@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId(\App\Models\Category::class)->references('id')->on('categories');
+            $table->foreignId('category_id')->references('id')->on('categories');
             $table->float('price');
             $table->unsignedInteger('discount')->nullable();
             $table->timestamp('discount_until')->nullable();

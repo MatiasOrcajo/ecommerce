@@ -9,7 +9,7 @@ class Coupon extends Model
 {
     use HasFactory;
 
-    protected $table = 'coupon';
+    protected $table = 'coupons';
     protected $guarded;
 
 

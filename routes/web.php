@@ -3,8 +3,22 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (\Illuminate\Http\Request $request) {
+
+    $cart = session()->get('cart', []);
+    $product = collect(
+        [
+            "name" => "Celular",
+            "price" => "35000",
+        ]
+
+    );
+
+    $cart[8] = $product;
+
+
+    dd($cart);
+    //return view('welcome');
 });
 
 Route::get('/dashboard', function () {
