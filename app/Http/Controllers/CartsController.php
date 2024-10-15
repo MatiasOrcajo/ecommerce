@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CartsController extends Controller
 {
-
     /**
      * Crea un carrito. Se va a crear una sola vez junto con el registro
      * del usuario

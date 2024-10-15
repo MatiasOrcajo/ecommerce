@@ -19,11 +19,16 @@ class CartProducts extends Model
      * Añade un producto al registro del usuario en la tabla cart_products
      *
      * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|void
      *
      */
     public static function addProduct(Product $product)
     {
+
+        if (Auth::guest()) {
+            self::addGuestProduct($product);
+            return;
+        }
 
         $productInCart = Auth::user()->cart->products->where('product_id', $product->id);
 
@@ -41,6 +46,21 @@ class CartProducts extends Model
             'message' => 'Producto añadido!'
         ], 200);
 
+    }
+
+    public static function addGuestProduct(Product $product)
+    {
+        $arr = [];
+        session()->put('cart', $arr);
+
+        $cart = session()->get('cart');
+        $cart[$product->id] = [
+            "name" => $product->name,
+            "price" => $product->price,
+            "quantity" => 1
+        ];
+
+        dd(session()->all());
     }
 
     /**

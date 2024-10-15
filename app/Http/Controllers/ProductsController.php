@@ -31,10 +31,10 @@ class ProductsController extends Controller
      */
     public function create(Request $request)
     {
-        $this->validateProduct($request);  // Validamos la entrada
+        $this->validateProduct($request);
 
         $product = new Product();
-        $this->saveProductData($product, $request);  // Reutilizamos la lógica común
+        $this->saveProductData($product, $request);
 
         return response()->json([
             'message' => 'Product created successfully!',
@@ -50,9 +50,9 @@ class ProductsController extends Controller
      */
     public function edit(Product $product, Request $request)
     {
-        $this->validateProduct($request);  // Validamos la entrada
+        $this->validateProduct($request);
 
-        $this->saveProductData($product, $request);  // Reutilizamos la lógica común
+        $this->saveProductData($product, $request);
 
         return response()->json([
             'message' => 'Product updated successfully!',
