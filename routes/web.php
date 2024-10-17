@@ -4,15 +4,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (\Illuminate\Http\Request $request) {
-
-
-
-
-    dd($cart);
-    //return view('welcome');
+    return view('welcome');
 });
 
-Route::get('/cart/{product}', [\App\Http\Controllers\CartsController::class, 'addProduct']);
+
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/cart/{product}', [\App\Http\Controllers\CartsController::class, 'addProduct']);
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
