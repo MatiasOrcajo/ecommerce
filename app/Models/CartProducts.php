@@ -50,6 +50,7 @@ class CartProducts extends Model
 
     public static function addGuestProduct(Product $product)
     {
+        dump(session()->all());
 
         // Obtener el carrito actual de la sesión, o un array vacío si no existe
         $cart = session()->get('cart', []);
@@ -62,12 +63,15 @@ class CartProducts extends Model
             $cart[$product->id] = [
                 "name" => $product->name,
                 "price" => $product->price,
-                "quantity" => 1
+                "quantity" => 1,
+                "id" => $product->id
             ];
         }
 
         // Guardar el carrito actualizado en la sesión
         session()->put('cart', $cart);
+
+        session()->save();
 
         // Para depurar, puedes ver todos los datos de la sesión
         dd(session()->all());
