@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use mysql_xdevapi\Exception;
 
 class CartProducts extends Model
@@ -18,6 +19,8 @@ class CartProducts extends Model
     /**
      * Añade un producto al registro del usuario en la tabla cart_products
      *
+     * Si el usuario no está logueado, solo se ejecuta la funcion addGuestProduct()
+     *
      * @param Product $product
      * @return \Illuminate\Http\JsonResponse|void
      *
@@ -26,8 +29,7 @@ class CartProducts extends Model
     {
 
         if (Auth::guest()) {
-            self::addGuestProduct($product);
-            return;
+            return self::addGuestProduct($product);
         }
 
         $productInCart = Auth::user()->cart->products->where('product_id', $product->id);
@@ -48,12 +50,18 @@ class CartProducts extends Model
 
     }
 
+
+    /**
+     * Añade un producto al carrito y lo guarda en la sesión.
+     * Esto solo funciona para los usuarios no registrados.
+     *
+     * @param Product $product
+     * @return \Illuminate\Http\JsonResponse
+     */
     public static function addGuestProduct(Product $product)
     {
-        dump(session()->all());
-
         // Obtener el carrito actual de la sesión, o un array vacío si no existe
-        $cart = session()->get('cart', []);
+        $cart = Session::get('cart', []);
 
         // Verificar si el producto ya está en el carrito y actualizar la cantidad
         if (isset($cart[$product->id])) {
@@ -69,12 +77,11 @@ class CartProducts extends Model
         }
 
         // Guardar el carrito actualizado en la sesión
-        session()->put('cart', $cart);
+        Session::put('cart', $cart);
 
-        session()->save();
+        Session::save();
 
-        // Para depurar, puedes ver todos los datos de la sesión
-        dd(session()->all());
+        return response()->json(Session::get('cart'));
     }
 
 
