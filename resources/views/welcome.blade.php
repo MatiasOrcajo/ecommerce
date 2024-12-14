@@ -1,95 +1,165 @@
 @extends('layouts.app')
 
 @section('content')
+
     <style>
-        /* Estilos adicionales para personalizar algunos elementos */
-        .container-custom {
-            height: 38px;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-            padding: 0.375rem 0.75rem;
-            display: flex;
-            align-items: center;
+        .step-container {
+            display: none;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 1rem;
+        .step-container.active {
+            display: block;
+        }
+
+        .form-step-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-next, .btn-prev {
+            width: 100px;
         }
     </style>
 
-    <!-- Formulario estilizado con Bootstrap 5 -->
-    <form id="form-checkout" class="container my-4 p-4 border rounded shadow-sm">
-        <!-- Número de tarjeta -->
-        <div class="mb-3">
-            <label for="form-checkout__cardNumber" class="form-label">Número de tarjeta</label>
-            <div id="form-checkout__cardNumber" class="container-custom"></div>
-        </div>
 
-        <!-- Fecha de expiración -->
-        <div class="mb-3">
-            <label for="form-checkout__expirationDate" class="form-label">Fecha de expiración</label>
-            <div id="form-checkout__expirationDate" class="container-custom"></div>
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="card shadow-sm col-md-6">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Formulario de Registro</h2>
+            </div>
+            <div class="card-body">
+                <!-- Paso 1 -->
+                <div id="step-1" class="step-container active">
+                    <div class="form-step-header">
+                        <h5>Paso 1: Información Personal</h5>
+                        <p>Completa tus datos personales para continuar.</p>
+                    </div>
+                    <form id="form-step-1">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" placeholder="Ingresa tu nombre"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" placeholder="Ingresa tu apellido"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="telefono" placeholder="Ingresa tu teléfono"
+                                   required>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-primary btn-next">Siguiente</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Paso 2 -->
+                <div id="step-2" class="step-container">
+                    <div class="form-step-header">
+                        <h5>Paso 2: Datos de Envío</h5>
+                        <p>Completa tu dirección para finalizar.</p>
+                    </div>
+                    <form id="form-step-2">
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" placeholder="Ingresa tu dirección"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="codigoPostal" class="form-label">Código Postal</label>
+                            <input type="text" class="form-control" id="codigoPostal"
+                                   placeholder="Ingresa tu código postal" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="localidad" class="form-label">Localidad</label>
+                            <input type="text" class="form-control" id="localidad" placeholder="Ingresa tu localidad"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="provincia" class="form-label">Provincia</label>
+                            <input type="text" class="form-control" id="provincia" placeholder="Ingresa tu provincia"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pais" class="form-label">País</label>
+                            <input type="text" class="form-control" id="pais" placeholder="Ingresa tu país" required>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary btn-prev">Atrás</button>
+                            <button id="submit" type="button" class="btn btn-primary">Finalizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Código de seguridad -->
-        <div class="mb-3">
-            <label for="form-checkout__securityCode" class="form-label">Código de seguridad</label>
-            <div id="form-checkout__securityCode" class="container-custom"></div>
-        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const btnNext = document.querySelector('.btn-next');
+        const btnPrev = document.querySelector('.btn-prev');
+        const btnSubmit = document.getElementById('submit');
 
-        <!-- Nombre del titular -->
-        <div class="mb-3">
-            <label for="form-checkout__cardholderName" class="form-label">Nombre del titular</label>
-            <input type="text" id="form-checkout__cardholderName" class="form-control" placeholder="Nombre en la tarjeta" />
-        </div>
+        btnNext.addEventListener('click', () => {
+            step1.classList.remove('active');
+            step2.classList.add('active');
+        });
 
-        <!-- Emisor de la tarjeta -->
-        <div class="mb-3">
-            <label for="form-checkout__issuer" class="form-label">Emisor</label>
-            <select id="form-checkout__issuer" class="form-select">
-                <option value="">Seleccione el emisor</option>
-                <!-- Opciones dinámicas aquí -->
-            </select>
-        </div>
+        btnPrev.addEventListener('click', () => {
+            step2.classList.remove('active');
+            step1.classList.add('active');
+        });
 
-        <!-- Cuotas -->
-        <div class="mb-3">
-            <label for="form-checkout__installments" class="form-label">Cuotas</label>
-            <select id="form-checkout__installments" class="form-select">
-                <option value="">Seleccione el número de cuotas</option>
-                <!-- Opciones dinámicas aquí -->
-            </select>
-        </div>
+        // Recopilar datos y enviarlos
+        btnSubmit.addEventListener('click', () => {
+            const data = {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                direccion: document.getElementById('direccion').value,
+                codigoPostal: document.getElementById('codigoPostal').value,
+                localidad: document.getElementById('localidad').value,
+                provincia: document.getElementById('provincia').value,
+                pais: document.getElementById('pais').value,
+            };
 
-        <!-- Tipo de identificación -->
-        <div class="mb-3">
-            <label for="form-checkout__identificationType" class="form-label">Tipo de identificación</label>
-            <select id="form-checkout__identificationType" class="form-select">
-                <option value="">Seleccione el tipo de identificación</option>
-                <!-- Opciones dinámicas aquí -->
-            </select>
-        </div>
 
-        <!-- Número de identificación -->
-        <div class="mb-3">
-            <label for="form-checkout__identificationNumber" class="form-label">Número de identificación</label>
-            <input type="text" id="form-checkout__identificationNumber" class="form-control" placeholder="Número de identificación" />
-        </div>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
-        <!-- Correo electrónico -->
-        <div class="mb-3">
-            <label for="form-checkout__cardholderEmail" class="form-label">Correo electrónico</label>
-            <input type="email" id="form-checkout__cardholderEmail" class="form-control" placeholder="correo@ejemplo.com" />
-        </div>
 
-        <!-- Botón de pago y barra de progreso -->
-        <div class="d-grid mb-3">
-            <button type="submit" id="form-checkout__submit" class="btn btn-primary">Pagar</button>
-        </div>
-        <progress value="0" class="progress-bar mb-3">Cargando...</progress>
-    </form>
+            $.ajax({
+                type: "POST",
+                url: '{{route('pagar')}}',
+                data: {
+                    data: JSON.stringify(data),
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (res) {
+                    window.open(res.init_point, '_blank');
+                },
+                error: function (res, textStatus, errorThrown) {
+                    console.log(res);
+                },
+            });
 
+        });
+
+    </script>
 
 @endsection
 
