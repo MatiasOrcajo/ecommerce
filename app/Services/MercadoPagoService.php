@@ -9,7 +9,7 @@ use MercadoPago\MercadoPagoConfig;
 
 class MercadoPagoService{
 
-    public function __construct()
+    public function __construct(private readonly OrderService $orderService)
     {
         MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
     }
@@ -17,6 +17,8 @@ class MercadoPagoService{
 
     public function crearPreferencia(Request $request)
     {
+
+        $order = $this->orderService->create(json_decode($request->data));
 
         $client = new PreferenceClient();
         $preference = $client->create([
@@ -35,10 +37,13 @@ class MercadoPagoService{
                     "quantity" => 1,
                     "currency_id" => "ARS",
                     "unit_price" => 1,
-                    "external_reference" => "1643827245",
+
                 )
             ),
+            "external_reference" => "1643827245",
         ]);
+
+        dd($preference);
 
 
         return response()->json($preference);

@@ -37,13 +37,18 @@
                     <form id="form-step-1">
                         @csrf
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" placeholder="Ingresa tu nombre"
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="name" placeholder="Ingresa tu nombre"
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" placeholder="Ingresa tu apellido"
+                            <label for="surname" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="surname" placeholder="Ingresa tu apellido"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI/CUIT</label>
+                            <input type="text" class="form-control" id="dni" placeholder="Ingresa tu DNI/CUIT"
                                    required>
                         </div>
                         <div class="mb-3">
@@ -52,8 +57,13 @@
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefono" placeholder="Ingresa tu teléfono"
+                            <label for="phone" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Ingresa tu teléfono"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="coupon" class="form-label">Cupón de descuento</label>
+                            <input type="tel" class="form-control" id="coupon" placeholder="Ingresa tu cupón"
                                    required>
                         </div>
                         <div class="text-end">
@@ -69,28 +79,28 @@
                     </div>
                     <form id="form-step-2">
                         <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" placeholder="Ingresa tu dirección"
+                            <label for="address" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="address" placeholder="Ingresa tu dirección"
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label for="codigoPostal" class="form-label">Código Postal</label>
-                            <input type="text" class="form-control" id="codigoPostal"
+                            <label for="zip_code" class="form-label">Código Postal</label>
+                            <input type="text" class="form-control" id="zip_code"
                                    placeholder="Ingresa tu código postal" required>
                         </div>
                         <div class="mb-3">
-                            <label for="localidad" class="form-label">Localidad</label>
-                            <input type="text" class="form-control" id="localidad" placeholder="Ingresa tu localidad"
+                            <label for="locality" class="form-label">Localidad</label>
+                            <input type="text" class="form-control" id="locality" placeholder="Ingresa tu localidad"
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label for="provincia" class="form-label">Provincia</label>
-                            <input type="text" class="form-control" id="provincia" placeholder="Ingresa tu provincia"
+                            <label for="province" class="form-label">Provincia</label>
+                            <input type="text" class="form-control" id="province" placeholder="Ingresa tu provincia"
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label for="pais" class="form-label">País</label>
-                            <input type="text" class="form-control" id="pais" placeholder="Ingresa tu país" required>
+                            <label for="country" class="form-label">País</label>
+                            <input type="text" class="form-control" id="country" placeholder="Ingresa tu país" required>
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary btn-prev">Atrás</button>
@@ -123,15 +133,17 @@
         // Recopilar datos y enviarlos
         btnSubmit.addEventListener('click', () => {
             const data = {
-                nombre: document.getElementById('nombre').value,
-                apellido: document.getElementById('apellido').value,
+                name: document.getElementById('name').value,
+                surname: document.getElementById('surname').value,
+                dni: document.getElementById('dni').value,
                 email: document.getElementById('email').value,
-                telefono: document.getElementById('telefono').value,
-                direccion: document.getElementById('direccion').value,
-                codigoPostal: document.getElementById('codigoPostal').value,
-                localidad: document.getElementById('localidad').value,
-                provincia: document.getElementById('provincia').value,
-                pais: document.getElementById('pais').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                zip_code: document.getElementById('zip_code').value,
+                locality: document.getElementById('locality').value,
+                province: document.getElementById('province').value,
+                country: document.getElementById('country').value,
+                coupon: document.getElementById('coupon').value,
             };
 
 

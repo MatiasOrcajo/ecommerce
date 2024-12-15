@@ -18,6 +18,7 @@ class OrderFactory extends Factory
             'status' => $this->faker->randomElement(['pending', 'completed', 'cancelled']),
             'payment_method' => $this->faker->randomElement(['credit_card', 'paypal']),
             'shipping_address' => $this->faker->address(),
+            'payment_id' => $this->faker->creditCardNumber,
             'coupon_id' => \App\Models\Coupon::factory(),
             'created_at' => now(),
         ];

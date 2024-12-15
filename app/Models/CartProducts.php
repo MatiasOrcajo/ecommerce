@@ -50,42 +50,6 @@ class CartProducts extends Model
 
     }
 
-
-    /**
-     * Añade un producto al carrito y lo guarda en la sesión.
-     * Esto solo funciona para los usuarios no registrados.
-     *
-     * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public static function addGuestProduct(Product $product)
-    {
-        // Obtener el carrito actual de la sesión, o un array vacío si no existe
-        $cart = Session::get('cart', []);
-
-        // Verificar si el producto ya está en el carrito y actualizar la cantidad
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity']++;
-        } else {
-            // Agregar nuevo producto si no está en el carrito
-            $cart[$product->id] = [
-                "name" => $product->name,
-                "price" => $product->price,
-                "quantity" => 1,
-                "id" => $product->id
-            ];
-        }
-
-        // Guardar el carrito actualizado en la sesión
-        Session::put('cart', $cart);
-
-        Session::save();
-
-        return response()->json(Session::get('cart'));
-    }
-
-
-
     /**
      * @param Product $product
      * @return \Illuminate\Http\JsonResponse

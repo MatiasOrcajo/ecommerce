@@ -6,11 +6,17 @@ use App\Models\Cart;
 use App\Models\CartProducts;
 use App\Models\Constants;
 use App\Models\Product;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartsController extends Controller
 {
+
+    public function __construct(private readonly CartService $cartService)
+    {
+    }
+
     /**
      * Crea un carrito. Se va a crear una sola vez junto con el registro
      * del usuario
@@ -35,7 +41,7 @@ class CartsController extends Controller
      */
     public function addProduct(Product $product)
     {
-        return CartProducts::addProduct($product);
+        return $this->cartService->addProduct($product);
     }
 
 

@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamp('order_date');
             $table->float('total_amount');
-            $table->string('status');
-            $table->string('payment_method');
+            $table->string('status')->nullable();
+            $table->string('payment_method')->nullable();
             $table->string('shipping_address');
-            $table->foreignId('coupon_id')->references('id')->on('coupons');
+            $table->string('payment_id')->nullable();
+            $table->foreignId('coupon_id')->nullable()->references('id')->on('coupons');
             $table->timestamps();
         });
     }
