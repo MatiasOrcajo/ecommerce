@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
@@ -19,6 +20,10 @@ class MercadoPagoService{
     {
 
         $order = $this->orderService->create(json_decode($request->data));
+
+        $items = $order->products->reduce(function (array $acc, \App\Models\OrderProducts $product){
+           dd($product);
+        }, []);
 
         $client = new PreferenceClient();
         $preference = $client->create([
@@ -40,7 +45,7 @@ class MercadoPagoService{
 
                 )
             ),
-            "external_reference" => "1643827245",
+            "external_reference" => $order->id,
         ]);
 
         dd($preference);

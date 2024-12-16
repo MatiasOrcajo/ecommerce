@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('customer_id')->references('id')->on('customers');
             $table->timestamp('order_date');
             $table->float('total_amount');
             $table->string('status')->nullable();

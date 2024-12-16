@@ -18,8 +18,9 @@ class CouponService{
     {
 
         $coupon = Coupon::where('code', $code)->first();
-        dd(Carbon::now()->gt(Carbon::parse($coupon->valid_until)));
-        if(Carbon::now() > Carbon::parse($coupon->valid_until)){
+
+        if(Carbon::now()->format('d-m-Y') > Carbon::parse($coupon->valid_until)->format('d-m-Y')){
+
             throw new \Exception("El cupón no es válido para esta fecha");
         }
 

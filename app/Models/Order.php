@@ -24,6 +24,15 @@ class Order extends Model
     }
 
 
+    /**
+     * Retorna todos los productos asociados a una orden
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+        return $this->hasMany(OrderProducts::class, 'order_id');
+    }
 
 
 }

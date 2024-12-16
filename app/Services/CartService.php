@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 
-class CartService{
+class CartService
+{
 
 
-    public function __construct(private readonly ProductService $productService)
+    public function __construct(private readonly ProductService $productService, private readonly CouponService $couponService)
     {
 
     }
@@ -48,23 +49,53 @@ class CartService{
 
 
     /**
+     *
      * Retorna el total de lo que se encuentra en el carrito
      *
-     * @return float|int
+     * @param $customerData
+     * @return \Illuminate\Support\Collection
+     *
      */
-    public function calculateTotalAmount()
+    public function calculateTotalAmount($customerData)
     {
+
         $cart = Session::get('cart');
-        $total = 0;
 
-        foreach (collect($cart) as $q){
-            $product = Product::find($q["id"]);
-            $total += (($product->price - $this->productService->calculateProductPriceWithDiscount($product))  * $q["quantity"]);
-        }
+        return collect($cart)->map(function ($query) use ($customerData) {
+            $product = Product::find($query["id"]);
+            $subtotal = round(($query["price"] * $query["quantity"]), 2);
+            $total = $subtotal;
+
+            if ($query["discount"] != 0) {
+                $total = round($subtotal - ($subtotal * $query["discount"]) / 100, 2);
+            }
 
 
+            //Valida el cupón en caso de haber y aplica descuento
+            //Esta funcionalidad tendrá que validarse aparte
+            //Ya que el cupón debe ser validad por fuera del formulario de pago
 
-        return round($total, 2);
+            $coupon = null;
+
+            if ($customerData->coupon != null) {
+                $coupon = $this->couponService->validateCoupon($customerData->coupon);
+            }
+
+            if ($coupon) {
+                $total = $total - ($total * $coupon->discount) / 100;
+            }
+            //
+
+
+            return [
+                "product_id" => $product->id,
+                "quantity" => $query["quantity"],
+                "unit_price" => $query["price"],
+                "discount" => $query["discount"],
+                "subtotal" => $subtotal,
+                "total_amount_with_discount" => $total,
+            ];
+        });
 
     }
 

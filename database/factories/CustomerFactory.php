@@ -3,23 +3,20 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-class UserFactory extends Factory
+class CustomerFactory extends Factory
 {
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->firstName(),
+            'surname' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->numerify('###########'),
-            'dni' => $this->faker->randomNumber(8, true),
-            'role' => $this->faker->randomElement(['admin', 'customer']),
-            'password' => Hash::make('password123'),
+            'dni' => $this->faker->unique()->randomNumber(8, true),
             'created_at' => now(),
         ];
     }

@@ -11,49 +11,44 @@ use Illuminate\Support\Facades\Session;
 
 class OrderService{
 
-    public function __construct(private readonly UserService $userService, private readonly CartService $cartService, private readonly CouponService $couponService, private readonly OrderProducts $orderProducts)
+
+    public function __construct(private readonly CustomerService $customerService, private readonly CartService $cartService, private readonly OrderProducts $orderProducts)
     {
     }
 
 
-    public function create($userData)
+    /**
+     * Crea una orden de compra y la retorna
+     *
+     * @param $customerData
+     * @return Order
+     * @throws \Exception
+     */
+    public function create($customerData)
     {
 
-        //User data
-        $data = [
-            "name" => $userData->name.' '. $userData->surname,
-            "email" => $userData->email,
-            "phone" => $userData->phone,
-            "dni_or_cuit" => $userData->dni,
-            "coupon" => $userData->coupon
-        ];
-        //Valida el cupón en caso de haber y aplica descuento
+        $productsBagWithTotal = $this->cartService->calculateTotalAmount($customerData);
+        $total = 0;
 
-        $coupon = null;
+        foreach ($productsBagWithTotal as $product){
+            $total += $product["total_amount_with_discount"];
 
-        if($userData->coupon != null){
-            $coupon = $this->couponService->validateCoupon($userData->coupon);
         }
 
-        $total = $this->cartService->calculateTotalAmount();
-
-        if($coupon){
-            $total = $total - ($total * $coupon->discount) / 100;
-        }
-
-        //
+        $coupon = Coupon::where('code', $customerData->coupon)->first();
 
         $order                      = new Order();
-        $order->user_id             = $this->userService->create($data)->id;
+        $order->customer_id         = $this->customerService->create($customerData)->id;
         $order->order_date          = Carbon::now();
-        $order->total_amount        = $total;
-        $order->shipping_address    = $userData->address.', '. $userData->locality.', '. $userData->province.', '. $userData->zip_code;
+        $order->total_amount        = round($total, 2);
+        $order->shipping_address    = $customerData->address.', '. $customerData->locality.', '. $customerData->province.', '. $customerData->zip_code;
         $order->coupon_id           = $coupon->id ?? null;
         $order->save();
 
-        //Asigna los productos del carrito al registro Order
-        $this->orderProducts->create($order);
-
+        //Vincula los productos del carrito al registro Order
+        //Este dato luego se levanta en MercadoPagoService
+        foreach ($productsBagWithTotal as $product)
+            $this->orderProducts->create($order, $product);
 
         return $order;
 

@@ -12,7 +12,7 @@ class CartFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => \App\Models\User::factory(),
+            'customer_id' => \App\Models\Customer::factory(),
             'status' => $this->faker->randomElement(['active', 'abandoned']),
             'created_at' => now(),
         ];
