@@ -1,17 +1,71 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app-adminkit')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+@section('content')
+    <div class="container-fluid p-0">
+
+        <div class="mb-3">
+            <h1 class="h3 d-inline align-middle">Chart.js</h1>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card flex-fill w-100">
+                    <div class="card-header">
+                        <h5 class="card-title">Line Chart</h5>
+                        <h6 class="card-subtitle text-muted">A line chart is a way of plotting data points on a line.</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="chartjs-line"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Bar Chart</h5>
+                        <h6 class="card-subtitle text-muted">A bar chart provides a way of showing data values represented as vertical bars.</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="chartjs-bar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Doughnut Chart</h5>
+                        <h6 class="card-subtitle text-muted">Doughnut charts are excellent at showing the relational proportions between data.</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart chart-sm">
+                            <canvas id="chartjs-doughnut"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Pie Chart</h5>
+                        <h6 class="card-subtitle text-muted">Pie charts are excellent at showing the relational proportions between data.</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart chart-sm">
+                            <canvas id="chartjs-pie"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
-</x-app-layout>
+
+    <script type="module" src="{{ mix('resources/js/chart.js') }}"></script>
+@endsection
+

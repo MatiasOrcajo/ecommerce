@@ -13,9 +13,9 @@ class OrderService
 {
 
 
-    public function __construct(private readonly CustomerService $customerService,
-                                private readonly CartService $cartService,
-                                private readonly OrderProducts $orderProducts)
+    public function __construct(private readonly CustomerService      $customerService,
+                                private readonly CartService          $cartService,
+                                private readonly OrderProductsService $orderProducts)
     {
     }
 

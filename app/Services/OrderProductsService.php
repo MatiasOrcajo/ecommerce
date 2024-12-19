@@ -6,7 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 
-class OrderProducts
+class OrderProductsService
 {
 
 

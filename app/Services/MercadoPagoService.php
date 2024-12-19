@@ -12,7 +12,7 @@ readonly class MercadoPagoService
 {
 
     public function __construct(private OrderService $orderService,
-                                private OrderProducts $orderProductsService
+                                private OrderProductsService $orderProductsService
     )
     {
         MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
@@ -42,7 +42,7 @@ readonly class MercadoPagoService
             $client = new PreferenceClient();
             $preference = $client->create([
                 "back_urls" => [
-                    "success" => route('pago-exitoso'),
+                    "success" => route('pago-exitoso', $order->id),
                     "failure" => env('URL_FAILURE', 'https://default.failure.url'),
                     "pending" => env('URL_PENDING', 'https://default.pending.url'),
                 ],
