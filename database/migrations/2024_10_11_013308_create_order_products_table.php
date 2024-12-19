@@ -17,7 +17,9 @@ return new class extends Migration
             $table->foreignId('order_id')->references('id')->on('orders');
             $table->unsignedInteger('quantity');
             $table->float('unit_price');
+            $table->float('discount')->nullable();
             $table->float('subtotal');
+            $table->float('total_amount');
             $table->timestamps();
         });
     }

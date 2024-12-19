@@ -10,7 +10,13 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'orders';
-    protected $guarded;
+    protected $fillable = [
+        "customer_id",
+        "order_date",
+        "total_amount",
+        "shipping_address",
+        "coupon_id"
+    ];
 
 
     /**

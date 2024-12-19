@@ -10,7 +10,9 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
 
 Route::group(['middleware' => ['web']], function () {
     Route::get('/cart/{product}', [\App\Http\Controllers\CartsController::class, 'addProduct']);
+    Route::get('/clear-cart', [\App\Http\Controllers\CartsController::class, 'clearCart']);
 });
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

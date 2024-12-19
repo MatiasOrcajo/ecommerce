@@ -18,7 +18,7 @@ class CheckoutController extends Controller
      */
     public function pagar(Request $request)
     {
-        return $this->mpService->crearPreferencia($request);
+        return $this->mpService->createPreference($request);
     }
 
 

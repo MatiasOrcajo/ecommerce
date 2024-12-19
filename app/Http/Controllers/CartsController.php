@@ -56,4 +56,15 @@ class CartsController extends Controller
         return CartProducts::deleteProduct($product);
     }
 
+
+    /**
+     * Vacía el carrito del usuario
+     *
+     * @return void
+     */
+    public function clearCart()
+    {
+        $this->cartService->clearCart();
+    }
+
 }

@@ -47,6 +47,18 @@ class CartService
         return response()->json(Session::get('cart'));
     }
 
+    /**
+     *
+     * Elimina todos los elementos del carrito de la sesión.
+     *
+     * @return void
+     *
+     */
+    public function clearCart()
+    {
+        Session::forget('cart');
+    }
+
 
     /**
      *

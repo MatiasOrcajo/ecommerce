@@ -19,6 +19,9 @@ class OrderProductsFactory extends Factory
             'subtotal' => function (array $attributes) {
                 return $attributes['quantity'] * $attributes['unit_price'];
             },
+            'total_amount' => function (array $attributes) {
+                return $attributes['quantity'] * $attributes['unit_price'] - 10;
+            },
             'created_at' => now(),
         ];
     }
