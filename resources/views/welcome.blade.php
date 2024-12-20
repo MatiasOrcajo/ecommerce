@@ -22,7 +22,20 @@
     </style>
 
 
-    <div class="container d-flex justify-content-center mt-5">
+    <div class="position-relative container d-flex justify-content-center mt-5">
+
+        <div class="mt-5 position-absolute" style="top: 0; right: 0;">
+            <form id="form-validate-coupon" class="d-flex flex-column">
+                @csrf
+                <label for="coupon" class="form-label">Cupón de descuento</label>
+                <input type="tel" class="form-control" id="coupon" placeholder="Ingresa tu cupón"
+                       required>
+                <p id="coupon-validated-success" style="color: green"></p>
+                <p id="coupon-validated-failed" style="color: red"></p>
+                <button type="button" id="validate-coupon-button" class="btn btn-primary mt-3">Validar</button>
+            </form>
+        </div>
+
         <div class="card shadow-sm col-md-6">
             <div class="card-header bg-primary text-white text-center">
                 <h2>Formulario de Registro</h2>
@@ -59,11 +72,6 @@
                         <div class="mb-3">
                             <label for="phone" class="form-label">Teléfono</label>
                             <input type="tel" class="form-control" id="phone" placeholder="Ingresa tu teléfono"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="coupon" class="form-label">Cupón de descuento</label>
-                            <input type="tel" class="form-control" id="coupon" placeholder="Ingresa tu cupón"
                                    required>
                         </div>
                         <div class="text-end">
@@ -119,6 +127,8 @@
         const btnNext = document.querySelector('.btn-next');
         const btnPrev = document.querySelector('.btn-prev');
         const btnSubmit = document.getElementById('submit');
+        const btnValidateCoupon = document.getElementById('validate-coupon-button');
+        let coupon_id = null;
 
         btnNext.addEventListener('click', () => {
             step1.classList.remove('active');
@@ -128,6 +138,28 @@
         btnPrev.addEventListener('click', () => {
             step2.classList.remove('active');
             step1.classList.add('active');
+        });
+
+
+        btnValidateCoupon.addEventListener('click', () => {
+
+            let coupon = document.getElementById('coupon').value;
+
+            $.ajax({
+                type: "GET",
+                url: '{{route('validate-coupon')}}'+ '?code='+ coupon,
+                success: function (xhr, status, error) {
+                    $('#coupon-validated-success').html(xhr.success);
+                    $('#coupon-validated-failed').html("");
+                    coupon_id = xhr.coupon_id;
+                },
+                error: function (xhr, status, error) {
+                    $('#coupon-validated-success').html("");
+                    $('#coupon-validated-failed').html(xhr.responseJSON.error);
+
+                },
+            });
+
         });
 
         // Recopilar datos y enviarlos
@@ -143,7 +175,7 @@
                 locality: document.getElementById('locality').value,
                 province: document.getElementById('province').value,
                 country: document.getElementById('country').value,
-                coupon: document.getElementById('coupon').value,
+                coupon: coupon_id,
             };
 
 

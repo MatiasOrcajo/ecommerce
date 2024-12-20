@@ -33,9 +33,10 @@ readonly class MercadoPagoService
     public function createPreference(Request $request)
     {
 
-
+        // Creates service record
         $order = $this->orderService->create(json_decode($request->data));
 
+        // Retrieves items to be purchased, with final price including discounts
         $items = $this->orderProductsService->mapOrderProductToItem($order->id);
 
         try {

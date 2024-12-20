@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code');
             $table->unsignedInteger('discount');
             $table->unsignedInteger('quantity');
-            $table->timestamp('valid_until');
+            $table->dateTime('valid_until');
             $table->timestamps();
         });
     }

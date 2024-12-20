@@ -31,14 +31,15 @@ class OrderService
     public function create($customerData)
     {
 
-        // Extract the list of cart products with total amounts
+        // Calculates total amount to be paid for every product
         $cartProducts = $this->cartService->calculateTotalAmount($customerData);
 
-        // Calculate the total cart amount (extract function)
+        // Calculate the total cart amount
+        // receives array of products
         $cartTotal = $this->calculateCartTotal($cartProducts);
 
         // Retrieve coupon if available
-        $coupon = Coupon::where('code', $customerData->coupon)->first();
+        $coupon = Coupon::find($customerData->coupon);
 
         // Extract shipping address (extract variable)
         $shippingAddress = sprintf(
@@ -61,6 +62,12 @@ class OrderService
             'coupon_id' => $coupon->id ?? null,
         ]);
 
+        if($coupon){
+            $coupon->quantity -= 1;
+            $coupon->save();
+        }
+
+
         // Link cart products to the order (extract variable)
         foreach ($cartProducts as $product) {
             $this->orderProducts->create($order, $product);
@@ -70,7 +77,13 @@ class OrderService
     }
 
 
-    // Extracted function for calculating total cart amount
+    /**
+     * Calculates the total amount for the cart, including discounts applied to each product.
+     *
+     * @param \Illuminate\Support\Collection $cartProducts A collection of cart products, each containing its discounted total amount.
+     *
+     * @return float The total cart amount after applying discounts.
+     */
     private function calculateCartTotal($cartProducts): float
     {
         return array_reduce(

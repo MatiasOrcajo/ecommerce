@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 
@@ -84,20 +85,11 @@ class CartService
 
 
             //Valida el cupón en caso de haber y aplica descuento
-            //Esta funcionalidad tendrá que validarse aparte
-            //Ya que el cupón debe ser validad por fuera del formulario de pago
-
-            $coupon = null;
-
-            if ($customerData->coupon != null) {
-                $coupon = $this->couponService->validateCoupon($customerData->coupon);
-            }
+            $coupon = Coupon::find($customerData->coupon_id);
 
             if ($coupon) {
                 $total = $total - ($total * $coupon->discount) / 100;
             }
-            //
-
 
             return [
                 "product_id" => $product->id,
