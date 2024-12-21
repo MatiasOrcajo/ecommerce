@@ -10,8 +10,8 @@
             <div class="col-12 col-lg-6">
                 <div class="card flex-fill w-100">
                     <div class="card-header">
-                        <h5 class="card-title">Line Chart</h5>
-                        <h6 class="card-subtitle text-muted">A line chart is a way of plotting data points on a line.</h6>
+                        <h5 class="card-title">Ventas/mes</h5>
+                        <h6 class="card-subtitle text-muted">Ventas totales en el año</h6>
                     </div>
                     <div class="card-body">
                         <div class="chart">

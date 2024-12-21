@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
         Coupon::factory(10)->create();
 
         // Seed Orders and OrderProductsService
-        Order::factory(20)->create()->each(function ($order) {
+        Order::factory(500)->create()->each(function ($order) {
             OrderProducts::factory(3)->create(['order_id' => $order->id]);
         });
 
