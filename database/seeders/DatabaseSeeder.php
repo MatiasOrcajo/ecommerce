@@ -39,8 +39,8 @@ class DatabaseSeeder extends Seeder
         Coupon::factory(10)->create();
 
         // Seed Orders and OrderProductsService
-        Order::factory(500)->create()->each(function ($order) {
-            OrderProducts::factory(3)->create(['order_id' => $order->id]);
+        Order::factory(1000)->create()->each(function ($order) {
+            OrderProducts::factory(1)->create(['order_id' => $order->id]);
         });
 
         // Seed Pictures for Products

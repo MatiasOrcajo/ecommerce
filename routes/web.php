@@ -11,6 +11,7 @@ Route::get('/', function (\Illuminate\Http\Request $request) {
 Route::group(['middleware' => ['web']], function () {
     Route::get('/cart/{product}', [\App\Http\Controllers\CartsController::class, 'addProduct']);
     Route::get('/clear-cart', [\App\Http\Controllers\CartsController::class, 'clearCart']);
+    Route::get('/get-ip-address',[\App\Http\Controllers\GuestController::class, 'getIpAddress']);
 });
 
 Route::post('/pagar', [\App\Http\Controllers\CheckoutController::class, 'pagar'])->name('pagar');

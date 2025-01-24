@@ -22,14 +22,14 @@ async function fetchSalesData() {
 async function renderChart() {
     // Esperar a que los datos sean cargados
     const data = await fetchSalesData();
-
+    console.log(data.salesData);
     // Configuración del gráfico
     const config = {
         type: 'bar',
         data: {
             labels: data.months, // Etiquetas obtenidas de la API
             datasets: [{
-                label: 'Ventas por Mes',
+                label: 'Facturación por Mes',
                 data: data.salesData, // Datos obtenidos de la API
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -47,7 +47,7 @@ async function renderChart() {
                 tooltip: {
                     callbacks: {
                         label: function (context) {
-                            return `Ventas: ${context.raw}`;
+                            return `Facturación: $${context.raw}`;
                         }
                     }
                 }
@@ -63,7 +63,7 @@ async function renderChart() {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Ventas'
+                        text: 'Facturación'
                     }
                 }
             }

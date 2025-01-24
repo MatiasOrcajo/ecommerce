@@ -12,9 +12,9 @@ class DashboardController extends Controller
     {
     }
 
-    public function getSales()
+    public function getSales(Request $request)
     {
-        return $this->statisticsService->getSales();
+        return $this->statisticsService->getSales($request);
     }
 
 }
