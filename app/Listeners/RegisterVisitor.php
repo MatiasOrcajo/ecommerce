@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\NewVisitor;
+use App\Models\Visitor;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Http\Request;
 
 class RegisterVisitor
 {
@@ -13,7 +15,7 @@ class RegisterVisitor
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -21,6 +23,9 @@ class RegisterVisitor
      */
     public function handle(NewVisitor $event): void
     {
-        //
+        // Verifica si la IP ya se registró hoy
+        if (!Visitor::where('ip_address', $event->ipAddress)->whereDate('created_at', today())->exists()) {
+            Visitor::create(['ip_address' => $event->ipAddress]);
+        }
     }
 }

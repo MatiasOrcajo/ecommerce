@@ -27,7 +27,7 @@ class StatisticsService{
     {
         $monthsToGoBack = $request->sub ?? 12;
 
-        $reportingPeriod = Carbon::parse('2024-4-3')->subMonths($monthsToGoBack)->monthsUntil(Carbon::parse('2024-4-3'));
+        $reportingPeriod = Carbon::parse(now())->subMonths($monthsToGoBack)->monthsUntil(Carbon::parse(now()));
 
         $months = collect($reportingPeriod)->mapWithKeys(function($date){
             return [$date->year . ' '.  $date->monthName => 0];
@@ -40,9 +40,18 @@ class StatisticsService{
             })
             ->map(function ($orders) {
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
-            });;
+            });
+
+//        dd(Order::where('status', 'completed')
+//            ->orderBy('order_date', 'desc')
+//            ->first());
 
         return $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
+
+    }
+
+
+    public function getVisitors() {
 
     }
 

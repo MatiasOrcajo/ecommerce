@@ -5,10 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (\Illuminate\Http\Request $request) {
 
-    \App\Events\NewVisitor::dispatch();
 
     return view('welcome');
-});
+})->middleware('capture-visitor')->name('home');
 
 
 Route::group(['middleware' => ['web']], function () {
