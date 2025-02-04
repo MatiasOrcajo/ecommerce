@@ -10,12 +10,12 @@
             <div class="col-12 col-lg-6">
                 <div class="card flex-fill w-100">
                     <div class="card-header">
-                        <h5 class="card-title">Ventas/mes</h5>
+                        <h5 class="card-title">Ventas</h5>
                         <h6 class="card-subtitle text-muted">Ventas totales en el año</h6>
                     </div>
                     <div class="card-body">
                         <div class="chart">
-                            <canvas id="chartjs-line"></canvas>
+                            <canvas id="sales-chart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -24,12 +24,12 @@
             <div class="col-12 col-lg-6">
                 <div class="card flex-fill w-100">
                     <div class="card-header">
-                        <h5 class="card-title">Ventas/mes</h5>
-                        <h6 class="card-subtitle text-muted">Ventas totales en el año</h6>
+                        <h5 class="card-title">Visitas</h5>
+                        <h6 class="card-subtitle text-muted">Visitas al sitio</h6>
                     </div>
                     <div class="card-body">
                         <div class="chart">
-                            <canvas id="chartjs-line"></canvas>
+                            <canvas id="visitors-chart"></canvas>
                         </div>
                     </div>
                 </div>

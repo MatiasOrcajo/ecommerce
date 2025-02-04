@@ -1,6 +1,11 @@
 import Chart from 'chart.js/auto';
 import axios from 'axios';
 
+/**
+ * Fetches sales data from the API and processes it into separate arrays for sales data and corresponding months.
+ *
+ * @return {Promise<{salesData: Array, months: Array}>} A promise that resolves to an object containing the sales data and months.
+ */
 async function fetchSalesData() {
     const salesData = [];
     const months = [];
@@ -19,7 +24,12 @@ async function fetchSalesData() {
     return { salesData, months };
 }
 
-async function renderChart() {
+/**
+ * Renders a sales chart using Chart.js based on the fetched sales data.
+ *
+ * @return {Promise<void>} A promise that resolves when the sales chart has been successfully rendered.
+ */
+async function renderSalesChart() {
     // Esperar a que los datos sean cargados
     const data = await fetchSalesData();
     console.log(data.salesData);
@@ -71,10 +81,89 @@ async function renderChart() {
     };
 
     // Renderizar el gráfico
-    const ctx = document.getElementById('chartjs-line').getContext('2d');
+    const ctx = document.getElementById('sales-chart').getContext('2d');
     new Chart(ctx, config);
 }
 
 // Llamar a la función para renderizar el gráfico
-renderChart();
+renderSalesChart();
 
+
+
+async function fetchVisitorsData() {
+    const visitorsData = [];
+    const months = [];
+
+    try {
+        const response = await axios.get('/api/visitors');
+        Object.entries(response.data).forEach(([key, value]) => {
+            visitorsData.push(value);
+            months.push(key);
+        });
+    } catch (error) {
+        alert('Unable to fetch visitors data. Please try again!');
+        console.error('Error en la petición:', error);
+    }
+
+    return { visitorsData, months };
+}
+
+
+async function renderVisitorsChart() {
+    // Esperar a que los datos sean cargados
+    const data = await fetchVisitorsData();
+    console.log(data.visitorsData);
+    // Configuración del gráfico
+    const config = {
+        type: 'line',
+        data: {
+            labels: data.months, // Etiquetas obtenidas de la API
+            datasets: [{
+                label: 'Visitas por Mes',
+                data: data.visitorsData, // Datos obtenidos de la API
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                tension: 0.4 // Suavizado de la línea
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return `Visitas al sitio: ${context.raw}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Meses'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Visitas'
+                    }
+                }
+            }
+        }
+    };
+
+    // Renderizar el gráfico
+    const ctx = document.getElementById('visitors-chart').getContext('2d');
+    new Chart(ctx, config);
+}
+
+// Llamar a la función para renderizar el gráfico
+renderVisitorsChart();

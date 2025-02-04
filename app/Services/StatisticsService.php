@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class StatisticsService{
+class StatisticsService
+{
 
 
     /**
@@ -29,8 +31,8 @@ class StatisticsService{
 
         $reportingPeriod = Carbon::parse(now())->subMonths($monthsToGoBack)->monthsUntil(Carbon::parse(now()));
 
-        $months = collect($reportingPeriod)->mapWithKeys(function($date){
-            return [$date->year . ' '.  $date->monthName => 0];
+        $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [$date->year . ' ' . $date->monthName => 0];
         });
 
         $orders = Order::where('status', 'completed')
@@ -42,17 +44,42 @@ class StatisticsService{
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-//        dd(Order::where('status', 'completed')
-//            ->orderBy('order_date', 'desc')
-//            ->first());
-
         return $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
 
     }
 
 
-    public function getVisitors() {
+    /**
+     * Retrieves the visitor count grouped by year and month for a specified reporting period.
+     *
+     * The reporting period is determined by the number of months to go back
+     * from the current date, which defaults to 12 months if not specified.
+     * Processes visitor data, groups by their creation date, and maps it to a
+     * predefined structure of months within the reporting period.
+     *
+     * @param Request $request The incoming HTTP request containing data, optionally including 'sub' to determine the reporting period.
+     *
+     * @return string A JSON representation of visitor counts for each month in the specified reporting period.
+     */
+    public function getVisitors(Request $request): string
+    {
+        $monthsToGoBack = $request->sub ?? 12;
 
+        $reportingPeriod = Carbon::parse(now())->subMonths($monthsToGoBack)->monthsUntil(Carbon::parse(now()));
+
+        $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [$date->year . ' ' . $date->monthName => 0];
+        });
+
+        $visitors = Visitor::all()
+            ->groupBy(function ($visitor) {
+                return Carbon::parse($visitor->created_at)->format('Y F');
+            })
+            ->map(function ($visitors) {
+                return $visitors->count();
+            });
+
+        return $months->map(fn($value, $month) => $visitors[$month] ?? null)->toJson();
     }
 
 }
