@@ -1,17 +1,19 @@
 import Chart from 'chart.js/auto';
 import axios from 'axios';
 
+let chartInstance = null; // Variable para almacenar la instancia del gráfico
+
 /**
  * Fetches sales data from the API and processes it into separate arrays for sales data and corresponding months.
  *
  * @return {Promise<{salesData: Array, months: Array}>} A promise that resolves to an object containing the sales data and months.
  */
-async function fetchSalesData() {
+async function fetchSalesData(routeToFetch = '/api/sales') {
     const salesData = [];
     const months = [];
 
     try {
-        const response = await axios.get('/api/sales');
+        const response = await axios.get(routeToFetch);
         Object.entries(response.data).forEach(([key, value]) => {
             salesData.push(value);
             months.push(key);
@@ -29,10 +31,15 @@ async function fetchSalesData() {
  *
  * @return {Promise<void>} A promise that resolves when the sales chart has been successfully rendered.
  */
-async function renderSalesChart() {
+async function renderSalesChart(routeToFetch = '/api/sales') {
     // Esperar a que los datos sean cargados
-    const data = await fetchSalesData();
-    console.log(data.salesData);
+    const data = await fetchSalesData(routeToFetch);
+
+    // Destruir el gráfico anterior si existe
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
     // Configuración del gráfico
     const config = {
         type: 'bar',
@@ -66,7 +73,7 @@ async function renderSalesChart() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Meses'
+                        text: 'Tiempo'
                     }
                 },
                 y: {
@@ -82,7 +89,7 @@ async function renderSalesChart() {
 
     // Renderizar el gráfico
     const ctx = document.getElementById('sales-chart').getContext('2d');
-    new Chart(ctx, config);
+    chartInstance = new Chart(ctx, config); // Guardar la nueva instancia del gráfico
 }
 
 // Llamar a la función para renderizar el gráfico
@@ -112,7 +119,6 @@ async function fetchVisitorsData() {
 async function renderVisitorsChart() {
     // Esperar a que los datos sean cargados
     const data = await fetchVisitorsData();
-    console.log(data.visitorsData);
     // Configuración del gráfico
     const config = {
         type: 'line',
@@ -167,3 +173,11 @@ async function renderVisitorsChart() {
 
 // Llamar a la función para renderizar el gráfico
 renderVisitorsChart();
+
+
+$("#time-filter").on("change", function (e) {
+    // Obtener el valor seleccionado
+    const selectedValue = $(this).val();
+
+    renderSalesChart('/api/sales?filter='+selectedValue);
+});
