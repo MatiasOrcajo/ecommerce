@@ -14,8 +14,8 @@ class OrderFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'order_date' => $this->faker->dateTimeBetween('2022-01-01', now()),
-            'total_amount' => $this->faker->randomFloat(2, 50, 1000),
+            'order_date' => $this->faker->dateTimeBetween('2023-01-01', now()),
+            'total_amount' => $this->faker->randomFloat(2, 15000, 300000),
 //            'status' => $this->faker->randomElement(['pending', 'completed', 'cancelled']),
             'status' => $this->faker->randomElement(['completed']),
             'payment_method' => $this->faker->randomElement(['credit_card', 'paypal']),

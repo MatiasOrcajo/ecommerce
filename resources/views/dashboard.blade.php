@@ -70,15 +70,6 @@
                                     <h1 class="m-0" style="color: green">&#8593 150%</h1>
                                 </div>
                             </div>
-
-{{--                            <div class="mt-3 d-flex justify-content-between align-items-center">--}}
-{{--                                <div class="d-flex align-items-center">--}}
-{{--                                    <h1 class="m-0">ARS 1,020,202</h1>--}}
-{{--                                </div>--}}
-{{--                                <div class="d-flex align-items-center">--}}
-{{--                                    <h1 class="m-0" style="color: green">&#8593 150%</h1>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                         </div>
                         <div class="card-body">
                             <div class="chart">
@@ -96,8 +87,33 @@
                     <div class="col-12">
                         <div class="card flex-fill">
                             <div class="card-header">
-                                <h5 class="card-title">Visitas</h5>
-                                <h6 class="card-subtitle text-muted">Visitas al sitio</h6>
+                                <h4 class="card-title">Visitas al sitio</h4>
+                                <div class="mt-3 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <h1 class="m-0" id="total-visits-amount"></h1>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <h1 class="m-0" style="color: green" id="total-visits-percentage-change-difference"></h1>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="m-0">Visitas período 1:</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="m-0" id="period-1-total-visits">0</h5>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="m-0">Visitas período 2:</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="m-0" id="period-2-total-visits">0</h5>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="chart">
@@ -108,7 +124,7 @@
                     </div>
                 </div>
                 <div class="row flex-grow-1">
-                    <div class="col-12" style="transform: translateY(-5%);">
+                    <div class="col-12" style="transform: translateY(3%);">
                         <div class="card flex-fill">
                             <div class="card-header">
                                 <h5 class="card-title">Pie Chart</h5>
@@ -130,7 +146,8 @@
 
 
 
-    <script type="module" src="{{ mix('resources/js/chart.js') }}"></script>
-    <script type="module" src="{{ mix('resources/js/timeFilter.js') }}"></script>
+    <script type="module" src="{{ mix('resources/js/getSalesInfo.js') }}"></script>
+    <script type="module" src="{{ mix('resources/js/getVisitorsInfo.js') }}"></script>
+    <script type="module" src="{{ mix('resources/js/timeSelectListener.js') }}"></script>
 @endsection
 

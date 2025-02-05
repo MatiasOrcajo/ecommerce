@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         Coupon::factory(10)->create();
 
         // Seed Orders and OrderProductsService
-        Order::factory(3000)->create()->each(function ($order) {
+        Order::factory(1000)->create()->each(function ($order) {
             OrderProducts::factory(1)->create(['order_id' => $order->id]);
         });
 
@@ -52,10 +52,10 @@ class DatabaseSeeder extends Seeder
         $visitors = [];
 
         // Generar 50 visitantes con IPs aleatorias y fechas aleatorias en los últimos 30 días
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $visitors[] = [
                 'ip_address' => $this->generateRandomIp(),
-                'created_at' => now()->subDays(rand(0, 365))->subMinutes(rand(0, 1440)),
+                'created_at' => now()->subDays(rand(0, 700))->subMinutes(rand(0, 1440)),
                 'updated_at' => now(),
             ];
         }
