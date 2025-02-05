@@ -3,16 +3,32 @@ import axios from 'axios';
 
 let chartInstance = null; // Variable para almacenar la instancia del gráfico
 
+
+/**
+ * Formats a given number to two decimal places and converts it to a localized string
+ * using the 'es-ES' locale.
+ *
+ * @param {number} number - The number to be formatted.
+ * @return {string} The formatted number as a localized string.
+ */
+function formatNumber(number){
+    return Number(number.toFixed(2)).toLocaleString('es-ES')
+}
+
+
 /**
  * Fetches sales data from the API and processes it into separate arrays for sales data and corresponding time.
  *
  * @return {Promise<{salesPrimaryData: Array, time: Array}>} A promise that resolves to an object containing the sales data and time.
  */
 async function fetchSalesData(routeToFetch = '/api/sales?filter=today') {
+
     const salesPrimaryData = [];
     const salesSecondaryData = [];
     const time = [];
     const secondaryDataTime = [];
+    let primaryDataValueCounter = 0;
+    let secondaryDataValueCounter = 0;
 
     try {
         const response = await axios.get(routeToFetch);
@@ -22,12 +38,34 @@ async function fetchSalesData(routeToFetch = '/api/sales?filter=today') {
         Object.entries(primary).forEach(([key, value]) => {
             salesPrimaryData.push(value);
             time.push(key);
+            primaryDataValueCounter += value;
         })
         Object.entries(secondary).forEach(([key, value]) => {
             salesSecondaryData.push(value);
             secondaryDataTime.push(key);
+            secondaryDataValueCounter += value;
 
         });
+
+        let percentageChange = ((primaryDataValueCounter / secondaryDataValueCounter)*100) - 100;
+        const selector = $("#total-billing-percentage-change-difference");
+
+        if(percentageChange >= 0) {
+            selector.html("&#8593;"+ formatNumber(percentageChange) + "%");
+
+            selector.css("color", "green");
+        }
+        else {
+            selector.html("&#8595;"+ formatNumber(percentageChange) + "%");
+
+            selector.css("color", "red");
+        }
+
+        $("#total-billing-amount").html("ARS "+formatNumber(primaryDataValueCounter));
+        $("#period-1-total-billing").html("ARS "+formatNumber(primaryDataValueCounter));
+        $("#period-2-total-billing").html("ARS "+formatNumber(secondaryDataValueCounter));
+
+
     } catch (error) {
         alert('Unable to fetch sales data. Please try again!');
         console.error('Error en la petición:', error);
