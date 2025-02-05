@@ -22,30 +22,51 @@
 
             <!-- Primera caja ocupa 1 columna completa a lo alto -->
             <div class="col-12 col-lg-7 d-flex">
-                <div class="card flex-fill">
-                    <div class="card-header">
-                        <h4 class="card-title">Ventas totales</h4>
-                        <div class="mt-3 d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <h1 class="m-0">ARS 1,020,202</h1>
+                <div class="row flex-grow-1">
+                    <div class="col-12 card flex-fill">
+                        <div class="card-header">
+                            <h4 class="card-title">Ventas totales</h4>
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <h1 class="m-0">ARS 1,020,202</h1>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <h1 class="m-0" style="color: green">&#8593 150%</h1>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center">
-                                <h1 class="m-0" style="color: green">&#8593 150%</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <canvas id="sales-chart"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="chart">
-                            <canvas id="sales-chart"></canvas>
+                    <div class="col-12 card flex-fill">
+                        <div class="card-header">
+                            <h4 class="card-title">Ventas totales</h4>
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <h1 class="m-0">ARS 1,020,202</h1>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <h1 class="m-0" style="color: green">&#8593 150%</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <canvas id="sales-chart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- Segunda columna dividida en tres secciones -->
             <div class="col-12 col-lg-5 d-flex flex-column">
-                <div class="row flex-grow-1">
-                    <div class="col-12 mb-3">
+                <div class="row flex-grow-1" style="height: 25%">
+                    <div class="col-12">
                         <div class="card flex-fill">
                             <div class="card-header">
                                 <h5 class="card-title">Visitas</h5>
@@ -60,7 +81,7 @@
                     </div>
                 </div>
                 <div class="row flex-grow-1">
-                    <div class="col-12">
+                    <div class="col-12" style="transform: translateY(-5%);">
                         <div class="card flex-fill">
                             <div class="card-header">
                                 <h5 class="card-title">Pie Chart</h5>

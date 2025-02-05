@@ -70,8 +70,7 @@ async function renderSalesChart(routeToFetch = '/api/sales?filter=today') {
                     borderColor: 'rgba(183, 176, 180, 0.8)',
                     backgroundColor: 'rgba(183, 176, 180, 1)',
                     borderWidth: 2,
-                    borderDash: [5, 5],
-                    tension: 0.3 // Suavizado de la línea
+                    tension: 0.6 // Suavizado de la línea
                 }
             ]
         },

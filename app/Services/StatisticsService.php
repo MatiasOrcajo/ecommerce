@@ -69,28 +69,6 @@ class StatisticsService
     }
 
 
-    private function filterBySpecificSubTimePeriod()
-    {
-        $reportingPeriod = Carbon::parse(now())->subDays(14)->daysUntil(Carbon::parse(now())->subDays(8));
-
-        $dates = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [Carbon::parse($date->toDateString())->format('d-m') => 0];
-        });
-
-        $orders = Order::where('status', 'completed')->whereBetween('order_date', [Carbon::parse(now())->subDays(14), Carbon::parse(now())->subDays(8)])
-            ->orderBy('order_date')
-            ->get()
-            ->groupBy(function ($order) {
-                return Carbon::parse($order->order_date)->format('d-m');
-            })
-            ->map(function ($orders) {
-                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
-            });
-
-        return $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
-    }
-
-
     /**
      * Filters and calculates today's sales data.
      *
@@ -106,6 +84,27 @@ class StatisticsService
         $dates = collect([Carbon::parse(now())->format('d-m') => 0]);
 
         $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->startOfDay(), Carbon::now()->endOfDay()])
+            ->get()
+            ->groupBy(function ($order) {
+                return Carbon::parse($order->order_date)->format('d-m');
+            })
+            ->map(function ($orders) {
+                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
+            });
+
+        $primaryInfo = $dates->map(fn($value, $date) => $orders[$date] ?? null)->toJson();
+        $secondaryInfo = $this->filterSalesYesterdayPreviousPeriod();
+
+        return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
+    }
+
+    private function filterSalesYesterdayPreviousPeriod(): string
+    {
+        $dates = collect([Carbon::parse(now())->subDays(1)->format('d-m') => 0]);
+
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->subDays(1)->startOfDay(), Carbon::now()->endOfDay()])
             ->get()
             ->groupBy(function ($order) {
                 return Carbon::parse($order->order_date)->format('d-m');
@@ -136,7 +135,8 @@ class StatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $orders = Order::where('status', 'completed')->whereBetween('order_date', [Carbon::parse(now())->subDays(7), Carbon::now()])
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
             ->orderBy('order_date')
             ->get()
             ->groupBy(function ($order) {
@@ -147,9 +147,32 @@ class StatisticsService
             });
 
         $primaryInfo = $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
-        $secondaryInfo = $this->filterBySpecificSubTimePeriod();
+        $secondaryInfo = $this->filterPreviousSevenDaysPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
+    }
+
+
+    private function filterPreviousSevenDaysPeriod(): string
+    {
+        $reportingPeriod = Carbon::parse(now())->subDays(14)->daysUntil(Carbon::parse(now())->subDays(8));
+
+        $dates = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [Carbon::parse($date->toDateString())->format('d-m') => 0];
+        });
+
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->subDays(14)->startOfDay(), Carbon::parse(now())->subDays(8)->endOfDay()])
+            ->orderBy('order_date')
+            ->get()
+            ->groupBy(function ($order) {
+                return Carbon::parse($order->order_date)->format('d-m');
+            })
+            ->map(function ($orders) {
+                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
+            });
+
+        return $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
     }
 
 
@@ -171,7 +194,34 @@ class StatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $orders = Order::where('status', 'completed')->whereBetween('order_date', [Carbon::parse(now())->startOfMonth(), Carbon::now()])
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->startOfMonth(), Carbon::now()])
+            ->orderBy('order_date')
+            ->get()
+            ->groupBy(function ($order) {
+                return Carbon::parse($order->order_date)->format('d-m');
+            })
+            ->map(function ($orders) {
+                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
+            });
+
+        $primaryInfo = $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
+        $secondaryInfo = $this->filterSalesPreviousMonthPeriod();
+
+        return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
+
+    }
+
+    private function filterSalesPreviousMonthPeriod(): string
+    {
+        $reportingPeriod = Carbon::now()->startOfMonth()->subMonth()->daysUntil(Carbon::now()->startOfMonth()->subMonth()->endOfMonth());
+
+        $dates = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [Carbon::parse($date->toDateString())->format('d-m') => 0];
+        });
+
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->startOfMonth()->subMonth()->endOfMonth()])
             ->orderBy('order_date')
             ->get()
             ->groupBy(function ($order) {
@@ -182,6 +232,7 @@ class StatisticsService
             });
 
         return $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
+
     }
 
 
@@ -204,6 +255,7 @@ class StatisticsService
         });
 
         $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->startOfYear(), Carbon::now()->endOfDay()])
             ->get()
             ->groupBy(function ($order) {
                 return Carbon::parse($order->order_date)->format('Y F');
@@ -212,7 +264,33 @@ class StatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
+        $primaryInfo = $months->map(fn($value, $month) => $orders[$month] ?? 0)->toJson();
+        $secondaryInfo = $this->filterSalesPreviousYearPeriod();
+
+        return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
+    }
+
+
+    private function filterSalesPreviousYearPeriod(): string
+    {
+        $reportingPeriod = Carbon::parse(now())->startOfYear()->subYear(1)->daysUntil(now()->startOfYear()->subYear(1)->endOfYear());
+
+        $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [$date->year . ' ' . $date->monthName => 0];
+        });
+
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->startOfYear()->subYear(1), now()->startOfYear()->subYear(1)->endOfYear()])
+            ->get()
+            ->groupBy(function ($order) {
+                return Carbon::parse($order->order_date)->format('Y F');
+            })
+            ->map(function ($orders) {
+                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
+            });
+
+        return $months->map(fn($value, $month) => $orders[$month] ?? 0)->toJson();
+
     }
 
 
@@ -238,6 +316,7 @@ class StatisticsService
         });
 
         $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->subMonths(12)->startOfMonth(), Carbon::now()])
             ->get()
             ->groupBy(function ($order) {
                 return Carbon::parse($order->order_date)->format('Y F');
@@ -246,7 +325,33 @@ class StatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
+        $primaryInfo = $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
+        $secondaryInfo = $this->filterSalesPreviousYearOnYearPeriod();
+
+        return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
+    }
+
+
+    private function filterSalesPreviousYearOnYearPeriod(): string
+    {
+        $reportingPeriod = Carbon::parse(now())->startOfMonth()->subYear(2)->daysUntil(now()->startOfMonth()->subYear(1)->endOfMonth());
+
+        $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [$date->year . ' ' . $date->monthName => 0];
+        });
+
+        $orders = Order::where('status', 'completed')
+            ->whereBetween('order_date', [Carbon::parse(now())->startOfMonth()->subYear(2), now()->startOfMonth()->subYear(1)->endOfMonth()])
+            ->get()
+            ->groupBy(function ($order) {
+                return Carbon::parse($order->order_date)->format('Y F');
+            })
+            ->map(function ($orders) {
+                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
+            });
+
+        return $months->map(fn($value, $month) => $orders[$month] ?? 0)->toJson();
+
     }
 
 
