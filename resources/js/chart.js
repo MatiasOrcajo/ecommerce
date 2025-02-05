@@ -8,7 +8,7 @@ let chartInstance = null; // Variable para almacenar la instancia del gráfico
  *
  * @return {Promise<{salesData: Array, months: Array}>} A promise that resolves to an object containing the sales data and months.
  */
-async function fetchSalesData(routeToFetch = '/api/sales') {
+async function fetchSalesData(routeToFetch = '/api/sales?filter=today') {
     const salesData = [];
     const months = [];
 
@@ -31,7 +31,7 @@ async function fetchSalesData(routeToFetch = '/api/sales') {
  *
  * @return {Promise<void>} A promise that resolves when the sales chart has been successfully rendered.
  */
-async function renderSalesChart(routeToFetch = '/api/sales') {
+async function renderSalesChart(routeToFetch = '/api/sales?filter=today') {
     // Esperar a que los datos sean cargados
     const data = await fetchSalesData(routeToFetch);
 

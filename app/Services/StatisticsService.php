@@ -15,6 +15,7 @@ class StatisticsService
      * Mapping of filter methods to their corresponding keys.
      */
     private const FILTER_METHOD_MAP = [
+        'today' => 'filterSalesToday',
         'seven-days' => 'filterSevenDays',
         'this-month' => 'filterSalesThisMonth',
         'this-year' => 'filterSalesThisYear',
@@ -63,10 +64,23 @@ class StatisticsService
     public function getSales(Request $request): string
     {
 
-        if ($request->has("filter")) {
-            return $this->getFilteredSales($request);
-        }
+        return $this->getFilteredSales($request);
 
+    }
+
+
+    /**
+     * Filters and calculates today's sales data.
+     *
+     * This method initializes today's date with a default sales value of 0. It retrieves all completed orders,
+     * groups them by their order date, and calculates the total sales amount for each day. For the current day's
+     * date, it checks if there are sales and includes the aggregated amount or assigns null if no sales exist.
+     *
+     * @return string A JSON representation of today's sales data, where the key is today's date in "d-m" format and
+     *                the value is the total sales amount or null if there were no sales.
+     */
+    private function filterSalesToday(): string
+    {
         $dates = collect([Carbon::parse(now())->format('d-m') => 0]);
 
         $orders = Order::where('status', 'completed')
@@ -79,8 +93,8 @@ class StatisticsService
             });
 
         return $dates->map(fn($value, $date) => $orders[$date] ?? null)->toJson();
-
     }
+
 
 
     /**
@@ -177,7 +191,19 @@ class StatisticsService
     }
 
 
-    private function filterSalesYearOnYear()
+    /**
+     * Filters and calculates the sales data for the past 12 months year-on-year.
+     *
+     * This method determines the reporting period spanning the previous 12 months up to the current month.
+     * It initializes each month within the period with a default value of 0 and groups completed order data
+     * by year and month. The total sales amount is calculated for each month, and months with no sales data
+     * are assigned a null value.
+     *
+     * @return string A JSON representation of sales data aggregated by month for the past year,
+     *                where each key is a month in "Year MonthName" format and the value is the total
+     *                sales amount or null if no sales occurred.
+     */
+    private function filterSalesYearOnYear(): string
     {
 
         $reportingPeriod = Carbon::parse(now())->subMonths(12)->monthsUntil(Carbon::parse(now()));
