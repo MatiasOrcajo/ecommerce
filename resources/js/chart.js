@@ -4,26 +4,36 @@ import axios from 'axios';
 let chartInstance = null; // Variable para almacenar la instancia del gráfico
 
 /**
- * Fetches sales data from the API and processes it into separate arrays for sales data and corresponding months.
+ * Fetches sales data from the API and processes it into separate arrays for sales data and corresponding time.
  *
- * @return {Promise<{salesData: Array, months: Array}>} A promise that resolves to an object containing the sales data and months.
+ * @return {Promise<{salesPrimaryData: Array, time: Array}>} A promise that resolves to an object containing the sales data and time.
  */
 async function fetchSalesData(routeToFetch = '/api/sales?filter=today') {
-    const salesData = [];
-    const months = [];
+    const salesPrimaryData = [];
+    const salesSecondaryData = [];
+    const time = [];
+    const secondaryDataTime = [];
 
     try {
         const response = await axios.get(routeToFetch);
-        Object.entries(response.data).forEach(([key, value]) => {
-            salesData.push(value);
-            months.push(key);
+        const primary = JSON.parse(response.data.primary);
+        const secondary = JSON.parse(response.data.secondary);
+
+        Object.entries(primary).forEach(([key, value]) => {
+            salesPrimaryData.push(value);
+            time.push(key);
+        })
+        Object.entries(secondary).forEach(([key, value]) => {
+            salesSecondaryData.push(value);
+            secondaryDataTime.push(key);
+
         });
     } catch (error) {
         alert('Unable to fetch sales data. Please try again!');
         console.error('Error en la petición:', error);
     }
 
-    return { salesData, months };
+    return {salesPrimaryData, time, secondaryDataTime, salesSecondaryData};
 }
 
 /**
@@ -44,15 +54,30 @@ async function renderSalesChart(routeToFetch = '/api/sales?filter=today') {
     const config = {
         type: 'bar',
         data: {
-            labels: data.months, // Etiquetas obtenidas de la API
-            datasets: [{
-                label: 'Facturación por Mes',
-                data: data.salesData, // Datos obtenidos de la API
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 2,
-                tension: 0.4 // Suavizado de la línea
-            }]
+            labels: data.time, // Etiquetas obtenidas de la API
+            datasets: [
+                {
+                    label: 'Facturación',
+                    data: data.salesPrimaryData, // Datos obtenidos de la API
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 3,
+                    tension: 0.3 // Suavizado de la línea
+                },
+                {
+                    label: `Mismo período anterior`,
+                    data: data.salesSecondaryData,
+                    borderColor: 'rgba(183, 176, 180, 0.8)',
+                    backgroundColor: 'rgba(183, 176, 180, 1)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.3 // Suavizado de la línea
+                }
+            ]
+        },
+        interaction: {
+            mode: 'index',
+            intersect: false
         },
         options: {
             responsive: true,
@@ -64,8 +89,17 @@ async function renderSalesChart(routeToFetch = '/api/sales?filter=today') {
                 tooltip: {
                     callbacks: {
                         label: function (context) {
-                            return `Facturación: $${context.raw}`;
-                        }
+                            // Mostrar una fecha personalizada para "Mismo período anterior"
+                            if (context.dataset.label === 'Mismo período anterior') {
+                                const previousDates = data.secondaryDataTime; // Array con las fechas personalizadas
+                                const index = context.dataIndex;
+                                const customDate = previousDates[index] || 'Fecha no disponible';
+                                return `${context.dataset.label}: $${context.raw} (${customDate})`;
+                            }
+
+                            // Por defecto, mostrar los datos normales para "Facturación"
+                            return `${context.dataset.label}: $${context.raw}`;
+                        },
                     }
                 }
             },
@@ -96,23 +130,22 @@ async function renderSalesChart(routeToFetch = '/api/sales?filter=today') {
 renderSalesChart();
 
 
-
 async function fetchVisitorsData() {
     const visitorsData = [];
-    const months = [];
+    const time = [];
 
     try {
         const response = await axios.get('/api/visitors');
         Object.entries(response.data).forEach(([key, value]) => {
             visitorsData.push(value);
-            months.push(key);
+            time.push(key);
         });
     } catch (error) {
         alert('Unable to fetch visitors data. Please try again!');
         console.error('Error en la petición:', error);
     }
 
-    return { visitorsData, months };
+    return {visitorsData, time};
 }
 
 
@@ -123,7 +156,7 @@ async function renderVisitorsChart() {
     const config = {
         type: 'line',
         data: {
-            labels: data.months, // Etiquetas obtenidas de la API
+            labels: data.time, // Etiquetas obtenidas de la API
             datasets: [{
                 label: 'Visitas por Mes',
                 data: data.visitorsData, // Datos obtenidos de la API
@@ -179,5 +212,5 @@ $("#time-filter").on("change", function (e) {
     // Obtener el valor seleccionado
     const selectedValue = $(this).val();
 
-    renderSalesChart('/api/sales?filter='+selectedValue);
+    renderSalesChart('/api/sales?filter=' + selectedValue);
 });

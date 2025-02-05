@@ -69,6 +69,28 @@ class StatisticsService
     }
 
 
+    private function filterBySpecificSubTimePeriod()
+    {
+        $reportingPeriod = Carbon::parse(now())->subDays(14)->daysUntil(Carbon::parse(now())->subDays(8));
+
+        $dates = collect($reportingPeriod)->mapWithKeys(function ($date) {
+            return [Carbon::parse($date->toDateString())->format('d-m') => 0];
+        });
+
+        $orders = Order::where('status', 'completed')->whereBetween('order_date', [Carbon::parse(now())->subDays(14), Carbon::parse(now())->subDays(8)])
+            ->orderBy('order_date')
+            ->get()
+            ->groupBy(function ($order) {
+                return Carbon::parse($order->order_date)->format('d-m');
+            })
+            ->map(function ($orders) {
+                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
+            });
+
+        return $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
+    }
+
+
     /**
      * Filters and calculates today's sales data.
      *
@@ -124,7 +146,10 @@ class StatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
+        $primaryInfo = $dates->map(fn($value, $day) => $orders[$day] ?? 0)->toJson();
+        $secondaryInfo = $this->filterBySpecificSubTimePeriod();
+
+        return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
 
 
