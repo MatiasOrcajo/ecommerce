@@ -52,8 +52,8 @@ readonly class MercadoPagoService
             ]);
 
         } catch (\Exception $e) {
-
-            return response()->json(['error' => 'Failed to create preference', 'message' => $e->getMessage()], 500);
+            dd($e);
+//            return response()->json(['error' => 'Failed to create preference', 'message' => $e->getMessage()], 500);
         }
 
 

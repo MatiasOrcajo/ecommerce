@@ -85,7 +85,7 @@ class CartService
 
 
             //Valida el cupón en caso de haber y aplica descuento
-            $coupon = Coupon::find($customerData->coupon_id);
+            $coupon = Coupon::find($customerData->coupon);
 
             if ($coupon) {
                 $total = $total - ($total * $coupon->discount) / 100;
