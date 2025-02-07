@@ -3,56 +3,43 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Services\SalesStatisticsService;
 
-class StatisticsService{
+class StatisticsService
+{
+
+
+    public function __construct(private readonly SalesStatisticsService $salesStatisticsService, private readonly VisitorsStatisticsService $visitorsStatisticsService)
+    {
+    }
 
 
     /**
-     * Retrieves sales data for completed orders, grouped and counted by month.
+     * Handle the request to retrieve filtered sales data.
      *
-     * This method calculates the sales data based on a requested sub-period of months
-     * or defaults to a 12-month period. It generates a collection of months within
-     * the specified period and maps completed order counts to each month. The result
-     * is returned as a JSON string.
-     *
-     * @param Request $request The HTTP request instance containing the `sub` parameter
-     *                         used to determine the number of months for the report.
-     *
-     * @return string A JSON-encoded string representing sales data with months as keys
-     *                and the corresponding number of completed orders as values.
+     * @param Request $request The incoming HTTP request containing filter parameters.
+     * @return string The filtered sales data in string format.
      */
     public function getSales(Request $request): string
     {
-        $monthsToGoBack = $request->sub ?? 12;
-
-        $reportingPeriod = Carbon::parse(now())->subMonths($monthsToGoBack)->monthsUntil(Carbon::parse(now()));
-
-        $months = collect($reportingPeriod)->mapWithKeys(function($date){
-            return [$date->year . ' '.  $date->monthName => 0];
-        });
-
-        $orders = Order::where('status', 'completed')
-            ->get()
-            ->groupBy(function ($order) {
-                return Carbon::parse($order->order_date)->format('Y F');
-            })
-            ->map(function ($orders) {
-                return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
-            });
-
-//        dd(Order::where('status', 'completed')
-//            ->orderBy('order_date', 'desc')
-//            ->first());
-
-        return $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
+        return $this->salesStatisticsService->getFilteredSales($request);
 
     }
 
 
-    public function getVisitors() {
-
+    /**
+     * Handles the retrieval of filtered visitor statistics.
+     *
+     * @param Request $request The incoming HTTP request containing filter criteria.
+     * @return string The filtered visitor statistics data.
+     */
+    public function getVisitors(Request $request): string
+    {
+        return $this->visitorsStatisticsService->getFilteredVisitors($request);
     }
+
 
 }
