@@ -7,7 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class PicturesController extends Controller
+class PictureController extends Controller
 {
     //
 

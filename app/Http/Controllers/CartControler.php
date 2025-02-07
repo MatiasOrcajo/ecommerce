@@ -10,7 +10,7 @@ use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CartsController extends Controller
+class CartControler extends Controller
 {
 
     public function __construct(private readonly CartService $cartService)

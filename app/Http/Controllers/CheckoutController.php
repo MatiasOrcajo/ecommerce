@@ -17,7 +17,7 @@ class CheckoutController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function pagar(Request $request)
+    public function pay(Request $request)
     {
         return $this->mpService->createPreference($request);
     }

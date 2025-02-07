@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\GuestService;
 use Illuminate\Http\Request;
 
-class GuestController extends Controller
+class VisitorController extends Controller
 {
 
     public function __construct(private readonly GuestService $guestService)
