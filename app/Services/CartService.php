@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Cart;
+use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CartService
@@ -15,23 +18,50 @@ class CartService
 
     }
 
+
+    /**
+     *
+     * Creates a new cart associated with the current authenticated user.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     *
+     */
+    public function create()
+    {
+        return Cart::create([
+            "status" => Constants::EMPTY
+        ]);
+    }
+
     /**
      * Añade un producto al carrito y lo guarda en la sesión.
      *
      * @param Product $product
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function addProduct(Product $product)
+    public function addProduct(Product $product)
     {
+
         // Obtener el carrito actual de la sesión, o un array vacío si no existe
-        $cart = Session::get('cart', []);
+        $sessionCart = null;
+
+        if(!Session::has('cart')){
+            $createdCartInstance = $this->create();
+            $createdCartInstance->status = Constants::ACTIVE;
+            $createdCartInstance->save();
+            $sessionCart[$createdCartInstance->id] = [];
+            Session::put('cart', $sessionCart);
+        }
+        else{
+            $sessionCart = Session::put('cart');
+        }
 
         // Verificar si el producto ya está en el carrito y actualizar la cantidad
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity']++;
+        if (isset($sessionCart[$product->id])) {
+            $sessionCart[array_key_first($sessionCart)][$product->id]['quantity']++;
         } else {
             // Agregar nuevo producto si no está en el carrito
-            $cart[$product->id] = [
+            $sessionCart[array_key_first($sessionCart)][$product->id] = [
                 "name" => $product->name,
                 "price" => $product->price,
                 "quantity" => 1,
@@ -41,9 +71,11 @@ class CartService
         }
 
         // Guardar el carrito actualizado en la sesión
-        Session::put('cart', $cart);
+        Session::put('cart', $sessionCart);
 
         Session::save();
+
+        dd(Session::get('cart'));
 
         return response()->json(Session::get('cart'));
     }

@@ -17,19 +17,11 @@ class CartControler extends Controller
     {
     }
 
-    /**
-     * Crea un carrito. Se va a crear una sola vez junto con el registro
-     * del usuario
-     *
-     * @return void
-     */
+
+
     public function create()
     {
-        $cart = new Cart();
-        $cart->user_id = Auth::user()->id;
-        $cart->status = Constants::EMPTY;
-
-        $cart->save();
+        $cart = $this->cartService->create();
     }
 
 

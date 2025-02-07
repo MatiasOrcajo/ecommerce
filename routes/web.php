@@ -16,7 +16,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/get-ip-address',[\App\Http\Controllers\VisitorController::class, 'getIpAddress']);
 });
 
-Route::post('/pay', [\App\Http\Controllers\CheckoutController::class, 'pagar'])->name('pagar');
+Route::post('/pay', [\App\Http\Controllers\CheckoutController::class, 'pay'])->name('pay');
 
 Route::get('pago-exitoso/{order}',[\App\Http\Controllers\CheckoutController::class, 'success'])->name('pago-exitoso');
 
