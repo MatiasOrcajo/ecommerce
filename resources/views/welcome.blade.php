@@ -188,7 +188,7 @@
 
             $.ajax({
                 type: "POST",
-                url: '{{route('pagar')}}',
+                url: '{{route('pay')}}',
                 data: {
                     data: JSON.stringify(data),
                     _token: $('meta[name="csrf-token"]').attr('content')
