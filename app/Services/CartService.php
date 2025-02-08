@@ -94,6 +94,20 @@ class CartService
 
     /**
      *
+     * Calculates and returns the remaining percentage in decimal form given a discount.
+     *
+     * @param float|int $discount
+     * @return float
+     *
+     */
+    private function getRemainingPercentageInDecimals($discount)
+    {
+        return 1 - ($discount / 100);
+    }
+
+
+    /**
+     *
      * Retorna el total de lo que se encuentra en el carrito
      *
      * @param $customerData
@@ -104,23 +118,22 @@ class CartService
     {
 
         $cart = Session::get('cart');
+        $idCartStoredInDatabase = array_key_first($cart);
 
-        return collect($cart)->map(function ($query) use ($customerData) {
+
+        return collect($cart[$idCartStoredInDatabase])->map(function ($query) use ($customerData) {
             $product = Product::find($query["id"]);
             $subtotal = round(($query["price"] * $query["quantity"]), 2);
-            $total = $subtotal;
 
-            if ($query["discount"] != 0) {
-                $total = round($subtotal - ($subtotal * $query["discount"]) / 100, 2);
-            }
+            $totalDiscount = $query["discount"];
 
-
-            //Valida el cupón en caso de haber y aplica descuento
             $coupon = Coupon::find($customerData->coupon);
 
             if ($coupon) {
-                $total = $total - ($total * $coupon->discount) / 100;
+                $totalDiscount += $coupon->discount;
             }
+
+            $total = round($subtotal * $this->getRemainingPercentageInDecimals($totalDiscount), 2);
 
             return [
                 "product_id" => $product->id,
