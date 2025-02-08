@@ -42,9 +42,10 @@ class CartService
     public function addProduct(Product $product)
     {
 
-        // Obtener el carrito actual de la sesión, o un array vacío si no existe
         $sessionCart = null;
 
+        //If cart isn't stored in session
+        //Create the Cart record and assign its id to the cart to be stored in session for reference
         if(!Session::has('cart')){
             $createdCartInstance = $this->create();
             $createdCartInstance->status = Constants::ACTIVE;
@@ -53,11 +54,11 @@ class CartService
             Session::put('cart', $sessionCart);
         }
         else{
-            $sessionCart = Session::put('cart');
+            $sessionCart = Session::get('cart');
         }
 
         // Verificar si el producto ya está en el carrito y actualizar la cantidad
-        if (isset($sessionCart[$product->id])) {
+        if (isset($sessionCart[array_key_first($sessionCart)][$product->id])) {
             $sessionCart[array_key_first($sessionCart)][$product->id]['quantity']++;
         } else {
             // Agregar nuevo producto si no está en el carrito
@@ -74,8 +75,6 @@ class CartService
         Session::put('cart', $sessionCart);
 
         Session::save();
-
-        dd(Session::get('cart'));
 
         return response()->json(Session::get('cart'));
     }
