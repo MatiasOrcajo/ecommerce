@@ -107,12 +107,12 @@ class CartService
 
 
     /**
+     * Calculates the total amount for each product in the cart after applying discounts.
      *
-     * Retorna el total de lo que se encuentra en el carrito
+     * @param object $customerData An object containing customer-related data, including applied coupons.
      *
-     * @param $customerData
-     * @return \Illuminate\Support\Collection
-     *
+     * @return \Illuminate\Support\Collection A collection of product details, including product ID, quantity, unit price,
+     *                                         discount, subtotal, and total amount after discounts.
      */
     public function calculateTotalAmount($customerData)
     {
