@@ -43,11 +43,12 @@ class OrderService
 
         // Extract shipping address (extract variable)
         $shippingAddress = sprintf(
-            "%s, %s, %s, %s",
-            $customerData->address,
-            $customerData->locality,
+            "%s, %s, %s, %s, %s",
             $customerData->province,
-            $customerData->zip_code
+            $customerData->locality,
+            $customerData->street.' '.$customerData->number,
+            $customerData->apartment ? 'Departamento '.$customerData->apartment : '',
+            'C.P.: '.$customerData->zip_code
         );
 
         // Create customer and associate with the order

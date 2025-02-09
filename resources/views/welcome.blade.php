@@ -10,7 +10,8 @@
                     <!-- Step navigation -->
                     <ul class="nav nav-pills mb-4 ul-steps" id="steps">
                         <!-- Primer paso: Cliente -->
-                        <li class="nav-item li-step li-steps-form d-flex align-items-center grey-background" id="step-client">
+                        <li class="nav-item li-step li-steps-form d-flex align-items-center grey-background"
+                            id="step-client">
                             <div class="li-step-icon">
                                 <i class="fa-solid fa-user"></i>
                             </div>
@@ -39,23 +40,29 @@
                             <form id="contactForm">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" placeholder="matias@gmail.com" required>
+                                    <input type="email" class="form-control" id="email" placeholder="matias@gmail.com"
+                                           required>
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="firstName" class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" id="firstName" placeholder="Matias" required>
+                                        <input type="text" class="form-control" id="firstName" placeholder="Nombre"
+                                               required>
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="lastName" class="form-label">Apellido</label>
-                                        <input type="text" class="form-control" id="lastName" placeholder="Orcajo" required>
+                                        <input type="text" class="form-control" id="lastName" placeholder="Apellido"
+                                               required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Teléfono</label>
-                                    <input type="tel" class="form-control" id="phone" placeholder="011 6172-1821" required>
+                                    <input type="tel" class="form-control" id="phone" placeholder="011 6172-1821"
+                                           required>
                                 </div>
-                                <button type="button" class="btn btn-primary" data-bs-target="#step2" data-bs-toggle="pill">Continuar con el método de pago</button>
+                                <button type="button" id="continue-to-payment-step-button" class="btn btn-primary" data-bs-target="#step2"
+                                        data-bs-toggle="pill">Continuar con el método de pago
+                                </button>
                             </form>
                         </div>
 
@@ -64,47 +71,58 @@
                             <h5 class="mb-3">Datos de facturación</h5>
                             <form id="billingForm">
                                 <div class="row">
-                                    <div class="mb-3 col-md-6">
-                                        <label for="billingFirstName" class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" id="billingFirstName" placeholder="Matias" required>
+                                    <div class="mb-3 col-md-4">
+                                        <label for="documentType" class="form-label">Tipo de documento</label>
+                                        <select class="form-select" id="documentType" required>
+                                            <option value="">Selecciona un tipo</option>
+                                            <option value="DNI">DNI</option>
+                                            <option value="CUIT">CUIT</option>
+                                        </select>
                                     </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="billingLastName" class="form-label">Apellido</label>
-                                        <input type="text" class="form-control" id="billingLastName" placeholder="Orcajo" required>
+                                    <div class="mb-3 col-md-8">
+                                        <label for="documentNumber" class="form-label">Número de documento</label>
+                                        <input type="text" class="form-control" id="documentNumber" required>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="billingPhone" class="form-label">Teléfono</label>
-                                    <input type="tel" class="form-control" id="billingPhone" placeholder="011 6172-1821" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="documentType" class="form-label">Tipo de documento</label>
-                                    <select class="form-select" id="documentType" required>
-                                        <option value="">Selecciona un tipo</option>
-                                        <option value="DNI">DNI</option>
-                                        <option value="CUIT">CUIT</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="documentNumber" class="form-label">Número de documento</label>
-                                    <input type="text" class="form-control" id="documentNumber" required>
-                                </div>
+
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
-                                        <label for="province" class="form-label">Provincia/Estado/Región</label>
+                                        <label for="province" class="form-label">Provincia</label>
                                         <select class="form-select" id="province" required>
-                                            <option value="">Selecciona una opción</option>
+
                                         </select>
                                     </div>
                                     <div class="mb-3 col-md-6">
-                                        <label for="city" class="form-label">Ciudad</label>
-                                        <select class="form-select" id="city" required>
+                                        <label for="locality" class="form-label">Localidad</label>
+                                        <select class="form-select" id="locality" required>
                                             <option value="">Selecciona una opción</option>
                                         </select>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-success">Finalizar</button>
+                                <div class="row">
+                                    <div class="mb-3 col-12">
+                                        <label for="street" class="form-label">Calle</label>
+                                        <input type="text" class="form-control" id="street" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="mb-3 col-md-4">
+                                        <label for="number" class="form-label">Número</label>
+                                        <input type="text" class="form-control" id="number" required>
+                                    </div>
+                                    <div class="mb-3 col-md-4">
+                                        <label for="apartment" class="form-label">Piso/Depto</label>
+                                        <input type="text" class="form-control" id="apartment" required>
+                                    </div>
+                                    <div class="mb-3 col-md-4">
+                                        <label for="zip_code" class="form-label">Código postal</label>
+                                        <input type="text" class="form-control" id="zip_code" required>
+                                    </div>
+                                </div>
                             </form>
+                            <button id="submit" class="btn btn-success">Finalizar</button>
+
                         </div>
                     </div>
                 </div>
@@ -113,13 +131,38 @@
             <!-- Información del producto -->
             <div class="col-md-5 checkout-info-container">
                 <h3 class="mb-3">Resumen de la compra</h3>
-                <div class="p-3 d-flex align-items-center border rounded w-75">
-                    <div class="order-summary-thumbnail">
-                        <img src="https://sublitextil.com.ar/wp-content/uploads/2019/01/Remera-sublimar-hombre-.jpg" alt="" class="img-fluid">
-                        <div class="item-quantity">2</div>
+                <div class="m-0 p-0" id="items-summary-container">
+
+                </div>
+
+                <form>
+                    <div class="row">
+                        <div class="mt-5 col-md-6">
+                            <label for="billingFirstName" class="form-label">Tengo un cupón de descuento</label>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <input type="text" class="mb-0 me-3 form-control" id="coupon"
+                                       placeholder="Ingresa tu código" required>
+                                <button type="button" class="btn btn-primary" id="validate-coupon-button">Validar
+                                </button>
+                            </div>
+                            <div id="coupon-validated-success" class="mt-2"
+                                 style="color: green; font-weight: bold"></div>
+                            <div id="coupon-validated-failed" class="mt-2"
+                                 style="color: red; font-weight: bold"></div>
+                        </div>
                     </div>
-                    <h5 class="d-block mx-3">Curso de Edición de Videos con CapCut</h5>
-                    <h4 class="text-success">ARS 22.990</h4>
+                </form>
+
+                <div class="row">
+                    <div class="mt-4 col-md-6" style="border-top: 1px solid #ccc">
+                        <div id="coupon-success-code"></div>
+                        <div class="d-flex justify-content-between align-content-center mt-3">
+                            <h2>Total</h2>
+                            <div id="total-price" class="text-success">
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,9 +173,51 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", () => {
+
+            let helperTotalAmountToBeDisplayed = 0;
+
+            /**
+             * Retrieves a list of province and populates a dropdown menu with them.
+             * Also fetches and updates a list of locality in another dropdown when a province is selected.
+             *
+             * @return {void} This method does not return a value. It updates the dropdown menus in the DOM.
+             */
+            function listProvinces() {
+
+                axios.get("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre")
+                    .then(response => {
+                        let province = response.data.provincias;
+                        let html = "";
+                        province.forEach(province => {
+                            html += `<option value="${province.nombre}">${province.nombre}</option>`
+                        });
+
+                        html += `<option selected="true" disabled="disabled">Seleccione una opción</option>`
+                        document.getElementById('province').innerHTML = html;
+                    })
+
+                document.getElementById('province').addEventListener('change', (event) => {
+                    axios.get(`https://apis.datos.gob.ar/georef/api/municipios?provincia=${event.target.value}&campos=id,nombre&max=500`)
+                        .then(response => {
+                            let locality = response.data.municipios;
+                            let html = "";
+                            locality.forEach(locality => {
+                                html += `<option value="${locality.nombre}">${locality.nombre}</option>`
+                            });
+
+                            html += `<option selected="true" disabled="disabled">Seleccione una opción</option>`
+
+                            document.getElementById('locality').innerHTML = html;
+                        })
+                })
+            }
+
+            listProvinces();
+
+
+
             const steps = document.querySelectorAll("#steps .li-step");
             const tabs = document.querySelectorAll(".tab-pane");
-            const btnNext = document.querySelector(".btn-next");
 
             // Manejador de clics en los pasos (navegación por pestañas)
             steps.forEach((step) => {
@@ -142,13 +227,12 @@
                         let targetStep = null;
 
                         // Activa la pestaña correspondiente
-                        if(clickedStep.id === "step-client"){
+                        if (clickedStep.id === "step-client") {
                             targetStep = "step1";
                             document.getElementById('step-client').classList.add("grey-background")
                             document.getElementById('step-payment').classList.remove("grey-background")
 
-                        }
-                        else{
+                        } else {
                             targetStep = "step2";
                             document.getElementById('step-client').classList.remove("grey-background")
                             document.getElementById('step-payment').classList.add("grey-background")
@@ -163,10 +247,18 @@
                 });
             });
 
-            // Manejador para botón "Continuar"
-            btnNext.addEventListener("click", () => {
+            document.getElementById('continue-to-payment-step-button').addEventListener('click', () => {
+
                 setActiveTab("step2");
-            });
+                document.getElementById('step-client').classList.remove("grey-background")
+                document.getElementById('step-payment').classList.add("grey-background")
+
+            })
+
+            // Manejador para botón "Continuar"
+            // btnNext.addEventListener("click", () => {
+            //     setActiveTab("step2");
+            // });
 
             // Función para activar la pestaña correspondiente
             function setActiveTab(targetId) {
@@ -187,78 +279,131 @@
                     }
                 });
             }
-        });
 
 
+            //Validate coupon
 
-        // const btnNext = document.querySelector('.btn-next');
-        // const btnPrev = document.querySelector('.btn-prev');
-        const btnSubmit = document.getElementById('submit');
-        const btnValidateCoupon = document.getElementById('validate-coupon-button');
-        let coupon_id = null;
+            const btnValidateCoupon = document.getElementById('validate-coupon-button');
+            let coupon_id = null;
 
-        btnValidateCoupon.addEventListener('click', () => {
+            btnValidateCoupon.addEventListener('click', () => {
 
-            let coupon = document.getElementById('coupon').value;
+                let coupon = document.getElementById('coupon').value;
+
+                axios.get(`{{route('validate-coupon')}}` + '?code=' + coupon)
+                .then(response => {
+                        $('#coupon-validated-success').html("Cupón validado");
+                        $('#coupon-validated-failed').html("");
+                        $('#coupon-success-code').html(`Aplicado ${response.data.coupon_discount}% OFF`)
+
+                        $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed - (helperTotalAmountToBeDisplayed * response.data.coupon_discount / 100).toFixed(2)}</h1>`);
+
+                        coupon_id = response.data.coupon_id;
+                    })
+                .catch(error => {
+                    $('#coupon-validated-success').html("");
+                    const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
+                    $('#coupon-validated-failed').html(errorMessage);
+                })
+
+            });
+
+
+            const btnSubmit = document.getElementById('submit');
+
+            // Recopilar datos y enviarlos
+            btnSubmit.addEventListener('click', () => {
+                const data = {
+                    name: document.getElementById('firstName').value,
+                    surname: document.getElementById('lastName').value,
+                    phone: document.getElementById('phone').value,
+                    dni: document.getElementById('documentNumber').value,
+                    email: document.getElementById('email').value,
+                    locality: document.getElementById('locality').value,
+                    province: document.getElementById('province').value,
+                    street: document.getElementById('street').value,
+                    number: document.getElementById('number').value,
+                    apartment: document.getElementById('apartment').value,
+                    zip_code: document.getElementById('zip_code').value,
+                    coupon_id: coupon_id,
+                };
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '{{route('pay')}}',
+                    data: {
+                        data: JSON.stringify(data),
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (res) {
+                        window.open(res.init_point, '_blank');
+                    },
+                    error: function (res, textStatus, errorThrown) {
+                        console.log(res);
+                    },
+                });
+
+            });
+
+
+            //items summary
+
 
             $.ajax({
                 type: "GET",
-                url: '{{route('validate-coupon')}}' + '?code=' + coupon,
+                url: '{{route('cart-info')}}',
                 success: function (xhr, status, error) {
-                    $('#coupon-validated-success').html(xhr.success);
-                    $('#coupon-validated-failed').html("");
-                    coupon_id = xhr.coupon_id;
+                    let key = Object.keys(xhr)[0];
+                    let items = xhr[key];
+                    let html = "";
+                    let total = 0;
+
+                    Object.entries(items).forEach(([key, item]) => {
+                        let priceHtml = ``;
+
+                        if (item.price * item.quantity > item.total_amount_with_discount_to_be_shown) {
+                            priceHtml = `<del><h4>$${item.price * item.quantity} </h4> </del>
+                                             <h4 class="text-success">$${item.total_amount_with_discount_to_be_shown}</h4>
+                                            `
+                            total += item.total_amount_with_discount_to_be_shown;
+                        } else {
+                            priceHtml = `<h4 class="text-success">$${item.price * item.quantity}</h4> `
+
+                            total += item.price * item.quantity;
+                        }
+
+                        html += `
+
+                                <div class="p-3 my-3 d-flex align-items-center border rounded w-75">
+                                    <div class="order-summary-thumbnail">
+                                        <img src="${item.picture}"
+                                             alt="" class="img-fluid">
+                                            <div class="item-quantity">${item.quantity}</div>
+                                    </div>
+                                    <h5 class="d-block mx-3">${item.name}</h5>
+                                    ${priceHtml}
+                                </div>
+                                `
+
+                    })
+                    helperTotalAmountToBeDisplayed = total;
+                    $('#total-price').html(`<h1>$${total}</h1>`);
+                    $('#items-summary-container').html(html);
                 },
                 error: function (xhr, status, error) {
-                    $('#coupon-validated-success').html("");
-                    $('#coupon-validated-failed').html(xhr.responseJSON.error);
-
+                    $('#items-summary-container').html("");
                 },
             });
+
 
         });
-
-        // Recopilar datos y enviarlos
-        btnSubmit.addEventListener('click', () => {
-            const data = {
-                name: document.getElementById('name').value,
-                surname: document.getElementById('surname').value,
-                dni: document.getElementById('dni').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                zip_code: document.getElementById('zip_code').value,
-                locality: document.getElementById('locality').value,
-                province: document.getElementById('province').value,
-                country: document.getElementById('country').value,
-                coupon: coupon_id,
-            };
-
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-
-            $.ajax({
-                type: "POST",
-                url: '{{route('pay')}}',
-                data: {
-                    data: JSON.stringify(data),
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
-                    window.open(res.init_point, '_blank');
-                },
-                error: function (res, textStatus, errorThrown) {
-                    console.log(res);
-                },
-            });
-
-        });
-
     </script>
 
 @endsection

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Services\MercadoPagoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
@@ -32,6 +34,16 @@ class CheckoutController extends Controller
         dd($order);
     }
 
+
+    /**
+     * Handle the request to retrieve cart information from the session.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCartInfo(): JsonResponse
+    {
+        return response()->json(Session::get('cart'));
+    }
 
 
 

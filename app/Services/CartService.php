@@ -34,10 +34,16 @@ class CartService
     }
 
     /**
-     * Añade un producto al carrito y lo guarda en la sesión.
+     * Adds a product to the cart stored in the session. If the cart does not exist in the session,
+     * it creates a new cart instance and stores it in the session. If the product already exists
+     * in the cart, it increments the quantity. Otherwise, it adds the product as a new item
+     * in the cart.
      *
-     * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
+     * Updates the product's total amount with the applied discount, calculates the discounted
+     * price, and saves the updated cart back to the session.
+     *
+     * @param Product $product The product to be added to the cart.
+     * @return \Illuminate\Http\JsonResponse Returns a JSON response with the updated cart.
      */
     public function addProduct(Product $product)
     {
@@ -60,18 +66,27 @@ class CartService
         // Verificar si el producto ya está en el carrito y actualizar la cantidad
         if (isset($sessionCart[array_key_first($sessionCart)][$product->id])) {
             $sessionCart[array_key_first($sessionCart)][$product->id]['quantity']++;
+
         } else {
-            // Agregar nuevo producto si no está en el carrito
+            // Adds product if it isn't stored in session
             $sessionCart[array_key_first($sessionCart)][$product->id] = [
                 "name" => $product->name,
                 "price" => $product->price,
                 "quantity" => 1,
                 "discount" => $product->discount,
-                "id" => $product->id
+                "id" => $product->id,
+                "picture" => $product->pictures->first()->path,
             ];
         }
 
-        // Guardar el carrito actualizado en la sesión
+        //Multiplies (price * 0,discount) * quantity
+        //To be shown in frontend checkout
+        $sessionCart[array_key_first($sessionCart)][$product->id]["total_amount_with_discount_to_be_shown"] =
+            round(($sessionCart[array_key_first($sessionCart)][$product->id]["price"] *
+                    $this->getRemainingPercentageInDecimals($sessionCart[array_key_first($sessionCart)][$product->id]["discount"]))
+                * $sessionCart[array_key_first($sessionCart)][$product->id]["quantity"], 2);
+
+
         Session::put('cart', $sessionCart);
 
         Session::save();

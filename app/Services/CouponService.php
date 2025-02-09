@@ -32,26 +32,24 @@ class CouponService{
         $coupon = Coupon::where('code', $validatedData['code'])->first();
 
         if (!$coupon){
-
-            return response()->json(['error' => "El cupón no existe"], 400);
-
+            throw new \Error("El cupón no existe");
         }
 
         if(Carbon::now()->greaterThan(Carbon::parse($coupon->valid_until))){
-
-            return response()->json(['error' => "El cupón no es válido para esta fecha"], 400);
+            throw new \Error("El cupón no es válido para esta fecha");
 
         }
 
         if($coupon->quantity == 0){
-
-            return response()->json(['error' => "El cupón está agotado"], 400);
+            throw new \Error("El cupón está agotado");
 
         }
 
         return response()->json([
             'success' => "Cupón validado con éxito",
             'coupon_id' => $coupon->id,
+            'coupon_code' => $coupon->code,
+            'coupon_discount' => $coupon->discount,
             ], 200);
 
 
