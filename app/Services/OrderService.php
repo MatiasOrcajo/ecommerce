@@ -32,14 +32,14 @@ class OrderService
     {
 
         // Calculates total amount to be paid for every product
-        $cartProducts = $this->cartService->calculateTotalAmount($customerData);
+        $cartProducts = $this->cartService->calculateCartItemsTotalAmountForEachOne($customerData);
 
         // Calculate the total cart amount
         // receives array of products
         $cartTotal = $this->calculateCartTotal($cartProducts);
 
         // Retrieve coupon if available
-        $coupon = Coupon::find($customerData->coupon);
+        $coupon = Coupon::find($customerData->coupon_id);
 
         // Extract shipping address (extract variable)
         $shippingAddress = sprintf(

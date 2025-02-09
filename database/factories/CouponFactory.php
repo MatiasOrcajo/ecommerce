@@ -13,7 +13,7 @@ class CouponFactory extends Factory
     {
         return [
             'code' => $this->faker->bothify('COUPON-####'),
-            'discount' => $this->faker->numberBetween(5, 50),
+            'discount' => 10,
             'quantity' => $this->faker->numberBetween(1, 300),
             'valid_until' => $this->faker->dateTimeBetween('+1 week', '+1 month'),
             'created_at' => now(),

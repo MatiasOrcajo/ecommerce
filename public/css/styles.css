@@ -1,0 +1,145 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.active {
+    display: block;
+}
+
+.grey-background {
+    background-color: #eee;
+}
+
+.container input {
+    border-radius:10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+.container select {
+    border-radius:10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+.container {
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+}
+
+.row {
+    height: 100%; /* Asegura que las columnas ocupen el 100% del contenedor */
+}
+
+.steps-container{
+    background-color: white; /* Fondo blanco para los pasos y el formulario */
+    padding: 20px;
+}
+
+.checkout-info-container {
+    background-color: #FAFAFA; /* Fondo gris claro */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alinea el contenido al principio */
+    border-left: 1px solid #ddd; /* Línea divisoria opcional */
+}
+
+.card {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.li-step{
+    padding: 10px 10px 10px 15px;
+    position: relative;
+    cursor: pointer;
+    width: 50%;
+}
+
+.li-steps-form {
+    border-right: 1px solid rgb(0 0 0 / .1);
+}
+
+.li-step-second{
+    /*transform: translateX(150%);*/
+}
+
+.li-step-icon{
+    float: left;
+    font-size: 24px;
+    line-height: 38px;
+    margin-right: 10px;
+    position: relative;
+    text-align: center;
+    min-width: 30px;
+}
+
+.li-step-description {
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #777;
+    margin-bottom: 0;
+}
+
+.ul-steps {
+    border: 1px solid rgb(0 0 0 / .1);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: #fff;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+}
+
+
+@media screen and (min-width: 1220px) {
+    .step-form-container {
+        float: right;
+        margin-right: 60px;
+        width: 50%;
+    }
+}
+
+.order-summary-thumbnail {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 3px #ccc;
+    height: 60px;
+    overflow: hidden;
+    width: 60px;
+    position: relative;
+}
+
+.order-summary-thumbnail img {
+    border: 0;
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.item-quantity {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #000;
+    color: #fff;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 0 0 0 5px;
+}
+/*steps*/
+

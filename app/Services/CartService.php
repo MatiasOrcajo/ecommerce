@@ -114,7 +114,7 @@ class CartService
      * @return \Illuminate\Support\Collection A collection of product details, including product ID, quantity, unit price,
      *                                         discount, subtotal, and total amount after discounts.
      */
-    public function calculateTotalAmount($customerData)
+    public function calculateCartItemsTotalAmountForEachOne($customerData)
     {
 
         $cart = Session::get('cart');
@@ -127,7 +127,7 @@ class CartService
 
             $totalDiscount = $query["discount"];
 
-            $coupon = Coupon::find($customerData->coupon);
+            $coupon = Coupon::find($customerData->coupon_id);
 
             if ($coupon) {
                 $totalDiscount += $coupon->discount;

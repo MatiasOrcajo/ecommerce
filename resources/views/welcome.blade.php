@@ -2,144 +2,200 @@
 
 @section('content')
 
-    <style>
-        .step-container {
-            display: none;
-        }
+    <div class="container m-0" style="max-width: 100%">
+        <div class="row">
+            <!-- Formulario de compra -->
+            <div class="col-md-7 steps-container">
+                <div id="stepForm" class="step-form-container">
+                    <!-- Step navigation -->
+                    <ul class="nav nav-pills mb-4 ul-steps" id="steps">
+                        <!-- Primer paso: Cliente -->
+                        <li class="nav-item li-step li-steps-form d-flex align-items-center grey-background" id="step-client">
+                            <div class="li-step-icon">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div>
+                                <div class="li-step-title">Cliente</div>
+                                <div class="li-step-description">Ingresa tus datos</div>
+                            </div>
+                        </li>
+                        <!-- Segundo paso: Pago -->
+                        <li class="nav-item li-step li-step-second d-flex align-items-center" id="step-payment">
+                            <div class="li-step-icon">
+                                <i class="fa-regular fa-credit-card" style="color: blue"></i>
+                            </div>
+                            <div>
+                                <div class="li-step-title">Pago</div>
+                                <div class="li-step-description">Elige cómo pagar</div>
+                            </div>
+                        </li>
+                    </ul>
 
-        .step-container.active {
-            display: block;
-        }
+                    <!-- Form content -->
+                    <div class="tab-content">
+                        <!-- Step 1: Información de contacto -->
+                        <div class="tab-pane fade show active" id="step1">
+                            <h5 class="mb-3">Información de contacto</h5>
+                            <form id="contactForm">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="matias@gmail.com" required>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label for="firstName" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="firstName" placeholder="Matias" required>
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="lastName" class="form-label">Apellido</label>
+                                        <input type="text" class="form-control" id="lastName" placeholder="Orcajo" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="phone" placeholder="011 6172-1821" required>
+                                </div>
+                                <button type="button" class="btn btn-primary" data-bs-target="#step2" data-bs-toggle="pill">Continuar con el método de pago</button>
+                            </form>
+                        </div>
 
-        .form-step-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-next, .btn-prev {
-            width: 100px;
-        }
-    </style>
-
-
-    <div class="position-relative container d-flex justify-content-center mt-5">
-
-        <div class="mt-5 position-absolute" style="top: 0; right: 0;">
-            <form id="form-validate-coupon" class="d-flex flex-column">
-                @csrf
-                <label for="coupon" class="form-label">Cupón de descuento</label>
-                <input type="tel" class="form-control" id="coupon" placeholder="Ingresa tu cupón"
-                       required>
-                <p id="coupon-validated-success" style="color: green"></p>
-                <p id="coupon-validated-failed" style="color: red"></p>
-                <button type="button" id="validate-coupon-button" class="btn btn-primary mt-3">Validar</button>
-            </form>
-        </div>
-
-        <div class="card shadow-sm col-md-6">
-            <div class="card-header bg-primary text-white text-center">
-                <h2>Formulario de Registro</h2>
-            </div>
-            <div class="card-body">
-                <!-- Paso 1 -->
-                <div id="step-1" class="step-container active">
-                    <div class="form-step-header">
-                        <h5>Paso 1: Información Personal</h5>
-                        <p>Completa tus datos personales para continuar.</p>
+                        <!-- Step 2: Datos de facturación -->
+                        <div class="tab-pane fade" id="step2">
+                            <h5 class="mb-3">Datos de facturación</h5>
+                            <form id="billingForm">
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label for="billingFirstName" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="billingFirstName" placeholder="Matias" required>
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="billingLastName" class="form-label">Apellido</label>
+                                        <input type="text" class="form-control" id="billingLastName" placeholder="Orcajo" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="billingPhone" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="billingPhone" placeholder="011 6172-1821" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="documentType" class="form-label">Tipo de documento</label>
+                                    <select class="form-select" id="documentType" required>
+                                        <option value="">Selecciona un tipo</option>
+                                        <option value="DNI">DNI</option>
+                                        <option value="CUIT">CUIT</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="documentNumber" class="form-label">Número de documento</label>
+                                    <input type="text" class="form-control" id="documentNumber" required>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label for="province" class="form-label">Provincia/Estado/Región</label>
+                                        <select class="form-select" id="province" required>
+                                            <option value="">Selecciona una opción</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="city" class="form-label">Ciudad</label>
+                                        <select class="form-select" id="city" required>
+                                            <option value="">Selecciona una opción</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Finalizar</button>
+                            </form>
+                        </div>
                     </div>
-                    <form id="form-step-1">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="name" placeholder="Ingresa tu nombre"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="surname" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="surname" placeholder="Ingresa tu apellido"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dni" class="form-label">DNI/CUIT</label>
-                            <input type="text" class="form-control" id="dni" placeholder="Ingresa tu DNI/CUIT"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="Ingresa tu teléfono"
-                                   required>
-                        </div>
-                        <div class="text-end">
-                            <button type="button" class="btn btn-primary btn-next">Siguiente</button>
-                        </div>
-                    </form>
                 </div>
-                <!-- Paso 2 -->
-                <div id="step-2" class="step-container">
-                    <div class="form-step-header">
-                        <h5>Paso 2: Datos de Envío</h5>
-                        <p>Completa tu dirección para finalizar.</p>
+            </div>
+
+            <!-- Información del producto -->
+            <div class="col-md-5 checkout-info-container">
+                <h3 class="mb-3">Resumen de la compra</h3>
+                <div class="p-3 d-flex align-items-center border rounded w-75">
+                    <div class="order-summary-thumbnail">
+                        <img src="https://sublitextil.com.ar/wp-content/uploads/2019/01/Remera-sublimar-hombre-.jpg" alt="" class="img-fluid">
+                        <div class="item-quantity">2</div>
                     </div>
-                    <form id="form-step-2">
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="address" placeholder="Ingresa tu dirección"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="zip_code" class="form-label">Código Postal</label>
-                            <input type="text" class="form-control" id="zip_code"
-                                   placeholder="Ingresa tu código postal" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="locality" class="form-label">Localidad</label>
-                            <input type="text" class="form-control" id="locality" placeholder="Ingresa tu localidad"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="province" class="form-label">Provincia</label>
-                            <input type="text" class="form-control" id="province" placeholder="Ingresa tu provincia"
-                                   required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="country" class="form-label">País</label>
-                            <input type="text" class="form-control" id="country" placeholder="Ingresa tu país" required>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary btn-prev">Atrás</button>
-                            <button id="submit" type="button" class="btn btn-primary">Finalizar</button>
-                        </div>
-                    </form>
+                    <h5 class="d-block mx-3">Curso de Edición de Videos con CapCut</h5>
+                    <h4 class="text-success">ARS 22.990</h4>
                 </div>
             </div>
         </div>
     </div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const step1 = document.getElementById('step-1');
-        const step2 = document.getElementById('step-2');
-        const btnNext = document.querySelector('.btn-next');
-        const btnPrev = document.querySelector('.btn-prev');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const steps = document.querySelectorAll("#steps .li-step");
+            const tabs = document.querySelectorAll(".tab-pane");
+            const btnNext = document.querySelector(".btn-next");
+
+            // Manejador de clics en los pasos (navegación por pestañas)
+            steps.forEach((step) => {
+                step.addEventListener("click", (event) => {
+                    const clickedStep = event.target.closest(".li-step");
+                    if (clickedStep) {
+                        let targetStep = null;
+
+                        // Activa la pestaña correspondiente
+                        if(clickedStep.id === "step-client"){
+                            targetStep = "step1";
+                            document.getElementById('step-client').classList.add("grey-background")
+                            document.getElementById('step-payment').classList.remove("grey-background")
+
+                        }
+                        else{
+                            targetStep = "step2";
+                            document.getElementById('step-client').classList.remove("grey-background")
+                            document.getElementById('step-payment').classList.add("grey-background")
+                        }
+
+                        setActiveTab(targetStep);
+                    }
+
+                    const otherStep = steps.find(step => step !== clickedStep);
+                    clickedStep.classList.add("grey-background");
+                    otherStep.classList.remove("grey-background");
+                });
+            });
+
+            // Manejador para botón "Continuar"
+            btnNext.addEventListener("click", () => {
+                setActiveTab("step2");
+            });
+
+            // Función para activar la pestaña correspondiente
+            function setActiveTab(targetId) {
+                tabs.forEach((tab) => {
+                    tab.classList.remove("show", "active");
+                    if (tab.id === targetId) {
+                        tab.classList.add("show", "active");
+                    }
+                });
+
+                // Actualiza el estado visual de los pasos
+                steps.forEach((step) => {
+                    step.classList.remove("active");
+                    if (step.id === "step-client" && targetId === "step1") {
+                        step.classList.add("active", "grey-background");
+                    } else if (step.id === "step-payment" && targetId === "step2") {
+                        step.classList.add("active", "grey-background");
+                    }
+                });
+            }
+        });
+
+
+
+        // const btnNext = document.querySelector('.btn-next');
+        // const btnPrev = document.querySelector('.btn-prev');
         const btnSubmit = document.getElementById('submit');
         const btnValidateCoupon = document.getElementById('validate-coupon-button');
         let coupon_id = null;
-
-        btnNext.addEventListener('click', () => {
-            step1.classList.remove('active');
-            step2.classList.add('active');
-        });
-
-        btnPrev.addEventListener('click', () => {
-            step2.classList.remove('active');
-            step1.classList.add('active');
-        });
-
 
         btnValidateCoupon.addEventListener('click', () => {
 
@@ -147,7 +203,7 @@
 
             $.ajax({
                 type: "GET",
-                url: '{{route('validate-coupon')}}'+ '?code='+ coupon,
+                url: '{{route('validate-coupon')}}' + '?code=' + coupon,
                 success: function (xhr, status, error) {
                     $('#coupon-validated-success').html(xhr.success);
                     $('#coupon-validated-failed').html("");
