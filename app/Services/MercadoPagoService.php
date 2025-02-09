@@ -39,15 +39,25 @@ readonly class MercadoPagoService
         // Retrieves items to be purchased, with final price including discounts
         $items = $this->orderProductsService->mapOrderProductToItem($order->id);
 
+//        dd($items);
+
         try {
             $client = new PreferenceClient();
-            $preference = $client->create([
+            $preference = $client->create(request: [
                 "back_urls" => [
                     "success" => route('pago-exitoso', $order->id),
                     "failure" => env('URL_FAILURE', 'https://default.failure.url'),
                     "pending" => env('URL_PENDING', 'https://default.pending.url'),
                 ],
-                "items" => $items,
+                "items" => array(
+                    array(
+                        "id" => "1234",
+                        "title" => "Orden #{$order->id} mitienda.com",
+                        "quantity" => 1,
+                        "currency_id" => "ARS",
+                        "unit_price" => $order->total_amount
+                    )
+                ),
                 "external_reference" => $order->id,
             ]);
 

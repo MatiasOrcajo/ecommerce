@@ -14,8 +14,8 @@ class ProductFactory extends Factory
         return [
             'name' => $this->faker->word(),
             'category_id' => \App\Models\Category::factory(),
-            'price' => $this->faker->randomFloat(2, 10, 1000),
-            'discount' => $this->faker->randomElement([0, 10, 20]),
+            'price' => 1000,
+            'discount' => $this->faker->randomElement([0, 10]),
             'sales' => $this->faker->numberBetween(0, 500),
             'visits' => $this->faker->numberBetween(0, 10000),
             'stock' => $this->faker->numberBetween(0, 100),

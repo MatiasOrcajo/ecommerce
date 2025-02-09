@@ -283,6 +283,10 @@
 
             //Validate coupon
 
+            function getRemainingPercentageInDecimals(discount){
+                return 1 - (discount / 100)
+            }
+
             const btnValidateCoupon = document.getElementById('validate-coupon-button');
             let coupon_id = null;
 
@@ -296,7 +300,7 @@
                         $('#coupon-validated-failed').html("");
                         $('#coupon-success-code').html(`Aplicado ${response.data.coupon_discount}% OFF`)
 
-                        $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed - (helperTotalAmountToBeDisplayed * response.data.coupon_discount / 100).toFixed(2)}</h1>`);
+                        $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed * getRemainingPercentageInDecimals(response.data.coupon_discount)}</h1>`);
 
                         coupon_id = response.data.coupon_id;
                     })

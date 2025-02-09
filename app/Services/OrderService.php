@@ -38,6 +38,14 @@ class OrderService
         // receives array of products
         $cartTotal = $this->calculateCartTotal($cartProducts);
 
+        $coupon = Coupon::find($customerData->coupon_id);
+
+        if($coupon){
+            $coupon->quantity -= 1;
+            $coupon->save();
+            $cartTotal = $cartTotal * (1- ($coupon->discount / 100));
+        }
+
         // Retrieve coupon if available
         $coupon = Coupon::find($customerData->coupon_id);
 
@@ -62,12 +70,6 @@ class OrderService
             'shipping_address' => $shippingAddress,
             'coupon_id' => $coupon->id ?? null,
         ]);
-
-        if($coupon){
-            $coupon->quantity -= 1;
-            $coupon->save();
-        }
-
 
         // Link cart products to the order (extract variable)
         foreach ($cartProducts as $product) {

@@ -31,7 +31,7 @@ class OrderProductsService
             'order_id'      => $order->id,
             'quantity'      => $product['quantity'],
             'unit_price'    => $product['unit_price'],
-            'discount'      => $product['discount'],
+            'discount'      => $product['product_discount'],
             'subtotal'      => $product['subtotal'],
             'total_amount'  => $product['total_amount_with_discount'],
         ]);
@@ -60,7 +60,7 @@ class OrderProductsService
                 "category_id" => $orderProduct->product->category_id,
                 "quantity" => $orderProduct->quantity,
                 "currency_id" => "ARS",
-                "unit_price" => $orderProduct->total_amount,
+                "unit_price" => $orderProduct->total_amount / $orderProduct->quantity,
             ];
 
             return $acc;

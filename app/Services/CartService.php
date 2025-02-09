@@ -144,18 +144,15 @@ class CartService
 
             $coupon = Coupon::find($customerData->coupon_id);
 
-            if ($coupon) {
-                $totalDiscount += $coupon->discount;
-            }
-
             $total = round($subtotal * $this->getRemainingPercentageInDecimals($totalDiscount), 2);
 
             return [
                 "product_id" => $product->id,
                 "quantity" => $query["quantity"],
                 "unit_price" => $query["price"],
-                "discount" => $query["discount"],
+                "product_discount" => $query["discount"],
                 "subtotal" => $subtotal,
+                "coupon_discount" => $coupon->discount ?? 0,
                 "total_amount_with_discount" => $total,
             ];
         });
