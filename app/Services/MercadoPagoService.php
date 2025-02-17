@@ -59,6 +59,7 @@ readonly class MercadoPagoService
                     )
                 ),
                 "external_reference" => $order->id,
+                "notification_url" => "https://notificationurl.com",
             ]);
 
         } catch (\Exception $e) {

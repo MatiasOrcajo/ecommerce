@@ -141,5 +141,19 @@ html, body {
     font-size: 12px;
     border-radius: 0 0 0 5px;
 }
+
+.x-cart-button {
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    top: 0;
+    right: 0;
+    background: black;
+    color: white;
+    transform: translateY(-30%);
+}
+
 /*steps*/
 

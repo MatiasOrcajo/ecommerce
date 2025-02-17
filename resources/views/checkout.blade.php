@@ -175,6 +175,7 @@
         document.addEventListener("DOMContentLoaded", () => {
 
             let helperTotalAmountToBeDisplayed = 0;
+            let couponIsApplied = 0;
 
             /**
              * Retrieves a list of province and populates a dropdown menu with them.
@@ -255,10 +256,6 @@
 
             })
 
-            // Manejador para botón "Continuar"
-            // btnNext.addEventListener("click", () => {
-            //     setActiveTab("step2");
-            // });
 
             // Función para activar la pestaña correspondiente
             function setActiveTab(targetId) {
@@ -303,6 +300,9 @@
                         $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed * getRemainingPercentageInDecimals(response.data.coupon_discount)}</h1>`);
 
                         coupon_id = response.data.coupon_id;
+
+                        couponIsApplied = response.data.coupon_discount
+
                     })
                 .catch(error => {
                     $('#coupon-validated-success').html("");
@@ -359,33 +359,42 @@
 
             //items summary
 
+            function getItemsSummary() {
 
-            $.ajax({
-                type: "GET",
-                url: '{{route('cart-info')}}',
-                success: function (xhr, status, error) {
-                    let key = Object.keys(xhr)[0];
-                    let items = xhr[key];
-                    let html = "";
-                    let total = 0;
+                $('#items-summary-container').html("");
 
-                    Object.entries(items).forEach(([key, item]) => {
-                        let priceHtml = ``;
+                $.ajax({
+                    type: "GET",
+                    url: '{{route('cart-info')}}',
+                    success: function (xhr, status, error) {
 
-                        if (item.price * item.quantity > item.total_amount_with_discount_to_be_shown) {
-                            priceHtml = `<del><h4>$${item.price * item.quantity} </h4> </del>
-                                             <h4 class="text-success">$${item.total_amount_with_discount_to_be_shown}</h4>
-                                            `
-                            total += item.total_amount_with_discount_to_be_shown;
-                        } else {
-                            priceHtml = `<h4 class="text-success">$${item.price * item.quantity}</h4> `
+                        let key = Object.keys(xhr)[0];
+                        let items = xhr[key];
+                        let html = "";
+                        let total = 0;
 
-                            total += item.price * item.quantity;
+                        if(Object.entries(items).length <= 0){
+                            location.reload();
                         }
 
-                        html += `
+                        Object.entries(items).forEach(([key, item]) => {
+                            let priceHtml = ``;
 
-                                <div class="p-3 my-3 d-flex align-items-center border rounded w-75">
+                            if (item.price * item.quantity > item.total_amount_with_discount_to_be_shown) {
+                                priceHtml = `<del><h4>$${item.price * item.quantity} </h4> </del>
+                                             <h4 class="text-success">$${item.total_amount_with_discount_to_be_shown}</h4>
+                                            `
+                                total += item.total_amount_with_discount_to_be_shown;
+                            } else {
+                                priceHtml = `<h4 class="text-success">$${item.price * item.quantity}</h4> `
+
+                                total += item.price * item.quantity;
+                            }
+
+                            html += `
+
+                                <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
+                                    <button class="x-cart-button delete_cart_product" id="${item.id}">X</button>
                                     <div class="order-summary-thumbnail">
                                         <img src="${item.picture}"
                                              alt="" class="img-fluid">
@@ -396,16 +405,48 @@
                                 </div>
                                 `
 
-                    })
-                    helperTotalAmountToBeDisplayed = total;
-                    $('#total-price').html(`<h1>$${total}</h1>`);
-                    $('#items-summary-container').html(html);
-                },
-                error: function (xhr, status, error) {
-                    $('#items-summary-container').html("");
-                },
-            });
+                        })
+                        helperTotalAmountToBeDisplayed = total;
+                        $('#total-price').html(`<h1>$${total}</h1>`);
+                        $('#items-summary-container').html(html);
 
+                        if(couponIsApplied > 0){
+                            $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed * getRemainingPercentageInDecimals(couponIsApplied)}</h1>`);
+                        }
+
+
+                        document.querySelectorAll('.delete_cart_product').forEach(element => {
+                            element.addEventListener('click', (event) => {
+
+                                const id = event.target.id;
+                                const route = '/cart/' + id
+
+                                $.ajax({
+                                    type: "DELETE",
+                                    url: route,
+                                    data: {
+                                        _token: $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    success: function (xhr, status, error) {
+
+                                        getItemsSummary()
+
+
+                                    }
+                                })
+                            })
+
+
+                        })
+                    },
+                    error: function (xhr, status, error) {
+                        $('#items-summary-container').html("");
+                    },
+                });
+
+            }
+
+            getItemsSummary();
 
         });
     </script>

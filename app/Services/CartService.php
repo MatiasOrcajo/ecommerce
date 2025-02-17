@@ -94,6 +94,39 @@ class CartService
         return response()->json(Session::get('cart'));
     }
 
+
+
+    /**
+     * Elimina un producto del registro del carrito en la sesión actual
+     *
+     * Si el carrito queda vacío tras la eliminación del producto, se actualiza
+     * el estado del carrito a EMPTY_BY_CUSTOMER.
+     *
+     * @param Product $product
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function deleteProduct(Product $product)
+    {
+
+        $cart = Cart::find(array_key_first(Session::get('cart')));
+        $cartInSession = Session::get('cart');
+
+        unset($cartInSession[$cart->id][$product->id]);
+
+        if (empty($cartInSession[$cart->id])) {
+            $cart->status = Constants::EMPTY_BY_CUSTOMER;
+            $cart->save();
+        }
+
+        Session::put('cart', $cartInSession);
+        Session::save();
+
+        return response()->json(Session::get('cart'));
+
+    }
+
+
     /**
      *
      * Elimina todos los elementos del carrito de la sesión.

@@ -45,7 +45,8 @@ class CartControler extends Controller
      */
     public function deleteProduct(Product $product)
     {
-        return CartProducts::deleteProduct($product);
+        return $this->cartService->deleteProduct($product);
+
     }
 
 
