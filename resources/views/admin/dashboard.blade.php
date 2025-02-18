@@ -146,8 +146,8 @@
 
 
 
-    <script type="module" src="{{ mix('resources/js/getSalesInfo.js') }}"></script>
-    <script type="module" src="{{ mix('resources/js/getVisitorsInfo.js') }}"></script>
-    <script type="module" src="{{ mix('resources/js/timeSelectListener.js') }}"></script>
+    <script type="module" src="{{ mix('public/js/getSalesInfo.js') }}"></script>
+    <script type="module" src="{{ mix('public/js/getVisitorsInfo.js') }}"></script>
+    <script type="module" src="{{ mix('public/js/timeSelectListener.js') }}"></script>
 @endsection
 

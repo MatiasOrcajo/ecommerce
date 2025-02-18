@@ -30,9 +30,14 @@ Route::group(['middleware' => ['web', 'capture-visitor']], function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard
+        return view('admin.dashboard
         ');
-    })->name('dashboard');
+    })->name('admin.dashboard');
+
+    Route::get('/products', function () {
+        return view('admin.products
+        ');
+    })->name('admin.products');
 
 });
 

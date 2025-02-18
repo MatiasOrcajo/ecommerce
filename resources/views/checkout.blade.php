@@ -350,7 +350,7 @@
                         window.open(res.init_point, '_blank');
                     },
                     error: function (res, textStatus, errorThrown) {
-                        console.log(res);
+                        // console.log(res);
                     },
                 });
 
