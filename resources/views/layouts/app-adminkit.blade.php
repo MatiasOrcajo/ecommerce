@@ -10,6 +10,8 @@
     <meta name="keywords"
           content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png"/>
 
@@ -18,10 +20,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+            crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
     <title>Blank Page | AdminKit Demo</title>
 
     <link href="{{asset('adminkit/css/app.css')}}" rel="stylesheet">
+    <link href="{{asset('css/datatables.css')}}" type="text/css" rel="stylesheet"/>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -182,7 +194,7 @@
                                             <i class="text-success" data-feather="user-plus"></i>
                                         </div>
                                         <div class="col-10">
-                                            <div class="text-dark">New connection</div>
+                                             <div class="text-dark">New connection</div>
                                             <div class="text-muted small mt-1">Christina accepted your request.</div>
                                             <div class="text-muted small mt-1">14h ago</div>
                                         </div>

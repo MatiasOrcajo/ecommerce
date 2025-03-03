@@ -10,4 +10,6 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/visitors', [\App\Http\Controllers\DashboardController::class, 'getVisitors']);
 
+    Route::get('/list-products', [\App\Http\Controllers\Admin\ProductController::class, 'listProducts']);
+
 });

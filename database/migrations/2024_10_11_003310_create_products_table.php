@@ -23,8 +23,8 @@ return new class extends Migration
             $table->unsignedInteger('stock')->default(0);
             $table->string('description')->nullable();
             $table->string('specs')->nullable();
-            $table->string('code');
-            $table->string('brand');
+            $table->string('code')->nullable();
+            $table->string('brand')->nullable();
             $table->timestamps();
         });
     }

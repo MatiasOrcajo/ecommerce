@@ -33,8 +33,7 @@ class ProductController extends Controller
     {
         $this->validateProduct($request);
 
-        $product = new Product();
-        $this->saveProductData($product, $request);
+        $this->saveProductData(new Product(), $request);
 
         return response()->json([
             'message' => 'Product created successfully!',

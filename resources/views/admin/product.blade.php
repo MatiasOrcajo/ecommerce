@@ -1,0 +1,175 @@
+@extends('layouts.app-adminkit')
+
+@section('content')
+
+    <div class="container-fluid p-0">
+        <div class="row">
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <div class="col-lg-4">
+                <div class="card shadow-lg p-4">
+                    <h2 class="mb-4">Editar Producto</h2>
+
+                    <form method="POST" action="{{route('admin.products.update', $product->id)}}" enctype="multipart/form-data">
+                        @csrf
+                        @method("PUT")
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre del Producto</label>
+                            <input value="{{$product->name}}" type="text" class="form-control" id="name" name="name"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Categoría</label>
+                            <select class="form-select" id="category" name="category_id" required>
+                                <option value="" selected disabled>Seleccionar categoría</option>
+
+                                @foreach ($categories as $category)
+                                    <option
+                                        value="{{$category->id}}" {{$category->id == $product->category->id ? 'selected' : ''}}>{{$category->name}}</option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Precio</label>
+                            <input type="number" value="{{$product->price}}" class="form-control" id="price"
+                                   name="price" min="0" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripcion</label>
+                            <textarea class="form-control" id="description" name="description"
+                                      rows="3">{{$product->description}}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="discount" class="form-label">Descuento (%)</label>
+                            <input value="{{$product->discount}}" type="number" class="form-control" id="discount"
+                                   name="discount" min="0" max="100">
+                        </div>
+                        <div class="mb-3">
+                            <label for="discount_until" class="form-label">Descuento válido hasta</label>
+                            <input value="{{\Carbon\Carbon::parse($product->discount_until)->format('Y-m-d')}}"
+                                   type="date" class="form-control" id="discount_until"
+                                   name="discount_until">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card shadow-lg p-4">
+                    <h2 class="mb-4">Imagenes del producto</h2>
+                    <small>La primera será la imagen de portada del producto</small>
+
+                    <div id="board" class="d-flex flex-wrap">
+                        <form>
+                            <div class="row">
+                                @foreach ($product->pictures as $picture)
+                                    <div style="width: 150px; position: relative;" class="m-2">
+                                        <img src="{{$picture->path}}" style="width: 150px" class="img-thumbnail m-2">
+                                        <div
+                                            style="position: absolute; top: 0; right: 0; background-color: red; color: white; padding: 3px; opacity: 0.8; cursor: pointer;"
+                                            class="destroyPicture" data-id="{{$picture->id}}"
+                                            data-url="{{route('admin.pictures.destroy', $picture->id)}}">
+                                            X
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </form>
+                    </div> <!-- Vista imagenes -->
+
+                    <form action="{{route('admin.pictures.store', $product->id)}}" method="POST"
+                          enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Selecciona imágenes:</label>
+                            <input type="file" class="form-control" id="images" name="images[]" multiple
+                                   accept="image/*" onchange="previewImages(event)">
+                        </div>
+                        <div id="preview" class="d-flex flex-wrap"></div> <!-- Vista previa -->
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-success">Subir Imágenes</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            function setupDestroyListeners() {
+                document.querySelectorAll(".destroyPicture").forEach(element => {
+                    element.addEventListener("click", function () {
+                        const pictureId = this.getAttribute("data-id");
+                        const deleteUrl = this.getAttribute("data-url");
+
+                        if (!deleteUrl) {
+                            console.error("URL de eliminación no encontrada");
+                            return;
+                        }
+
+                        if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
+
+
+                            $.ajax({
+                                url: deleteUrl,
+                                type: "DELETE",
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                },
+                                success: function (response) {
+                                    location.reload();
+                                },
+                            });
+                        }
+                    });
+                });
+            }
+
+            setupDestroyListeners();
+        });
+
+
+        function previewImages(event) {
+            const previewContainer = document.getElementById("preview");
+            previewContainer.innerHTML = ""; // Limpia la vista previa anterior
+
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("img-thumbnail", "m-2");
+                    img.style.width = "150px";
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+    </script>
+
+@endsection
