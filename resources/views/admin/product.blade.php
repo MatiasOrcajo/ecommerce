@@ -16,7 +16,8 @@
                 <div class="card shadow-lg p-4">
                     <h2 class="mb-4">Editar Producto</h2>
 
-                    <form method="POST" action="{{route('admin.products.update', $product->id)}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('admin.products.update', $product->id)}}"
+                          enctype="multipart/form-data">
                         @csrf
                         @method("PUT")
                         <div class="mb-3">
@@ -74,7 +75,9 @@
                     <small>La primera será la imagen de portada del producto</small>
 
                     <div id="board" class="d-flex flex-wrap">
-                        <form>
+                        <form action="{{route('admin.pictures.edit.order', $product->id)}}" method="POST">
+                            @csrf
+                            @method("PUT")
                             <div class="row">
                                 @foreach ($product->pictures as $picture)
                                     <div style="width: 150px; position: relative;" class="m-2">
@@ -85,9 +88,15 @@
                                             data-url="{{route('admin.pictures.destroy', $picture->id)}}">
                                             X
                                         </div>
+                                        <div>
+                                            <input style="max-width: 100%;" type="number" name="{{$picture->id}}"
+                                                   value="{{$picture->order}}">
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
+                            <button type="submit" class="btn btn-success mb-5">Guardar orden</button>
+
                         </form>
                     </div> <!-- Vista imagenes -->
 
@@ -100,7 +109,7 @@
                                    accept="image/*" onchange="previewImages(event)">
                         </div>
                         <div id="preview" class="d-flex flex-wrap"></div> <!-- Vista previa -->
-                        <div class="text-center mt-3">
+                        <div class="text-center mt-3" style="float: left;">
                             <button type="submit" class="btn btn-success">Subir Imágenes</button>
                         </div>
                     </form>

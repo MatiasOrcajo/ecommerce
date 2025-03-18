@@ -58,4 +58,28 @@ class PictureController extends Controller
         return response()->json($pictures);
     }
 
+
+    /**
+     * Updates the order of pictures associated with a product.
+     *
+     * @param Product $product The product associated with the pictures.
+     * @param Request $request The HTTP request containing the updated order data.
+     *
+     * @return \Illuminate\Http\RedirectResponse Redirects back with a success message on successful order update.
+     */
+    public function editOrder(Product $product, Request $request)
+    {
+
+        $datos = collect($request->all())->except(['_token', '_method']);
+
+        foreach ($datos as $key => $value) {
+            $picture = Picture::find($key);
+            $picture->order = $value;
+            $picture->save();
+        }
+
+        return back()->with('success', 'Orden editado correctamente');
+
+    }
+
 }
