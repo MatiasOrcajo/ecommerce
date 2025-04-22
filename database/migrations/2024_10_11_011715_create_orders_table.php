@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('shipping_address');
-            $table->string('payment_id')->nullable();
+            $table->string('preference_id')->nullable();
             $table->foreignId('coupon_id')->nullable()->references('id')->on('coupons');
             $table->timestamps();
         });

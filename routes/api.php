@@ -12,4 +12,10 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/list-products', [\App\Http\Controllers\Admin\ProductController::class, 'listProducts']);
 
+    Route::get('/list-categories', [\App\Http\Controllers\Admin\CategoryController::class, 'listCategories']);
+
+    Route::get('/categories/{category}/products', [\App\Http\Controllers\Admin\CategoryController::class, 'listProducts'])->name('admin.categories.listProducts');
+
+
+
 });

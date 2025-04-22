@@ -21,9 +21,14 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::post('/pay', [\App\Http\Controllers\CheckoutController::class, 'pay'])->name('pay');
 
-    Route::get('pago-exitoso/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('pago-exitoso');
+    Route::get('payment-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('payment-success');
+    Route::get('payment-failure/{order}', [\App\Http\Controllers\CheckoutController::class, 'failure'])->name('payment-failure');
+    Route::get('payment-pending/{order}', [\App\Http\Controllers\CheckoutController::class, 'pending'])->name('payment-pending');
+    Route::post('/mercadopago-notification-endpoint', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('mercadopago-notification-endpoint');
+    Route::get('/consult-preference/{preferenceId}', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('consult-preference');
 
     Route::delete('/cart/{product}', [\App\Http\Controllers\CartControler::class, 'deleteProduct']);
+
 
 });
 
@@ -50,6 +55,12 @@ Route::prefix('admin')->group(function () {
         Route::put('/pictures/{product}/edit-order', [\App\Http\Controllers\Admin\PictureController::class, 'editOrder'])->name('admin.pictures.edit.order');
 
         Route::put('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
+
+        Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories');
+
+        Route::post('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');
+
+        Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('admin.categories.show');
 
     });
 });

@@ -7,6 +7,7 @@ use App\Services\MercadoPagoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use MercadoPago\Client\Preference\PreferenceClient;
 
 class CheckoutController extends Controller
 {
@@ -31,9 +32,35 @@ class CheckoutController extends Controller
      */
     public function success(Request $request, Order $order)
     {
-        dd($order);
+        $order->status = 'Orden recibida';
+        $order->save();
+
     }
 
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function failure(Request $request, Order $order)
+    {
+        $order->status = 'Pago rechazado';
+        $order->save();
+
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function pending(Request $request, Order $order)
+    {
+        $order->status = 'Pendiente de aprobación';
+        $order->save();
+
+    }
 
     /**
      * Handle the request to retrieve cart information from the session.

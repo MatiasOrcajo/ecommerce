@@ -56,14 +56,14 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item {{ request()->routeIs('categories') ? 'active' : '' }}">
-                    <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
+                <li class="sidebar-item {{ request()->routeIs('admin.categories') ? 'active' : '' }}">
+                    <a class="sidebar-link" href="{{ route('admin.categories') }}">
                         <i class="align-middle fa-solid fa-layer-group"></i>
                         <span class="align-middle">Categorías</span>
                     </a>
                 </li>
 
-                <li class="sidebar-item {{ request()->routeIs('admin.products') ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->routeIs('admin.products') || request()->routeIs('admin.products.show') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('admin.products') }}">
                         <i class="align-middle fa-solid fa-shirt"></i>
                         <span class="align-middle">Productos</span>

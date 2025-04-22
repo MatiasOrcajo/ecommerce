@@ -45,24 +45,29 @@ readonly class MercadoPagoService
             $client = new PreferenceClient();
             $preference = $client->create(request: [
                 "back_urls" => [
-                    "success" => route('pago-exitoso', $order->id),
-                    "failure" => env('URL_FAILURE', 'https://default.failure.url'),
-                    "pending" => env('URL_PENDING', 'https://default.pending.url'),
+                    "success" => route('payment-success', $order->id),
+                    "failure" => route('payment-failure', $order->id),
+                    "pending" => route('payment-pending', $order->id),
                 ],
                 "items" => array(
                     array(
                         "id" => "1234",
-                        "title" => "Orden #{$order->id} mitienda.com",
+                        "title" => "Orden #{$order->id} atica.com.ar",
                         "quantity" => 1,
                         "currency_id" => "ARS",
-                        "unit_price" => $order->total_amount
+//                        "unit_price" => $order->total_amount
+                        "unit_price" => 10
                     )
                 ),
                 "external_reference" => $order->id,
                 "notification_url" => "https://notificationurl.com",
             ]);
 
+            $order->preference_id = $preference->id;
+            $order->save();
+
         } catch (\Exception $e) {
+            dd($e);
             return response()->json(['error' => 'Failed to create preference', 'message' => $e->getMessage()], 500);
         }
 
