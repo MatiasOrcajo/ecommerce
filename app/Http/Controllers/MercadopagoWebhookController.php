@@ -40,11 +40,11 @@ class MercadopagoWebhookController extends Controller
         }
 
         else if($response["order_status"] == "payment_in_process"){
-            $order->status = "Pago pendiente";
+            $order->status = "Pago pendiente de aprobación";
         }
 
         else{
-            $order->status = "Orden cancelada";
+            $order->status = "Pago fallido";
         }
 
         $order->save();

@@ -62,6 +62,8 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('admin.categories.show');
 
+        Route::get('/panel', [\App\Http\Controllers\Admin\PanelController::class, 'index'])->name('admin.panel');
+
     });
 });
 
