@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web']], function () {
 
+    Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index');
+
     Route::get('/cart', function (\Illuminate\Http\Request $request) {
         return view('checkout');
     })->name('home')->middleware('cart-empty'); //cart-empty should redirect to home

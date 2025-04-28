@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container m-0" style="max-width: 100%">
+    <div class="container my-4" style="max-width: 100%">
         <div class="row">
             <!-- Formulario de compra -->
             <div class="col-md-7 steps-container">
