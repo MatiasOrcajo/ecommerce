@@ -157,7 +157,20 @@
 
 {{-- Espaciado para que el contenido no quede detrás del header fijo --}}
 <style>
+
+    html
+    {
+        overflow-x: hidden;
+    }
+
     body {
         padding-top: 120px;
+    }
+
+    footer {
+        bottom: 0;
+        left: 0;
+        display: inline-block;
+        width:100%;
     }
 </style>

@@ -86,7 +86,7 @@
         <h2 class="d-block mt-5 text-center" style="font-size: 4rem">destacados.</h2>
 
     </div>
-    <div class="row g-4">
+    <div class="row g-4 mx-3">
 
         <div class="col-md-4">
             <div class="card border-0 h-100">
@@ -240,17 +240,71 @@
 
     </div>
 
-    <div class="container">
+    <div class="my-5 py-5">
         <div class="d-flex justify-content-center align-items-center">
-            <div>
-                <i class="fa-brands fa-instagram"></i>
+            <div class="me-4">
+                <i class="fa-brands fa-instagram" style="font-size: 4rem"></i>
             </div>
-            <div class="mt-5 py-2">
-                <p class="d-block mt-5 text-center" style="font-size: 4rem">SEGUINOS EN INSTAGRAM</p>
-                <h3>@atica.arg</h3>
+            <div style="transform: translateY(-20%)">
+                <p class="d-block mt-5 text-center" style="font-size: 1.5rem;">SEGUINOS EN INSTAGRAM</p>
+                <h3 style="font-size: 2.5rem">@atica.arg</h3>
             </div>
         </div>
     </div>
+
+
+    <!-- Newsletter Subscription Form (Bootstrap 5) -->
+    <div class="container p-0 w-75 translate-y-0">
+
+        <div>
+            <!-- Top bar -->
+            <div class="bg-dark text-white d-flex justify-content-between align-items-center px-4 py-3">
+                <h5 class="m-0" style="font-size: 1.5rem">Unite a nuestro <strong>#ClubAtica</strong> y recibí muchos beneficios</h5>
+            </div>
+
+            <!-- Formulario -->
+            <div class="bg-white border shadow-sm p-4 p-md-5">
+                <h6 class="mb-4">Completa tus datos para suscribirte</h6>
+                <form>
+
+                    <!-- Campos de texto -->
+                    <div class="mb-3">
+                        <input type="email" class="form-control form-control-lg" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control form-control-lg" placeholder="Nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control form-control-lg" placeholder="Apellido" required>
+                    </div>
+                    <div class="mb-4">
+                        <input type="text" class="form-control form-control-lg" placeholder="cumpleaños (dd/mm)" pattern="\d{2}/\d{2}">
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="mb-4">
+                        <label class="form-label d-block mb-2">Qué te gustaría recibir?</label>
+                        <div class="d-flex align-items-center mb-2">
+                            <input class="form-check-input w-auto me-2" type="checkbox" id="optGiftcard">
+                            <label class="form-check-label text-uppercase fw-bold" for="optGiftcard">
+                                giftcard
+                            </label>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <input class="form-check-input w-auto me-2" type="checkbox" id="optGiftcard">
+                            <label class="form-check-label text-uppercase fw-bold" for="optGiftcard">
+                                newsletter
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Botón Enviar -->
+                    <button type="submit" class="btn btn-dark btn-lg w-100">ENVIAR</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- instagram -->
