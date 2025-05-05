@@ -117,12 +117,127 @@
 
             </div>
 
+            <div class="col-lg-4">
+                <div class="card shadow-lg p-4">
+                    <h2 class="mb-4">Añadir talles</h2>
+
+                    <form method="POST" action="{{route('admin.product.create.size', $product->id)}}"
+                          enctype="multipart/form-data">
+                        @csrf
+                        @method("POST")
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Talle:</label>
+                            <input type="text" class="form-control" id="size" name="size"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Stock:</label>
+                            <input type="number" class="form-control" id="stock"
+                                   name="stock" min="0" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">Lista de Talles</div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="productSizes">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="{{asset('adminkit/js/app.js')}}"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 
     <script>
+
+
+        $(document).ready(function () {
+            // ID del producto desde Blade
+            const productId = '{{ $product->id }}';
+            // URL para cargar talles
+            const listUrl   = `/api/products/${productId}/list-sizes`;
+
+            // Si ya existe una tabla, la destruimos
+            if ($.fn.DataTable.isDataTable('#productSizes')) {
+                $('#productSizes').DataTable().destroy();
+            }
+            $('#productSizes').empty();
+
+            // Inicializamos la DataTable
+            const table = $('#productSizes').DataTable({
+                deferRender: true,
+                autoWidth:   true,
+                paging:      true,
+                stateSave:   true,
+                processing:  true,
+                ajax:        listUrl,
+                columns: [
+                    { title: 'TALLE', data: 'size' },
+                    {
+                        title: 'STOCK',
+                        data:  'stock',
+                        render: function(data, type, row) {
+                            // Solo en modo "display" metemos el input
+                            if (type === 'display') {
+                                return `
+                  <input
+                    type="number"
+                    class="form-control form-control-sm stock-input"
+                    data-id="${row.id}"
+                    value="${data}"
+                    style="width:80px;"
+                  >
+                `;
+                            }
+                            // En modos de ordenamiento, filtrado, etc.
+                            return data;
+                        }
+                    }
+                ]
+            });
+
+            // Delegamos el evento change sobre los inputs
+            $('#productSizes tbody').on('change', '.stock-input', function() {
+                const $input   = $(this);
+                const newStock = $input.val();
+                const sizeId   = $input.data('id');
+
+                $.ajax({
+                    url:    `/api/products/${productId}/update-size-stock/${sizeId}`,
+                    type:   'PUT',
+                    data:   { stock: newStock },
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Opcional: actualizar el dato en la tabla sin recargarla
+                        const row = table.row( $input.closest('tr') );
+                        row.data( $.extend({}, row.data(), { stock: newStock }) ).draw(false);
+                        // Notificación opcional
+                        console.log('Stock actualizado:', response);
+                    },
+                    error: function(xhr) {
+                        alert('Error al actualizar el stock.');
+                    }
+                });
+            });
+        });
+
 
         document.addEventListener("DOMContentLoaded", function () {
             function setupDestroyListeners() {

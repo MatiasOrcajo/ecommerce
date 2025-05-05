@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Picture;
 use App\Models\Product;
+use App\Models\ProductSize;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -74,6 +75,38 @@ class ProductController extends Controller
         return view('admin.product', compact('product', 'categories'));
     }
 
+
+
+    public function createSize(Product $product, Request $request)
+    {
+        $productSize = new ProductSize();
+        $productSize->size = $request->size;
+        $productSize->stock = $request->stock;
+        $productSize->product_id = $product->id;
+        $productSize->save();
+
+        return back()->with('success', 'Talle añadido correctamente');
+
+    }
+
+
+    public function listSizes(Product $product)
+    {
+        return DataTables::of($product->sizes->map(function ($size) {
+            return [
+                "id" => $size->id,
+                "size" => $size->size,
+                "stock" => $size->stock,
+            ];
+        }))->make(true);
+    }
+
+
+    public function updateSizeStock(Product $product, ProductSize $productSize, Request $request)
+    {
+        $productSize->stock = $request->stock;
+        $productSize->save();
+    }
 
 
 }

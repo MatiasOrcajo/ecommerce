@@ -20,6 +20,10 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Admin\PanelController::class, 'updateOrderStatus'])->name('admin.orders.updateStatus');
 
+    Route::get('/products/{product}/list-sizes', [\App\Http\Controllers\Admin\ProductController::class, 'listSizes'])->name('admin.products.listSizes');
+
+    Route::put('/products/{product}/update-size-stock/{productSize}', [\App\Http\Controllers\Admin\ProductController::class, 'updateSizeStock'])->name('admin.products.updateSizeStock');
+
 
 
 });

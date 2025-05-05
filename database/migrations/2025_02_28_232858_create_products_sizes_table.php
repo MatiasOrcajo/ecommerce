@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products_sizes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products');
-            $table->unsignedInteger('size');
+            $table->string('size');
             $table->unsignedBigInteger('stock');
             $table->timestamps();
         });

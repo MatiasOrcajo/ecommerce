@@ -50,6 +50,8 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'show'])->name('admin.product.show');
 
+        Route::post('/products/{product}/create-size', [\App\Http\Controllers\Admin\ProductController::class, 'createSize'])->name('admin.product.create.size');
+
         Route::post('/pictures/{product}', [\App\Http\Controllers\Admin\PictureController::class, 'store'])->name('admin.pictures.store');
 
         Route::delete('/pictures/{picture}', [\App\Http\Controllers\Admin\PictureController::class, 'destroy'])->name('admin.pictures.destroy');
@@ -67,6 +69,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('admin.categories.show');
 
         Route::get('/panel', [\App\Http\Controllers\Admin\PanelController::class, 'index'])->name('admin.panel');
+
 
     });
 });
