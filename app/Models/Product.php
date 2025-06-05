@@ -60,7 +60,10 @@ class Product extends Model
     }
 
 
-
+    public function getRouteKeyName()
+    {
+        return 'slug'; // Indica que usaremos el campo 'slug' para obtener el modelo en las rutas
+    }
 
 
 

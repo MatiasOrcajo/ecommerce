@@ -7,15 +7,13 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index');
 
-    Route::get('/product', [\App\Http\Controllers\IndexController::class, 'show'])->name('product');
+    Route::get('/productos/{slug}', [\App\Http\Controllers\IndexController::class, 'show'])->name('product');
 
     Route::get('/cart', function (\Illuminate\Http\Request $request) {
         return view('checkout');
     })->name('home')->middleware('cart-empty'); //cart-empty should redirect to home
 
-    Route::get('/cart/{product}', [\App\Http\Controllers\CartControler::class, 'addProduct']);
-
-    Route::get('/clear-cart', [\App\Http\Controllers\CartControler::class, 'clearCart']);
+    Route::get('/clear-cart', [\App\Http\Controllers\CartController::class, 'clearCart']);
 
     Route::get('/get-ip-address', [\App\Http\Controllers\VisitorController::class, 'getIpAddress']);
 
@@ -31,7 +29,10 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/mercadopago-notification-endpoint', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('mercadopago-notification-endpoint');
     Route::get('/consult-preference/{preferenceId}', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('consult-preference');
 
-    Route::delete('/cart/{product}', [\App\Http\Controllers\CartControler::class, 'deleteProduct']);
+    Route::delete('/cart/{product}', [\App\Http\Controllers\CartController::class, 'deleteProduct']);
+
+    Route::post('/carts/products/{product}', [\App\Http\Controllers\CartController::class, 'addProduct']);
+
 
 
 });

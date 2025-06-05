@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -45,56 +46,93 @@ class CartService
      * @param Product $product The product to be added to the cart.
      * @return \Illuminate\Http\JsonResponse Returns a JSON response with the updated cart.
      */
-    public function addProduct(Product $product)
+    public function addProduct(Product $product, Request $request)
     {
 
         $sessionCart = null;
 
         //If cart isn't stored in session
         //Create the Cart record and assign its id to the cart to be stored in session for reference
-        if(!Session::has('cart')){
+        if (!Session::has('cart')) {
             $createdCartInstance = $this->create();
             $createdCartInstance->status = Constants::ACTIVE;
             $createdCartInstance->save();
             $sessionCart[$createdCartInstance->id] = [];
             Session::put('cart', $sessionCart);
-        }
-        else{
+        } else {
             $sessionCart = Session::get('cart');
         }
 
-        // Verificar si el producto ya está en el carrito y actualizar la cantidad
-        if (isset($sessionCart[array_key_first($sessionCart)][$product->id])) {
-            $sessionCart[array_key_first($sessionCart)][$product->id]['quantity']++;
 
-        } else {
-            // Adds product if it isn't stored in session
+        if( isset($sessionCart[array_key_first($sessionCart)][$product->id]["sizes"])){
+
+            $newSize = [
+                $request->size =>
+                    [
+                    "quantity" => $request->quantity,
+                ]
+            ];
+
+            $key = array_key_first($sessionCart);
+            $sizes = &$sessionCart[$key][$product->id]["sizes"];
+
+            $sizes = array_merge($sizes, $newSize);
+
+            $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"] = $sizes;
+        }
+        else{
+
             $sessionCart[array_key_first($sessionCart)][$product->id] = [
+                "id" => $product->id,
                 "name" => $product->name,
                 "price" => $product->price,
-                "quantity" => 1,
+                "sizes" => [
+                    $request->size => [
+                        "quantity" => $request->quantity,
+                    ]
+                ],
                 "discount" => $product->discount,
-                "id" => $product->id,
                 "picture" => $product->pictures->first()->path,
             ];
         }
-
-        //Multiplies (price * 0,discount) * quantity
-        //To be shown in frontend checkout
-        $sessionCart[array_key_first($sessionCart)][$product->id]["total_amount_with_discount_to_be_shown"] =
-            round(($sessionCart[array_key_first($sessionCart)][$product->id]["price"] *
-                    $this->getRemainingPercentageInDecimals($sessionCart[array_key_first($sessionCart)][$product->id]["discount"]))
-                * $sessionCart[array_key_first($sessionCart)][$product->id]["quantity"], 2);
-
 
         Session::put('cart', $sessionCart);
 
         Session::save();
 
+        //Multiplies (price * 0,discount) * quantity
+        //To be shown in frontend checkout
+
+        $price = $sessionCart[array_key_first($sessionCart)][$product->id]["price"];
+        $discount = $sessionCart[array_key_first($sessionCart)][$product->id]["discount"];
+        $quantity = $this->getQuantityOfProductInCart($product);
+
+        $sessionCart[array_key_first($sessionCart)][$product->id]["total_amount_with_discount_to_be_shown"] =
+            round(( $price *
+                    $this->getRemainingPercentageInDecimals($discount))
+                * $quantity, 2);
+
+        Session::put('cart', $sessionCart);
+
+        Session::save();
+
+
         return response()->json(Session::get('cart'));
     }
 
 
+    private function getQuantityOfProductInCart(Product $product)
+    {
+        $sessionCart = Session::get('cart');
+        $sizes = $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"];
+        $quantity = 0;
+
+        foreach ($sizes as $size) {
+            $quantity += $size["quantity"];
+        }
+
+        return $quantity;
+    }
 
     /**
      * Elimina un producto del registro del carrito en la sesión actual

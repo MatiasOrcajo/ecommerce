@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductSize;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
@@ -61,7 +62,10 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        Product::create($request->toArray());
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->name);
+
+        Product::create($data);
 
         return back()->with('success', 'Producto creado correctamente');
     }

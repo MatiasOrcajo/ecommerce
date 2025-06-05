@@ -201,7 +201,7 @@
                     axios.get(`https://apis.datos.gob.ar/georef/api/municipios?provincia=${event.target.value}&campos=id,nombre&max=500`)
                         .then(response => {
                             let locality = response.data.municipios;
-                            let html = "";
+                            let html = "";giftcard
                             locality.forEach(locality => {
                                 html += `<option value="${locality.nombre}">${locality.nombre}</option>`
                             });

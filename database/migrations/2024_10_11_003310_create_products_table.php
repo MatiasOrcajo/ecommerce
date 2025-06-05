@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('specs')->nullable();
             $table->string('code')->nullable();
             $table->string('brand')->nullable();
+            $table->string('slug');
             $table->timestamps();
         });
     }

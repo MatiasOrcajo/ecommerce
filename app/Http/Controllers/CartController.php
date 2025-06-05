@@ -7,10 +7,11 @@ use App\Models\CartProducts;
 use App\Models\Constants;
 use App\Models\Product;
 use App\Services\CartService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CartControler extends Controller
+class CartController extends Controller
 {
 
     public function __construct(private readonly CartService $cartService)
@@ -29,11 +30,13 @@ class CartControler extends Controller
      * Añade un producto al carrito del usuario
      *
      * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function addProduct(Product $product)
+    public function addProduct(Product $product, Request $request)
     {
-        return $this->cartService->addProduct($product);
+
+        return $this->cartService->addProduct($product, $request);
     }
 
 

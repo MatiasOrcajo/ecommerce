@@ -115,7 +115,7 @@
     <div class="container my-5 ">
         <div class="row gx-5">
             <div class="col-12 d-block d-md-none mb-3">
-                <h2 style="font-size: 24px">CARDIGAN MARE LANILLA</h2>
+                <h2 style="font-size: 24px">{{$product->name}}</h2>
             </div>
             <!-- Imágenes -->
             <div class="col-md-6">
@@ -260,12 +260,32 @@
 
             <!-- Información del producto -->
             <div class="col-md-6">
-                <h2 class="d-none d-md-block" style="font-size: 32px">CARDIGAN MARE LANILLA</h2>
-                <p class="h3 text-dark">$15.499</p>
-                <p class="text-secondary">$13.174,15 con Transferencia</p>
-                <div class="border p-2 d-inline-block mb-3">
-                    3 CUOTAS SIN INTERÉS DE <strong>$5.166,33</strong>
-                </div>
+                <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{$product->name}}</h2>
+
+                @php
+                    $productPrice = $product->discount != 0 ? $product->price * (1 - ($product->discount / 100)) : $product->price;
+                    $threeInstallments = round($productPrice/3, 2);
+                    $productPriceWithBankTransferCondition = round($productPrice * (1 - (10 / 100)), 2);
+                @endphp
+
+                @if($product->discount != 0)
+
+                    <p class="h4 text-dark"><small><del>${{$product->price}}</del> %{{$product->discount}} off</small></p>
+                    <p class="h3 text-dark">${{$productPrice}}</p>
+                    <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
+                    <div class="border p-2 d-inline-block mb-3">
+                        3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
+                    </div>
+
+                @else
+
+                    <p class="h3 text-dark">${{$product->price}}</p>
+                    <p class="text-secondary">$13.174,15 con Transferencia</p>
+                    <div class="border p-2 d-inline-block mb-3">
+                        3 CUOTAS SIN INTERÉS DE <strong>$5.166,33</strong>
+                    </div>
+                @endif
+
                 <div class="mb-3">
                     <span class="me-2">Medios de pago:</span>
                     <i style="color: #6e6ee7" class="fab fa-cc-visa"></i>
@@ -285,17 +305,18 @@
                 {{--                </div>--}}
 
                 <div class="my-4">
-                    <label class="d-block mb-1"><strong>Talle:</strong> S</label>
+                    <label class="d-block mb-1" id="sizeSelector"><strong>Talle:</strong> S</label>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-outline-secondary">S</button>
-                        <button class="btn btn-outline-secondary">M</button>
-                        <button class="btn btn-outline-secondary">L</button>
+                        <button class="btn btn-outline-secondary sizes">S</button>
+                        <button class="btn btn-outline-secondary sizes">M</button>
+                        <button class="btn btn-outline-secondary sizes">L</button>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label"><strong>Cantidad</strong></label>
                     <input
+                        id="quantity"
                         type="number"
                         class="form-control"
                         value="1"
@@ -304,7 +325,7 @@
                     />
                 </div>
 
-                <button class="btn btn-dark btn-lg w-100">
+                <button id="add-product-to-cart" class="btn btn-dark btn-lg w-100">
                     AGREGAR AL CARRITO
                 </button>
             </div>
@@ -313,8 +334,49 @@
 
     <!-- Bootstrap 5 JS bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
     <script>
+
+        let selectedSize;
+        let selectedQuantity;
+
+        document.querySelectorAll(".sizes").forEach(function (element){
+            element.addEventListener('click', function (e){
+
+                selectedSize = e.target.innerHTML;
+                document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize;
+                document.querySelectorAll(".sizes").forEach(function (element){
+                    element.classList.remove('active');
+                });
+                e.target.classList.add('active');
+
+            })
+        })
+
+
+
+        $('#add-product-to-cart').click(function(){
+            const id = {{$product->id}};
+            const route = '/carts/products/' + id
+
+            $.ajax({
+                type: "POST",
+                url: route,
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    size: selectedSize,
+                    quantity: $('#quantity').val(),
+                },
+                success: function (xhr, status, error) {
+                    console.log(xhr);
+                    toastr.success('Producto agregado al carrito');
+                }
+            })
+        })
+
+
         // Carousel y thumbnails
         const carouselEl = document.getElementById('productCarousel');
         const carousel = new bootstrap.Carousel(carouselEl, {ride: false});

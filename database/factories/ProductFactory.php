@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -11,8 +12,17 @@ class ProductFactory extends Factory
 {
     public function definition()
     {
+        $names = [
+            "Campera SIENA",
+            "Campera SILVER",
+            "Campera GOLD",
+            "Campera PLATINUM",
+        ];
+
+        $name = $names[$this->faker->numberBetween(0, 3)];
+
         return [
-            'name' => $this->faker->word(),
+            'name' => $name,
             'category_id' => \App\Models\Category::factory(),
             'price' => 1000,
             'discount' => $this->faker->randomElement([0, 10]),
@@ -23,6 +33,7 @@ class ProductFactory extends Factory
             'specs' => $this->faker->words(5, true),
             'code' => $this->faker->unique()->ean13(),
             'brand' => $this->faker->company(),
+            'slug' => Str::slug($name),
             'created_at' => now(),
         ];
     }

@@ -281,23 +281,6 @@
                         <input type="text" class="form-control form-control-lg" placeholder="cumpleaños (dd/mm)" pattern="\d{2}/\d{2}">
                     </div>
 
-                    <!-- Checkboxes -->
-                    <div class="mb-4">
-                        <label class="form-label d-block mb-2">Qué te gustaría recibir?</label>
-                        <div class="d-flex align-items-center mb-2">
-                            <input class="form-check-input w-auto me-2" type="checkbox" id="optGiftcard">
-                            <label class="form-check-label text-uppercase fw-bold" for="optGiftcard">
-                                giftcard
-                            </label>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <input class="form-check-input w-auto me-2" type="checkbox" id="optGiftcard">
-                            <label class="form-check-label text-uppercase fw-bold" for="optGiftcard">
-                                newsletter
-                            </label>
-                        </div>
-                    </div>
-
                     <!-- Botón Enviar -->
                     <button type="submit" class="btn btn-dark btn-lg w-100">ENVIAR</button>
                 </form>
