@@ -69,7 +69,30 @@ class CheckoutController extends Controller
      */
     public function getCartInfo(): JsonResponse
     {
-        return response()->json(Session::get('cart'));
+        $sessionCart = \Illuminate\Support\Facades\Session::get('cart');
+        $products = $sessionCart[array_key_first($sessionCart)];
+        $data = [
+            "products" => []
+        ];
+
+        foreach ($products as $product) {
+            foreach($product["sizes"] as $index => $size){
+                $data["products"][] = [
+                    "name" => $product["name"],
+                    "price" => $product["price"],
+                    "size" => $index,
+                    "quantity" => $size["quantity"],
+                    "discount" => $product["discount"],
+                    "picture" => $product["picture"],
+                    "total" => $size["total_amount_with_discounts"]
+                ];
+            }
+
+        }
+
+        $data["order_total_amount"] = array_sum(array_column($data["products"], "total"));
+
+        return response()->json($data);
     }
 
 

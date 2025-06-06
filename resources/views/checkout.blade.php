@@ -367,45 +367,45 @@
                     type: "GET",
                     url: '{{route('cart-info')}}',
                     success: function (xhr, status, error) {
-
-                        let key = Object.keys(xhr)[0];
-                        let items = xhr[key];
+                        console.log(xhr.products);
+                        let products = xhr.products;
                         let html = "";
-                        let total = 0;
+                        let total = xhr.order_total_amount;
 
-                        if(Object.entries(items).length <= 0){
+                        if(Object.entries(products).length <= 0){
                             location.reload();
                         }
 
-                        Object.entries(items).forEach(([key, item]) => {
+                        Object.entries(products).forEach(([key, product]) => {
+
+
                             let priceHtml = ``;
 
-                            if (item.price * item.quantity > item.total_amount_with_discount_to_be_shown) {
-                                priceHtml = `<del><h4>$${item.price * item.quantity} </h4> </del>
-                                             <h4 class="text-success">$${item.total_amount_with_discount_to_be_shown}</h4>
+                            if (product.discount > 0) {
+                                priceHtml = `<del><h4>$${product.price} </h4> </del>
+                                             <h4 class="text-success">$${product.total}</h4>
                                             `
-                                total += item.total_amount_with_discount_to_be_shown;
                             } else {
-                                priceHtml = `<h4 class="text-success">$${item.price * item.quantity}</h4> `
+                                priceHtml = `<h4 class="text-success">$${product.total}</h4> `
 
-                                total += item.price * item.quantity;
                             }
 
                             html += `
 
                                 <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
-                                    <button class="x-cart-button delete_cart_product" id="${item.id}">X</button>
+                                    <button class="x-cart-button delete_cart_product" id="${product.id}">X</button>
                                     <div class="order-summary-thumbnail">
-                                        <img src="${item.picture}"
+                                        <img src="${product.picture}"
                                              alt="" class="img-fluid">
-                                            <div class="item-quantity">${item.quantity}</div>
+                                            <div class="item-quantity">${product.quantity}</div>
                                     </div>
-                                    <h5 class="d-block mx-3">${item.name}</h5>
+                                    <h5 class="d-block mx-3">${product.name} Talle: ${product.size}</h5>
                                     ${priceHtml}
                                 </div>
                                 `
 
                         })
+
                         helperTotalAmountToBeDisplayed = total;
                         $('#total-price').html(`<h1>$${total}</h1>`);
                         $('#items-summary-container').html(html);

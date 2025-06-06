@@ -49,6 +49,7 @@ class CartService
     public function addProduct(Product $product, Request $request)
     {
 
+
         $sessionCart = null;
 
         //If cart isn't stored in session
@@ -100,38 +101,44 @@ class CartService
 
         Session::save();
 
-        //Multiplies (price * 0,discount) * quantity
-        //To be shown in frontend checkout
-
-        $price = $sessionCart[array_key_first($sessionCart)][$product->id]["price"];
-        $discount = $sessionCart[array_key_first($sessionCart)][$product->id]["discount"];
-        $quantity = $this->getQuantityOfProductInCart($product);
-
-        $sessionCart[array_key_first($sessionCart)][$product->id]["total_amount_with_discount_to_be_shown"] =
-            round(( $price *
-                    $this->getRemainingPercentageInDecimals($discount))
-                * $quantity, 2);
+        $sessionCart = $this->calculateTotalAmountByProductInCart($product);
 
         Session::put('cart', $sessionCart);
 
         Session::save();
 
-
         return response()->json(Session::get('cart'));
     }
 
 
-    private function getQuantityOfProductInCart(Product $product)
+    /**
+     * Calculates the total amount for each size of a product in the cart, applying discounts
+     * and storing the calculated amount back into the cart for each size.
+     *
+     * It retrieves the current cart from the session, iterates through the sizes of the specified
+     * product, applies the applicable discount, and calculates the total amount for each size based
+     * on its quantity and discounted price. The updated cart is then returned.
+     *
+     * @param Product $product The product whose sizes' total amounts need to be calculated.
+     * @return array The updated cart with total amounts for each size recalculated.
+     */
+    private function calculateTotalAmountByProductInCart(Product $product)
     {
         $sessionCart = Session::get('cart');
         $sizes = $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"];
-        $quantity = 0;
+        $price = $sessionCart[array_key_first($sessionCart)][$product->id]["price"];
+        $discount = $sessionCart[array_key_first($sessionCart)][$product->id]["discount"];
 
-        foreach ($sizes as $size) {
-            $quantity += $size["quantity"];
+        foreach ($sizes as $index => $size) {
+
+            $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"][$index]["total_amount_with_discounts"] =
+                round(( $price *
+                        $this->getRemainingPercentageInDecimals($discount))
+                    * $size["quantity"], 2);
+
         }
 
-        return $quantity;
+        return $sessionCart;
     }
 
     /**

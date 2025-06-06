@@ -202,18 +202,9 @@
                 </div>
 
                 <div class="my-3">
-                    <!-- Material -->
                     <div class="mb-4">
                         <div class="bg-light border rounded p-2">
-                            <em>Material</em>
-                        </div>
-                        <p class="mt-2 mb-0">Lanilla</p>
-                    </div>
-
-                    <!-- Detalles -->
-                    <div class="mb-4">
-                        <div class="bg-light border rounded p-2">
-                            <em>Detalles</em>
+                            <em>Descripción</em>
                         </div>
                         <p class="mt-2 mb-0">
                             Cardigan cuello redondo de lanilla, lleva botones a contra tono. Al ser de lanilla es bien
@@ -280,9 +271,9 @@
                 @else
 
                     <p class="h3 text-dark">${{$product->price}}</p>
-                    <p class="text-secondary">$13.174,15 con Transferencia</p>
+                    <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
                     <div class="border p-2 d-inline-block mb-3">
-                        3 CUOTAS SIN INTERÉS DE <strong>$5.166,33</strong>
+                        3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
                     </div>
                 @endif
 
@@ -356,24 +347,28 @@
         })
 
 
-
         $('#add-product-to-cart').click(function(){
             const id = {{$product->id}};
             const route = '/carts/products/' + id
 
-            $.ajax({
-                type: "POST",
-                url: route,
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    size: selectedSize,
-                    quantity: $('#quantity').val(),
-                },
-                success: function (xhr, status, error) {
-                    console.log(xhr);
-                    toastr.success('Producto agregado al carrito');
-                }
-            })
+            if(selectedSize == undefined){
+               toastr.error('Debe seleccionar un talle');
+            }
+            else{
+                $.ajax({
+                    type: "POST",
+                    url: route,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        size: selectedSize,
+                        quantity: $('#quantity').val(),
+                    },
+                    success: function (xhr, status, error) {
+                        console.log(xhr);
+                        toastr.success('Producto agregado al carrito');
+                    }
+                })
+            }
         })
 
 
