@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('order_products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products');
+            $table->string('size');
             $table->foreignId('order_id')->references('id')->on('orders');
             $table->unsignedInteger('quantity');
             $table->float('unit_price');

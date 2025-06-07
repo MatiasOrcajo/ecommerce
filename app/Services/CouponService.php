@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Models\Coupon;
+use App\Traits\CartTrait;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
-class CouponService{
+class CouponService
+{
 
+    use CartTrait;
 
     /**
      * Validates the provided coupon code.
@@ -45,6 +49,18 @@ class CouponService{
 
         }
 
+        $coupon->quantity -= 1;
+        $coupon->save();
+
+        $sessionCart = Session::get('cart');
+        $sessionCart[array_key_first($sessionCart)]["is_coupon_applied"] = true;
+        $sessionCart[array_key_first($sessionCart)]["coupon_id"] = $coupon->id;
+        $sessionCart[array_key_first($sessionCart)]["coupon_code"] = $coupon->code;
+        $sessionCart[array_key_first($sessionCart)]["coupon_discount"] = $coupon->discount;
+        $sessionCart[array_key_first($sessionCart)]["order_total"] = $this->calculateNewTotalAfterApplyingCoupon($sessionCart);
+        Session::put('cart', $sessionCart);
+        Session::save();
+
         return response()->json([
             'success' => "Cupón validado con éxito",
             'coupon_id' => $coupon->id,
@@ -54,5 +70,6 @@ class CouponService{
 
 
     }
+
 
 }

@@ -7,18 +7,26 @@ use App\Models\CartProducts;
 use App\Models\Constants;
 use App\Models\Product;
 use App\Services\CartService;
+use App\Traits\CartTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
 
+    use CartTrait;
+
     public function __construct(private readonly CartService $cartService)
     {
+        $this->calculateCartTotalAmount();
     }
 
-
+    public function seeCart()
+    {
+        dd(Session::get('cart'));
+    }
 
     public function create()
     {

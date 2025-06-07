@@ -28,6 +28,7 @@ class OrderProductsService
         // Crear el registro utilizando asignación masiva.
         \App\Models\OrderProducts::create([
             'product_id'    => $product['product_id'],
+            'size'          => $product['size'],
             'order_id'      => $order->id,
             'quantity'      => $product['quantity'],
             'unit_price'    => $product['unit_price'],

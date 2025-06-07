@@ -70,7 +70,8 @@ class CheckoutController extends Controller
     public function getCartInfo(): JsonResponse
     {
         $sessionCart = \Illuminate\Support\Facades\Session::get('cart');
-        $products = $sessionCart[array_key_first($sessionCart)];
+        $products = $sessionCart[array_key_first($sessionCart)]["products"];
+
         $data = [
             "products" => []
         ];

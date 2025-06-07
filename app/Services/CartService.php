@@ -6,12 +6,15 @@ use App\Models\Cart;
 use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Traits\CartTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CartService
 {
+
+    use CartTrait;
 
 
     public function __construct(private readonly ProductService $productService, private readonly CouponService $couponService)
@@ -34,6 +37,8 @@ class CartService
         ]);
     }
 
+
+
     /**
      * Adds a product to the cart stored in the session. If the cart does not exist in the session,
      * it creates a new cart instance and stores it in the session. If the product already exists
@@ -49,7 +54,6 @@ class CartService
     public function addProduct(Product $product, Request $request)
     {
 
-
         $sessionCart = null;
 
         //If cart isn't stored in session
@@ -59,13 +63,14 @@ class CartService
             $createdCartInstance->status = Constants::ACTIVE;
             $createdCartInstance->save();
             $sessionCart[$createdCartInstance->id] = [];
+            $sessionCart[$createdCartInstance->id]["is_coupon_applied"] = false;
             Session::put('cart', $sessionCart);
         } else {
             $sessionCart = Session::get('cart');
         }
 
 
-        if( isset($sessionCart[array_key_first($sessionCart)][$product->id]["sizes"])){
+        if( isset($sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"])){
 
             $newSize = [
                 $request->size =>
@@ -75,15 +80,15 @@ class CartService
             ];
 
             $key = array_key_first($sessionCart);
-            $sizes = &$sessionCart[$key][$product->id]["sizes"];
+            $sizes = &$sessionCart[$key]["products"][$product->id]["sizes"];
 
             $sizes = array_merge($sizes, $newSize);
 
-            $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"] = $sizes;
+            $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"] = $sizes;
         }
         else{
 
-            $sessionCart[array_key_first($sessionCart)][$product->id] = [
+            $sessionCart[array_key_first($sessionCart)]["products"][$product->id] = [
                 "id" => $product->id,
                 "name" => $product->name,
                 "price" => $product->price,
@@ -97,48 +102,11 @@ class CartService
             ];
         }
 
-        Session::put('cart', $sessionCart);
+        $this->saveCartInSession($sessionCart);
 
-        Session::save();
-
-        $sessionCart = $this->calculateTotalAmountByProductInCart($product);
-
-        Session::put('cart', $sessionCart);
-
-        Session::save();
+        $this->calculateCartTotalAmount();
 
         return response()->json(Session::get('cart'));
-    }
-
-
-    /**
-     * Calculates the total amount for each size of a product in the cart, applying discounts
-     * and storing the calculated amount back into the cart for each size.
-     *
-     * It retrieves the current cart from the session, iterates through the sizes of the specified
-     * product, applies the applicable discount, and calculates the total amount for each size based
-     * on its quantity and discounted price. The updated cart is then returned.
-     *
-     * @param Product $product The product whose sizes' total amounts need to be calculated.
-     * @return array The updated cart with total amounts for each size recalculated.
-     */
-    private function calculateTotalAmountByProductInCart(Product $product)
-    {
-        $sessionCart = Session::get('cart');
-        $sizes = $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"];
-        $price = $sessionCart[array_key_first($sessionCart)][$product->id]["price"];
-        $discount = $sessionCart[array_key_first($sessionCart)][$product->id]["discount"];
-
-        foreach ($sizes as $index => $size) {
-
-            $sessionCart[array_key_first($sessionCart)][$product->id]["sizes"][$index]["total_amount_with_discounts"] =
-                round(( $price *
-                        $this->getRemainingPercentageInDecimals($discount))
-                    * $size["quantity"], 2);
-
-        }
-
-        return $sessionCart;
     }
 
     /**
@@ -186,20 +154,6 @@ class CartService
 
 
     /**
-     *
-     * Calculates and returns the remaining percentage in decimal form given a discount.
-     *
-     * @param float|int $discount
-     * @return float
-     *
-     */
-    private function getRemainingPercentageInDecimals($discount)
-    {
-        return 1 - ($discount / 100);
-    }
-
-
-    /**
      * Calculates the total amount for each product in the cart after applying discounts.
      *
      * @param object $customerData An object containing customer-related data, including applied coupons.
@@ -212,9 +166,10 @@ class CartService
 
         $cart = Session::get('cart');
         $idCartStoredInDatabase = array_key_first($cart);
-
+        dd($cart);
 
         return collect($cart[$idCartStoredInDatabase])->map(function ($query) use ($customerData) {
+            dd($query);
             $product = Product::find($query["id"]);
             $subtotal = round(($query["price"] * $query["quantity"]), 2);
 

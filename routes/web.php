@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Traits\CartTrait;
 
 Route::group(['middleware' => ['web']], function () {
+
+    Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);
 
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index');
 

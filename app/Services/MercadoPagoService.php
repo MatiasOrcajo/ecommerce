@@ -35,6 +35,7 @@ readonly class MercadoPagoService
 
         // Creates service record
         $order = $this->orderService->create(json_decode($request->data));
+        dd($order);
         $order->status = "Orden no paga por el cliente";
         $order->save();
 
