@@ -137,7 +137,7 @@
 
                 <form>
                     <div class="row">
-                        <div class="mt-5 col-md-6">
+                        <div class="mt-5 col-md-6" id="couponInputContainer">
                             <label for="billingFirstName" class="form-label">Tengo un cupón de descuento</label>
                             <div class="d-flex align-items-center justify-content-between">
                                 <input type="text" class="mb-0 me-3 form-control" id="coupon"
@@ -389,8 +389,10 @@
                         $('#total-price').html(`<h1>$${total}</h1>`);
                         $('#items-summary-container').html(html);
 
-                        if(isCouponApplied == true){
+                        if(isCouponApplied){
                             $('#total-price').html(`<del><h1>$${oldOrderTotalBeforeCoupon}</h1></del> <h1>$${total}</h1>`);
+
+                            $("#couponInputContainer").css("display", "none");
                         }
 
 

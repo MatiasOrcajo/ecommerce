@@ -30,6 +30,7 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-white">
             @include('layouts.navbar')
+            @include('layouts.popup')
 
             <!-- Page Heading -->
             @isset($header)
