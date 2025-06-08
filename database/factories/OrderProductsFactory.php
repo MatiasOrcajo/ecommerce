@@ -17,12 +17,10 @@ class OrderProductsFactory extends Factory
             'size' => $this->faker->randomElement(['XS', 'S', 'M', 'L', 'XL']),
             'quantity' => $this->faker->numberBetween(1, 5),
             'unit_price' => $this->faker->randomFloat(2, 10, 500),
-            'subtotal' => function (array $attributes) {
+            'total' => function (array $attributes) {
                 return $attributes['quantity'] * $attributes['unit_price'];
             },
-            'total_amount' => function (array $attributes) {
-                return $attributes['quantity'] * $attributes['unit_price'] - 10;
-            },
+
             'created_at' => now(),
         ];
     }

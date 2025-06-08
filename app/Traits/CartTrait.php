@@ -9,6 +9,39 @@ trait CartTrait
 {
 
     /**
+     * Retrieves the ID of the applied coupon from the session cart.
+     *
+     * @return int|string|null The ID of the applied coupon or null if no coupon is applied.
+     */
+    public function getCouponAppliedId()
+    {
+        return Session::get('cart')[array_key_first(Session::get('cart'))]["coupon_id"] ?? null;
+    }
+
+
+    /**
+     * Retrieves the total order amount from the session cart.
+     *
+     * @return float The total order amount stored in the session cart.
+     */
+    public function getCartTotal()
+    {
+        return Session::get('cart')[array_key_first(Session::get('cart'))]["order_total"];
+    }
+
+
+    /**
+     * Retrieves the current cart stored in the session.
+     *
+     * @return mixed The cart data stored in the session, or null if no cart exists.
+     */
+    public function getCart()
+    {
+        return Session::get('cart');
+    }
+
+
+    /**
      * Calculates the remaining percentage in decimals after applying a discount.
      *
      * This method converts the provided discount percentage into its decimal equivalent
@@ -51,6 +84,11 @@ trait CartTrait
 
         $sessionCart[array_key_first($sessionCart)]["order_total"] = $total;
 
+        if(!$sessionCart[array_key_first($sessionCart)]["is_coupon_applied"]){
+
+            $sessionCart[array_key_first($sessionCart)]["old_order_total_before_coupon_was_applied"] = $total;
+        }
+
         $this->saveCartInSession($sessionCart);
 
         return $sessionCart;
@@ -80,7 +118,7 @@ trait CartTrait
      * @param Product $product The product whose sizes' total amounts need to be calculated.
      * @return array The updated cart with total amounts for each size recalculated.
      */
-    private function calculateTotalAmountByProductInCart($sessionCart, Product $product)
+    private function calculateTotalAmountByProductInCart(&$sessionCart, Product $product)
     {
         $sizes = $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"];
         $price = $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["price"];
@@ -95,8 +133,13 @@ trait CartTrait
                         $this->getRemainingPercentageInDecimals($discount))
                     * $size["quantity"], 2);
 
+            $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"][$index]["subtotal"] = $price * $size["quantity"];
+
             $acc += $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"][$index]["total_amount_with_discounts"];
+
+            $this->saveCartInSession($sessionCart);
         }
+
 
 
         return $acc;

@@ -284,34 +284,6 @@
                 return 1 - (discount / 100)
             }
 
-            const btnValidateCoupon = document.getElementById('validate-coupon-button');
-            let coupon_id = null;
-
-            btnValidateCoupon.addEventListener('click', () => {
-
-                let coupon = document.getElementById('coupon').value;
-
-                axios.get(`{{route('validate-coupon')}}` + '?code=' + coupon)
-                .then(response => {
-                        $('#coupon-validated-success').html("Cupón validado");
-                        $('#coupon-validated-failed').html("");
-                        $('#coupon-success-code').html(`Aplicado ${response.data.coupon_discount}% OFF`)
-
-                        $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed * getRemainingPercentageInDecimals(response.data.coupon_discount)}</h1>`);
-
-                        coupon_id = response.data.coupon_id;
-
-                        couponIsApplied = response.data.coupon_discount
-
-                    })
-                .catch(error => {
-                    $('#coupon-validated-success').html("");
-                    const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
-                    $('#coupon-validated-failed').html(errorMessage);
-                })
-
-            });
-
 
             const btnSubmit = document.getElementById('submit');
 
@@ -367,10 +339,12 @@
                     type: "GET",
                     url: '{{route('cart-info')}}',
                     success: function (xhr, status, error) {
-                        console.log(xhr.products);
+
+                        let isCouponApplied = xhr.is_coupon_applied;
                         let products = xhr.products;
                         let html = "";
-                        let total = xhr.order_total_amount;
+                        total = xhr.order_total;
+                        oldOrderTotalBeforeCoupon = xhr.old_order_total_before_coupon_was_applied;
 
                         if(Object.entries(products).length <= 0){
                             location.reload();
@@ -378,40 +352,45 @@
 
                         Object.entries(products).forEach(([key, product]) => {
 
+                            Object.entries(product.sizes).forEach(([key, data]) => {
 
-                            let priceHtml = ``;
+                                let priceHtml = ``;
 
-                            if (product.discount > 0) {
-                                priceHtml = `<del><h4>$${product.price} </h4> </del>
-                                             <h4 class="text-success">$${product.total}</h4>
+                                if (product.discount > 0) {
+                                    priceHtml = `<del><h4>$${data.subtotal} </h4> </del>
+                                             <h4 class="text-success">$${data.total_amount_with_discounts
+                                    }</h4>
                                             `
-                            } else {
-                                priceHtml = `<h4 class="text-success">$${product.total}</h4> `
+                                } else {
+                                    priceHtml = `<h4 class="text-success">$${data.total_amount_with_discounts
+                                    }</h4> `
 
-                            }
+                                }
 
-                            html += `
+                                html += `
 
                                 <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
                                     <button class="x-cart-button delete_cart_product" id="${product.id}">X</button>
                                     <div class="order-summary-thumbnail">
                                         <img src="${product.picture}"
                                              alt="" class="img-fluid">
-                                            <div class="item-quantity">${product.quantity}</div>
+                                            <div class="item-quantity">${data.quantity}</div>
                                     </div>
-                                    <h5 class="d-block mx-3">${product.name} Talle: ${product.size}</h5>
+                                    <h5 class="d-block mx-3">${product.name} Talle: ${key}</h5>
                                     ${priceHtml}
                                 </div>
                                 `
 
+                            })
+
+
                         })
 
-                        helperTotalAmountToBeDisplayed = total;
                         $('#total-price').html(`<h1>$${total}</h1>`);
                         $('#items-summary-container').html(html);
 
-                        if(couponIsApplied > 0){
-                            $('#total-price').html(`<del><h1>$${helperTotalAmountToBeDisplayed}</h1></del> <h1>$${helperTotalAmountToBeDisplayed * getRemainingPercentageInDecimals(couponIsApplied)}</h1>`);
+                        if(isCouponApplied == true){
+                            $('#total-price').html(`<del><h1>$${oldOrderTotalBeforeCoupon}</h1></del> <h1>$${total}</h1>`);
                         }
 
 
@@ -447,6 +426,34 @@
             }
 
             getItemsSummary();
+
+
+            let oldOrderTotalBeforeCoupon = 0;
+            let total = 0;
+
+            const btnValidateCoupon = document.getElementById('validate-coupon-button');
+            let coupon_id = null;
+
+            btnValidateCoupon.addEventListener('click', () => {
+
+                let coupon = document.getElementById('coupon').value;
+
+                axios.get(`{{route('validate-coupon')}}` + '?code=' + coupon)
+                    .then(response => {
+                        $('#coupon-validated-success').html("Cupón validado");
+                        $('#coupon-validated-failed').html("");
+                        $('#coupon-success-code').html(`Aplicado ${response.data.coupon_discount}% OFF`)
+
+                        getItemsSummary();
+
+                    })
+                    .catch(error => {
+                        $('#coupon-validated-success').html("");
+                        const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
+                        $('#coupon-validated-failed').html(errorMessage);
+                    })
+
+            });
 
         });
     </script>

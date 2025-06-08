@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Services\MercadoPagoService;
+use App\Traits\CartTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -11,6 +12,9 @@ use MercadoPago\Client\Preference\PreferenceClient;
 
 class CheckoutController extends Controller
 {
+
+    use CartTrait;
+
     public function __construct(private readonly MercadoPagoService $mpService)
     {
 
@@ -69,31 +73,9 @@ class CheckoutController extends Controller
      */
     public function getCartInfo(): JsonResponse
     {
-        $sessionCart = \Illuminate\Support\Facades\Session::get('cart');
-        $products = $sessionCart[array_key_first($sessionCart)]["products"];
+        $cart = $this->getCart();
 
-        $data = [
-            "products" => []
-        ];
-
-        foreach ($products as $product) {
-            foreach($product["sizes"] as $index => $size){
-                $data["products"][] = [
-                    "name" => $product["name"],
-                    "price" => $product["price"],
-                    "size" => $index,
-                    "quantity" => $size["quantity"],
-                    "discount" => $product["discount"],
-                    "picture" => $product["picture"],
-                    "total" => $size["total_amount_with_discounts"]
-                ];
-            }
-
-        }
-
-        $data["order_total_amount"] = array_sum(array_column($data["products"], "total"));
-
-        return response()->json($data);
+        return response()->json($cart[array_key_first($cart)]);
     }
 
 

@@ -33,8 +33,7 @@ class OrderProductsService
             'quantity'      => $product['quantity'],
             'unit_price'    => $product['unit_price'],
             'discount'      => $product['product_discount'],
-            'subtotal'      => $product['subtotal'],
-            'total_amount'  => $product['total_amount_with_discount'],
+            'total'  => $product['total'],
         ]);
     }
 

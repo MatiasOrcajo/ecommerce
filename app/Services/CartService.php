@@ -161,33 +161,32 @@ class CartService
      * @return \Illuminate\Support\Collection A collection of product details, including product ID, quantity, unit price,
      *                                         discount, subtotal, and total amount after discounts.
      */
-    public function calculateCartItemsTotalAmountForEachOne($customerData)
+    public function createArrayOfProductsInCart($customerData)
     {
 
-        $cart = Session::get('cart');
+        $cart = $this->getCart();
         $idCartStoredInDatabase = array_key_first($cart);
-        dd($cart);
 
         return collect($cart[$idCartStoredInDatabase])->map(function ($query) use ($customerData) {
-            dd($query);
-            $product = Product::find($query["id"]);
-            $subtotal = round(($query["price"] * $query["quantity"]), 2);
 
-            $totalDiscount = $query["discount"];
+            $data = [];
 
-            $coupon = Coupon::find($customerData->coupon_id);
+            foreach ($query["sizes"] as $size => $data){
+                $product = Product::find($query["id"]);
+                $coupon_id = $this->getCouponAppliedId();
 
-            $total = round($subtotal * $this->getRemainingPercentageInDecimals($totalDiscount), 2);
+                $data[] = [
+                    "product_id" => $product->id,
+                    "size" => $size,
+                    "quantity" => $data["quantity"],
+                    "unit_price" => $query["price"],
+                    "product_discount" => $query["discount"],
+                    "total" => $data["total_amount_with_discounts"],
+                    "coupon_discount" => Coupon::find($coupon_id)->discount ?? null,
+                ];
+            }
 
-            return [
-                "product_id" => $product->id,
-                "quantity" => $query["quantity"],
-                "unit_price" => $query["price"],
-                "product_discount" => $query["discount"],
-                "subtotal" => $subtotal,
-                "coupon_discount" => $coupon->discount ?? 0,
-                "total_amount_with_discount" => $total,
-            ];
+            return $data;
         });
 
     }

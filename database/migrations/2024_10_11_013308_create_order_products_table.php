@@ -19,8 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->float('unit_price');
             $table->float('discount')->nullable();
-            $table->float('subtotal');
-            $table->float('total_amount');
+            $table->float('total');
             $table->timestamps();
         });
     }

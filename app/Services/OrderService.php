@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Traits\CartTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 class OrderService
 {
 
+    use CartTrait;
 
     public function __construct(private readonly CustomerService      $customerService,
                                 private readonly CartService          $cartService,
@@ -32,22 +34,10 @@ class OrderService
     {
 
         // Calculates total amount to be paid for every product
-        $cartProducts = $this->cartService->calculateCartItemsTotalAmountForEachOne($customerData);
+        $cartProducts = $this->cartService->createArrayOfProductsInCart($customerData);
 
         // Calculate the total cart amount
         // receives array of products
-        $cartTotal = $this->calculateCartTotal($cartProducts);
-
-        $coupon = Coupon::find($customerData->coupon_id);
-
-        if($coupon){
-            $coupon->quantity -= 1;
-            $coupon->save();
-            $cartTotal = $cartTotal * (1- ($coupon->discount / 100));
-        }
-
-        // Retrieve coupon if available
-        $coupon = Coupon::find($customerData->coupon_id);
 
         // Extract shipping address (extract variable)
         $shippingAddress = sprintf(
@@ -66,9 +56,9 @@ class OrderService
         $order = Order::create([
             'customer_id' => $customer->id,
             'order_date' => Carbon::now(),
-            'total_amount' => round($cartTotal, 2),
+            'total_amount' => $this->getCartTotal(),
             'shipping_address' => $shippingAddress,
-            'coupon_id' => $coupon->id ?? null,
+            'coupon_id' => $this->getCouponAppliedId(),
         ]);
 
         // Link cart products to the order (extract variable)
