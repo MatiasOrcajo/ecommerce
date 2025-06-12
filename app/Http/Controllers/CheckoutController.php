@@ -20,6 +20,13 @@ class CheckoutController extends Controller
 
     }
 
+
+    public function index()
+    {
+        return view('checkout');
+    }
+
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse

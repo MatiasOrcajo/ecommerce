@@ -54,7 +54,7 @@
                 <p>Unite para recibirlo</p>
                 <input type="email" class="form-control" placeholder="Email">
                 <input type="text" class="form-control" placeholder="Cómo te gusta que te llamen">
-                <button class="btn btn-dark w-100">Suscribirme</button>
+                <button id="subscribe_button" class="btn btn-dark w-100">Suscribirme</button>
                 <small class="d-block text-muted mt-2">Recibirás un correo para validar tu email.</small>
             </div>
         </div>

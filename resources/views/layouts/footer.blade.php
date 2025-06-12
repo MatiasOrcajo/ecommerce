@@ -10,8 +10,6 @@
                     <li><a href="#" class="text-white text-decoration-none">Inicio</a></li>
                     <li><a href="#" class="text-white text-decoration-none">Productos</a></li>
                     <li><a href="#" class="text-white text-decoration-none">Políticas &amp; FAQ</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Contáctanos</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Minoristas</a></li>
                 </ul>
             </div>
 
@@ -19,8 +17,6 @@
             <div class="col-12 col-md-4 mb-4">
                 <h5 class="fw-bold">Contáctanos</h5>
                 <ul class="list-unstyled">
-                    <li><a href="https://wa.me/541128899281" class="text-white text-decoration-none">541128899281</a>
-                    </li>
                     <li class="mt-1">+54 9 1128899281</li>
                     <li class="mt-1"><a href="mailto:info@paccaindumentaria.com.ar"
                                         class="text-white text-decoration-none">info@paccaindumentaria.com.ar</a></li>

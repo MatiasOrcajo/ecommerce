@@ -119,13 +119,13 @@ class CartService
      * @return \Illuminate\Http\JsonResponse
      *
      */
-    public function deleteProduct(Product $product)
+    public function deleteProduct(Product $product, Request $request)
     {
 
         $cart = Cart::find(array_key_first(Session::get('cart')));
         $cartInSession = Session::get('cart');
 
-        unset($cartInSession[$cart->id][$product->id]);
+        unset($cartInSession[$cart->id]["products"][$product->id]["sizes"][$request->size]);
 
         if (empty($cartInSession[$cart->id])) {
             $cart->status = Constants::EMPTY_BY_CUSTOMER;

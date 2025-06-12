@@ -60,17 +60,9 @@
                                     <input type="tel" class="form-control" id="phone" placeholder="011 6172-1821"
                                            required>
                                 </div>
-                                <button type="button" id="continue-to-payment-step-button" class="btn btn-primary" data-bs-target="#step2"
-                                        data-bs-toggle="pill">Continuar con el método de pago
-                                </button>
-                            </form>
-                        </div>
 
-                        <!-- Step 2: Datos de facturación -->
-                        <div class="tab-pane fade" id="step2">
-                            <h5 class="mb-3">Datos de facturación</h5>
-                            <form id="billingForm">
                                 <div class="row">
+
                                     <div class="mb-3 col-md-4">
                                         <label for="documentType" class="form-label">Tipo de documento</label>
                                         <select class="form-select" id="documentType" required>
@@ -120,6 +112,72 @@
                                         <input type="text" class="form-control" id="zip_code" required>
                                     </div>
                                 </div>
+
+                                <button type="button" id="continue-to-payment-step-button" class="btn btn-primary" data-bs-target="#step2"
+                                        data-bs-toggle="pill">Continuar con el método de pago
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Step 2: Datos de facturación -->
+                        <div class="tab-pane fade" id="step2">
+                            <form id="billingForm">
+
+                                <div class="row mb-5">
+                                    <h5 class="mb-3">Método de envío</h5>
+                                    <div class="col-md-6 d-flex justify-content-center">
+                                        <button type="button" id="mercado-pago-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                                style="font-size: 1rem;"
+                                                data-method="mercado-pago">
+                                            <i class="bi bi-credit-card"
+                                               style="margin-right: 5px; font-size: 1.2rem;"></i> Correo Argentino
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-center">
+                                        <button type="button" id="bank-transfer-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                                style="font-size: 1rem;"
+                                                data-method="bank-transfer">
+                                            <i class="bi bi-bank" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            Retiro en Bernardo de Irigoyen 630
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-5">
+                                    <h5 class="mb-3">Método de pago</h5>
+                                    <div class="col-md-12 d-flex justify-content-center">
+                                        <button type="button" id="mercado-pago-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                                style="font-size: 1rem;"
+                                                data-method="mercado-pago">
+                                            <i class="bi bi-credit-card"
+                                               style="margin-right: 5px; font-size: 1.2rem;"></i> Mercado Pago
+                                        </button>
+                                    </div>
+                                    <div class="col-md-12 d-flex justify-content-center">
+                                        <button type="button" id="bank-transfer-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                                style="font-size: 1rem;"
+                                                data-method="bank-transfer">
+                                            <i class="bi bi-bank" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            Transferencia Bancaria |
+                                            10% off
+                                        </button>
+                                    </div>
+                                    <div class="col-md-12 d-flex justify-content-center">
+                                        <button type="button" id="cash-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                                style="font-size: 1rem;"
+                                                data-method="cash">
+                                            <i class="bi bi-cash" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            Efectivo |
+                                            20% off
+                                                </button>
+                                    </div>
+                                </div>
+
                             </form>
                             <button id="submit" class="btn btn-success">Finalizar</button>
 
@@ -157,6 +215,12 @@
                     <div class="mt-4 col-md-6" style="border-top: 1px solid #ccc">
                         <div id="coupon-success-code"></div>
                         <div class="d-flex justify-content-between align-content-center mt-3">
+                            <h2>Envío:</h2>
+                            <div class="text-success">
+                            GRATIS!
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-content-center mt-3">
                             <h2>Total</h2>
                             <div id="total-price" class="text-success">
 
@@ -173,6 +237,34 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", () => {
+
+
+            // Agregar un event listener a todos los elementos con la clase 'payment_method'
+            const paymentMethodButtons = document.querySelectorAll(".payment_method");
+            paymentMethodButtons.forEach((button) => {
+                button.addEventListener("click", (event) => {
+
+                    const selectedPaymentMethod = event.target.dataset.method;
+
+
+                    $.ajax({
+                        url: "/test",
+                        type: "GET",
+                        data: {
+                            payment_method: selectedPaymentMethod
+                        },
+                        success: function (response) {
+                            console.log("Payment method successfully sent:", response);
+                            // Puedes manejar la respuesta aquí
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error sending the payment method:", error);
+                            // Puedes manejar el error aquí
+                        }
+                    });
+
+                });
+            });
 
             let helperTotalAmountToBeDisplayed = 0;
             let couponIsApplied = 0;
@@ -289,6 +381,37 @@
 
             // Recopilar datos y enviarlos
             btnSubmit.addEventListener('click', () => {
+
+                // Validar que todos los campos del formulario sean obligatorios antes de enviar
+                const requiredFields = [
+                    'firstName',
+                    'lastName',
+                    'phone',
+                    'documentNumber',
+                    'email',
+                    'locality',
+                    'province',
+                    'street',
+                    'number',
+                    'zip_code'
+                ];
+
+                let isValid = true;
+
+                requiredFields.forEach((field) => {
+                    const inputField = document.getElementById(field);
+                    if (!inputField.value.trim()) {
+                        inputField.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        inputField.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    toastr.error("Por favor, complete todos los campos obligatorios.")
+                    return;
+                }
                 const data = {
                     name: document.getElementById('firstName').value,
                     surname: document.getElementById('lastName').value,
@@ -370,7 +493,7 @@
                                 html += `
 
                                 <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
-                                    <button class="x-cart-button delete_cart_product" id="${product.id}">X</button>
+                                    <button class="x-cart-button delete_cart_product" data-size="${key}" id="${product.id}">X</button>
                                     <div class="order-summary-thumbnail">
                                         <img src="${product.picture}"
                                              alt="" class="img-fluid">
@@ -386,19 +509,20 @@
 
                         })
 
+
                         $('#total-price').html(`<h1>$${total}</h1>`);
-                        $('#items-summary-container').html(html);
+                        $('#items-summary-container').empty().append(html);
 
                         if(isCouponApplied){
                             $('#total-price').html(`<del><h1>$${oldOrderTotalBeforeCoupon}</h1></del> <h1>$${total}</h1>`);
-
-                            $("#couponInputContainer").css("display", "none");
                         }
 
 
                         document.querySelectorAll('.delete_cart_product').forEach(element => {
                             element.addEventListener('click', (event) => {
 
+
+                                const size = event.target.getAttribute('data-size');
                                 const id = event.target.id;
                                 const route = '/cart/' + id
 
@@ -406,7 +530,8 @@
                                     type: "DELETE",
                                     url: route,
                                     data: {
-                                        _token: $('meta[name="csrf-token"]').attr('content')
+                                        _token: $('meta[name="csrf-token"]').attr('content'),
+                                        size: size,
                                     },
                                     success: function (xhr, status, error) {
 

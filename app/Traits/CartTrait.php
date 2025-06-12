@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Session;
 trait CartTrait
 {
 
+    public function __construct()
+    {
+        if($this->getCart() != null){
+            $this->calculateCartTotalAmount();
+        }
+    }
+
+
     /**
      * Retrieves the ID of the applied coupon from the session cart.
      *
@@ -70,23 +78,38 @@ trait CartTrait
     }
 
 
-
+    /**
+     * Calculates the total amount of the cart, including handling coupon discounts if applied.
+     *
+     * This method iterates over the products in the cart to compute the total amount based on product-specific calculations.
+     * It also updates the session cart with the computed totals, applying coupon discounts when necessary.
+     *
+     * @return array The updated session cart containing the recalculated totals.
+     */
     public function calculateCartTotalAmount()
     {
         $sessionCart = Session::get('cart');
         $productsInCart = $sessionCart[array_key_first($sessionCart)]["products"];
         $total = 0;
 
+
+        //calcula el total de cada producto sin tener en cuenta los descuentos por cupón
         foreach ($productsInCart as $index => $product) {
             $product = Product::find($index);
             $total += $this->calculateTotalAmountByProductInCart($sessionCart, $product);
         }
 
-        $sessionCart[array_key_first($sessionCart)]["order_total"] = $total;
+        //este dato debe ser siempre el total sin descuentos por cupón
+        $sessionCart[array_key_first($sessionCart)]["old_order_total_before_coupon_was_applied"] = $total;
+        //si existe un cupón de descuento aplicado
+        if($sessionCart[array_key_first($sessionCart)]["is_coupon_applied"]){
 
-        if(!$sessionCart[array_key_first($sessionCart)]["is_coupon_applied"]){
+            $sessionCart[array_key_first($sessionCart)]["order_total"] = $total * $this->getRemainingPercentageInDecimals($sessionCart[array_key_first($sessionCart)]["coupon_discount"]);
 
-            $sessionCart[array_key_first($sessionCart)]["old_order_total_before_coupon_was_applied"] = $total;
+        }
+        else{
+            //si no existe
+            $sessionCart[array_key_first($sessionCart)]["order_total"] = $total;
         }
 
         $this->saveCartInSession($sessionCart);

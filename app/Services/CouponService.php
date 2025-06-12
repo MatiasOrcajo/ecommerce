@@ -28,6 +28,11 @@ class CouponService
      */
     public function validateCoupon(Request $request)
     {
+        $sessionCart = Session::get('cart');
+
+        if($sessionCart[array_key_first($sessionCart)]["is_coupon_applied"]){
+            throw new \Error("Ya tiene un cupón aplicado");
+        }
 
         $validatedData = $request->validate([
            'code' => 'required|string|max:255'
@@ -52,7 +57,6 @@ class CouponService
         $coupon->quantity -= 1;
         $coupon->save();
 
-        $sessionCart = Session::get('cart');
         $sessionCart[array_key_first($sessionCart)]["is_coupon_applied"] = true;
         $sessionCart[array_key_first($sessionCart)]["coupon_id"] = $coupon->id;
         $sessionCart[array_key_first($sessionCart)]["coupon_code"] = $coupon->code;

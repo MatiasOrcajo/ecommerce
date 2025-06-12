@@ -170,6 +170,7 @@
     footer {
         bottom: 0;
         left: 0;
+        height: 50%;
         display: inline-block;
         width:100%;
     }
