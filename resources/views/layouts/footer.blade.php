@@ -1,4 +1,4 @@
-<footer class="bg-dark text-white">
+<footer class="bg-dark text-white" style="margin-top: 10rem">
     <div class="container pt-5 h-auto">
 
         <!-- Primera fila: Categorías, Contacto, RRSS -->

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Services\CheckoutService;
 use App\Services\MercadoPagoService;
 use App\Traits\CartTrait;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,7 @@ class CheckoutController extends Controller
 
     use CartTrait;
 
-    public function __construct(private readonly MercadoPagoService $mpService)
+    public function __construct(private readonly MercadoPagoService $mpService, private readonly CheckoutService $checkoutService)
     {
 
     }
@@ -33,6 +34,9 @@ class CheckoutController extends Controller
      */
     public function pay(Request $request)
     {
+
+        dd(collect(json_decode($request->data)));
+
         return $this->mpService->createPreference($request);
     }
 

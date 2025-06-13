@@ -2,10 +2,10 @@
 
 @section('content')
 
-    <div class="container my-4" style="max-width: 100%">
+    <div class="container mt-4" style="max-width: 100%; ">
         <div class="row">
             <!-- Formulario de compra -->
-            <div class="col-md-7 steps-container">
+            <div class="col-md-7 steps-container" style="padding-bottom: 10rem;">
                 <div id="stepForm" class="step-form-container">
                     <!-- Step navigation -->
                     <ul class="nav nav-pills mb-4 ul-steps" id="steps">
@@ -126,21 +126,21 @@
                                 <div class="row mb-5">
                                     <h5 class="mb-3">Método de envío</h5>
                                     <div class="col-md-6 d-flex justify-content-center">
-                                        <button type="button" id="mercado-pago-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                        <button type="button" id="correo-argentino-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipment_method"
                                                 style="font-size: 1rem;"
-                                                data-method="mercado-pago">
-                                            <i class="bi bi-credit-card"
+                                                data-shipment-method="correo-argentino">
+                                            <i class="mx-0"
                                                style="margin-right: 5px; font-size: 1.2rem;"></i> Correo Argentino
                                         </button>
                                     </div>
                                     <div class="col-md-6 d-flex justify-content-center">
-                                        <button type="button" id="bank-transfer-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
+                                        <button type="button" id="take-away-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipment_method"
                                                 style="font-size: 1rem;"
-                                                data-method="bank-transfer">
-                                            <i class="bi bi-bank" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            Retiro en Bernardo de Irigoyen 630
+                                                data-shipment-method="take-away">
+                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            Retiro en CABA
                                         </button>
                                     </div>
                                 </div>
@@ -151,8 +151,8 @@
                                         <button type="button" id="mercado-pago-button"
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
                                                 style="font-size: 1rem;"
-                                                data-method="mercado-pago">
-                                            <i class="bi bi-credit-card"
+                                                data-payment-method="mercado-pago">
+                                            <i class="mx-0"
                                                style="margin-right: 5px; font-size: 1.2rem;"></i> Mercado Pago
                                         </button>
                                     </div>
@@ -160,8 +160,8 @@
                                         <button type="button" id="bank-transfer-button"
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
                                                 style="font-size: 1rem;"
-                                                data-method="bank-transfer">
-                                            <i class="bi bi-bank" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                                data-payment-method="bank-transfer">
+                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
                                             Transferencia Bancaria |
                                             10% off
                                         </button>
@@ -170,8 +170,8 @@
                                         <button type="button" id="cash-button"
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
                                                 style="font-size: 1rem;"
-                                                data-method="cash">
-                                            <i class="bi bi-cash" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                                data-payment-method="cash">
+                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
                                             Efectivo |
                                             20% off
                                                 </button>
@@ -239,13 +239,65 @@
         document.addEventListener("DOMContentLoaded", () => {
 
 
-            // Agregar un event listener a todos los elementos con la clase 'payment_method'
+
+            // Capturar eventos de clic para elementos con las clases 'payment_method' y 'shipment_method'
+            let selectedShipmentMethod = null;
+            let selectedPaymentMethod = null;
             const paymentMethodButtons = document.querySelectorAll(".payment_method");
+            const shipmentMethodButtons = document.querySelectorAll(".shipment_method");
+
+            document.getElementById("correo-argentino-button").addEventListener("click", () => {
+                selectedShipmentMethod = "correo-argentino";
+
+            })
+
+            document.getElementById("take-away-button").addEventListener("click", () => {
+                selectedShipmentMethod = "take-away";
+            })
+
+
+            // Cambiar las clases de los botones al hacer clic
             paymentMethodButtons.forEach((button) => {
                 button.addEventListener("click", (event) => {
 
-                    const selectedPaymentMethod = event.target.dataset.method;
+                    // Remover estilos de otros botones
+                    paymentMethodButtons.forEach(btn => {
+                        btn.style.color = "";
+                        btn.style.backgroundColor = "";
+                        btn.style.borderColor = "";
+                    });
 
+                    // Aplicar clases al botón seleccionado
+                    event.target.style.color = "var(--bs-btn-hover-color)";
+                    event.target.style.backgroundColor = "var(--bs-btn-hover-bg)";
+                    event.target.style.borderColor = "var(--bs-btn-hover-border-color)";
+
+                });
+            });
+
+            shipmentMethodButtons.forEach((button) => {
+                button.addEventListener("click", (event) => {
+
+                    // Remover estilos de otros botones
+                    shipmentMethodButtons.forEach(btn => {
+                        btn.style.color = "";
+                        btn.style.backgroundColor = "";
+                        btn.style.borderColor = "";
+                    });
+
+                    // Aplicar clases al botón seleccionado
+                    event.target.style.color = "var(--bs-btn-hover-color)";
+                    event.target.style.backgroundColor = "var(--bs-btn-hover-bg)";
+                    event.target.style.borderColor = "var(--bs-btn-hover-border-color)";
+
+                });
+            });
+
+            // Agregar un event listener a todos los elementos con la clase 'payment_method'
+            paymentMethodButtons.forEach((button) => {
+                button.addEventListener("click", (event) => {
+
+                    selectedPaymentMethod = event.target.getAttribute("data-payment-method");
 
                     $.ajax({
                         url: "/test",
@@ -293,7 +345,7 @@
                     axios.get(`https://apis.datos.gob.ar/georef/api/municipios?provincia=${event.target.value}&campos=id,nombre&max=500`)
                         .then(response => {
                             let locality = response.data.municipios;
-                            let html = "";giftcard
+                            let html = "";
                             locality.forEach(locality => {
                                 html += `<option value="${locality.nombre}">${locality.nombre}</option>`
                             });
@@ -412,6 +464,7 @@
                     toastr.error("Por favor, complete todos los campos obligatorios.")
                     return;
                 }
+
                 const data = {
                     name: document.getElementById('firstName').value,
                     surname: document.getElementById('lastName').value,
@@ -425,7 +478,11 @@
                     apartment: document.getElementById('apartment').value,
                     zip_code: document.getElementById('zip_code').value,
                     coupon_id: coupon_id,
+                    payment_method: selectedPaymentMethod,
+                    shipment_method: selectedShipmentMethod
                 };
+
+                console.log(data);
 
                 $.ajaxSetup({
                     headers: {
