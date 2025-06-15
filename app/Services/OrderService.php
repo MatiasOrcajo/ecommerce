@@ -10,6 +10,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Handles the creation and management of customer orders, including cart processing,
+ * discount application, and order product association.
+ */
 class OrderService
 {
 
@@ -32,10 +36,6 @@ class OrderService
      */
     public function create($customerData)
     {
-
-        // Calculates total amount to be paid for every product
-        $cartProducts = $this->cartService->createArrayOfProductsInCart($customerData);
-
         // Calculate the total cart amount
         // receives array of products
 
@@ -57,17 +57,46 @@ class OrderService
             'customer_id' => $customer->id,
             'order_date' => Carbon::now(),
             'total_amount' => $this->getCartTotal(),
+            'code' => $this->generateOrderCode(),
+            'status' => 'No pago',
             'shipping_address' => $shippingAddress,
+            'expiration_date' => Carbon::now()->addDays(4),
             'coupon_id' => $this->getCouponAppliedId(),
         ]);
 
-        // Link cart products to the order (extract variable)
-        foreach ($cartProducts as $product) {
-            $this->orderProducts->create($order, $product);
-        }
+        $this->orderProducts->create($order);
 
         return $order;
     }
+
+
+    /**
+     * Generates a unique order code with a specified length.
+     *
+     * The generated code consists of a prefix ('ORD-') followed by randomly
+     * selected alphanumeric characters that exclude ambiguous ones such as
+     * '0', 'O', 'I', and '1'. The method ensures uniqueness of the code
+     * by recursively regenerating it in case of a duplication found in
+     * the database.
+     *
+     * @param int $length The length of the random part of the order code. Default is 4.
+     * @return string The generated unique order code.
+     */
+    private function generateOrderCode($length = 4) {
+        $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        $code = 'ORD-';
+
+        for ($i = 0; $i < $length; $i++) {
+            $code .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+
+        if(Order::where("code", $code)->first()){
+            $this->generateOrderCode();
+        }
+
+        return $code;
+    }
+
 
 
     /**

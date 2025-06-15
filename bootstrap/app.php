@@ -14,7 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             "capture-visitor" => "App\Http\Middleware\CaptureVisitor",
-            "cart-empty" => "App\Http\Middleware\CartEmptyMiddleware"
+            "cart-empty" => "App\Http\Middleware\CartEmptyMiddleware",
+            "order-success" => "App\Http\Middleware\OrderSuccessMiddleware"
 
         ]);
     })

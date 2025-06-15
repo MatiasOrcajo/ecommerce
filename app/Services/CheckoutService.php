@@ -25,13 +25,36 @@ class CheckoutService
     public function processOrder(Request $request)
     {
 
-        $paymentMethods = [];
+        $paymentMethods = [
+            "bank-transfer" => "Transferencia bancaria",
+            "mercado-pago" => "Mercado Pago",
+            "cash" => "Efectivo"
+        ];
 
-        $order = $this->orderService->create(json_decode($request->data));
-        $order->status = "Orden no paga por el cliente";
+        $shippingMethods = [
+            "correo-argentino" => "Correo Argentino",
+            "andreani" => "Andreani",
+            "take-away" => "Retiro en CABA"
+        ];
+
+
+        $request = json_decode($request->data);
+
+        $selectedPaymentMethod = $request->payment_method;
+        $order = $this->orderService->create($request);
+        $order->shipping_method = $shippingMethods[$request->shipping_method];
+        $order->payment_method = $paymentMethods[$selectedPaymentMethod];
         $order->save();
 
-        // Retrieves items to be purchased, with final price including discounts
-        $items = $this->orderProductsService->mapOrderProductToItem($order->id);
+        if($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash"){
+
+            return response()->json([
+               "success" => true,
+               "route" => route('order-success', $order->code)
+            ]);
+        }
+
     }
+
+
 }

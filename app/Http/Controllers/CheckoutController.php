@@ -30,14 +30,28 @@ class CheckoutController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function pay(Request $request)
     {
 
-        dd(collect(json_decode($request->data)));
+        return $this->checkoutService->processOrder($request);
 
-        return $this->mpService->createPreference($request);
+//        return $this->mpService->createPreference($request);
+    }
+
+
+
+    /**
+     * Handles the processing of a successful order.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function processOrderSuccess($code)
+    {
+        $order = Order::where('code', $code)->first();
+
+        return view('checkout.order-success', compact('order'));
     }
 
 

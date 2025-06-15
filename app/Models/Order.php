@@ -10,13 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'orders';
-    protected $fillable = [
-        "customer_id",
-        "order_date",
-        "total_amount",
-        "shipping_address",
-        "coupon_id"
-    ];
+    protected $guarded;
 
 
     /**
@@ -38,6 +32,12 @@ class Order extends Model
     public function products()
     {
         return $this->hasMany(OrderProducts::class, 'order_id');
+    }
+
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_id');
     }
 
 

@@ -22,7 +22,13 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('validate-coupon', [\App\Services\CouponService::class, 'validateCoupon'])->name('validate-coupon');
 
+    /**
+     * checkout
+     */
     Route::post('/pay', [\App\Http\Controllers\CheckoutController::class, 'pay'])->name('pay');
+
+    Route::get('/orden/{code}', [\App\Http\Controllers\CheckoutController::class, 'processOrderSuccess'])->name('order-success')->middleware('order-success');
+    Route::post('/orden/verificar-email/{code}', [\App\Http\Controllers\CheckoutController::class, 'processOrderSuccess'])->name('order.success.verify.email')->middleware('order-success');
 
     Route::get('payment-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('payment-success');
     Route::get('payment-failure/{order}', [\App\Http\Controllers\CheckoutController::class, 'failure'])->name('payment-failure');

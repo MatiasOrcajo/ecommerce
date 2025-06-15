@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->references('id')->on('customers');
             $table->dateTime('order_date');
+            $table->dateTime('expiration_date');
             $table->float('total_amount');
-            $table->string('status')->nullable();
+            $table->string('status');
             $table->string('payment_method')->nullable();
+            $table->string('shipping_method')->nullable();
             $table->string('shipping_address');
+            $table->string('code');
             $table->string('preference_id')->nullable();
             $table->foreignId('coupon_id')->nullable()->references('id')->on('coupons');
             $table->timestamps();

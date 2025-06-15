@@ -167,21 +167,20 @@ class CartService
         $cart = $this->getCart();
         $idCartStoredInDatabase = array_key_first($cart);
 
-        return collect($cart[$idCartStoredInDatabase])->map(function ($query) use ($customerData) {
-
+        return collect($cart[$idCartStoredInDatabase]["products"])->map(function ($query) use ($customerData) {
             $data = [];
 
-            foreach ($query["sizes"] as $size => $data){
+            foreach ($query["sizes"] as $size => $product){
                 $product = Product::find($query["id"]);
                 $coupon_id = $this->getCouponAppliedId();
 
                 $data[] = [
                     "product_id" => $product->id,
                     "size" => $size,
-                    "quantity" => $data["quantity"],
+                    "quantity" => $product["quantity"],
                     "unit_price" => $query["price"],
                     "product_discount" => $query["discount"],
-                    "total" => $data["total_amount_with_discounts"],
+                    "total" => $product["total_amount_with_discounts"],
                     "coupon_discount" => Coupon::find($coupon_id)->discount ?? null,
                 ];
             }

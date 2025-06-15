@@ -16,25 +16,39 @@ class OrderProductsService
 
 
     /**
-     * Create a new order product record in the database using mass assignment.
+     * Creates entries in the OrderProducts table by iterating through the products and their sizes
+     * obtained from the session cart. Assigns necessary details such as product ID, size, order ID,
+     * quantity, unit price, discount, and the final total amount with discounts while considering
+     * any applied coupons.
      *
-     * @param Order $order The order associated with the product.
-     * @param array $product An associative array containing product details
-     *
+     * @param \App\Models\Order $order The order model instance for which the products are being created.
      * @return void
      */
-    public function create(Order $order, array $product)
+    public function create(Order $order)
     {
-        // Crear el registro utilizando asignación masiva.
-        \App\Models\OrderProducts::create([
-            'product_id'    => $product['product_id'],
-            'size'          => $product['size'],
-            'order_id'      => $order->id,
-            'quantity'      => $product['quantity'],
-            'unit_price'    => $product['unit_price'],
-            'discount'      => $product['product_discount'],
-            'total'  => $product['total'],
-        ]);
+        $cart = Session::get('cart')[array_key_first(Session::get('cart'))];
+        $products = $cart["products"];
+        foreach ($products as $index => $product) {
+            foreach($product["sizes"] as $size => $value){
+
+                // Crear el registro utilizando asignación masiva.
+                \App\Models\OrderProducts::create([
+                    'product_id'    => $product["id"],
+                    'size'          => $size,
+                    'order_id'      => $order->id,
+                    'quantity'      => $value['quantity'],
+                    'unit_price'    => $value['subtotal'],
+                    'discount'      => $product['discount'],
+                    //el total de la orden puede ser menor
+                    //dependiendo de si está aplicado un cupón o no
+                    //el precio final real del producto en ese caso
+                    //deberá evaluarse haciendo el descuento de cupón de la orden
+                    'total'  => $value['total_amount_with_discounts'],
+                ]);
+            }
+
+        }
+
     }
 
 

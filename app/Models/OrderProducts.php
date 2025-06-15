@@ -11,11 +11,12 @@ class OrderProducts extends Model
 
     protected $fillable = [
         'product_id',
+        'size',
         'order_id',
         'quantity',
         'unit_price',
         'subtotal',
-        'total_amount',
+        'total',
         'discount',
     ];
 

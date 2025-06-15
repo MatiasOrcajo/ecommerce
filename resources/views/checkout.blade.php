@@ -125,18 +125,27 @@
 
                                 <div class="row mb-5">
                                     <h5 class="mb-3">Método de envío</h5>
-                                    <div class="col-md-6 d-flex justify-content-center">
+                                    <div class="col-md-12 d-flex justify-content-center">
                                         <button type="button" id="correo-argentino-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipment_method"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
                                                 style="font-size: 1rem;"
                                                 data-shipment-method="correo-argentino">
                                             <i class="mx-0"
                                                style="margin-right: 5px; font-size: 1.2rem;"></i> Correo Argentino
                                         </button>
                                     </div>
-                                    <div class="col-md-6 d-flex justify-content-center">
+                                    <div class="col-md-12 d-flex justify-content-center">
+                                        <button type="button" id="andreani-button"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
+                                                style="font-size: 1rem;"
+                                                data-shipment-method="andreani">
+                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            Andreani
+                                        </button>
+                                    </div>
+                                    <div class="col-md-12 d-flex justify-content-center">
                                         <button type="button" id="take-away-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipment_method"
+                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
                                                 style="font-size: 1rem;"
                                                 data-shipment-method="take-away">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
@@ -240,11 +249,11 @@
 
 
 
-            // Capturar eventos de clic para elementos con las clases 'payment_method' y 'shipment_method'
+            // Capturar eventos de clic para elementos con las clases 'payment_method' y 'shipping_method'
             let selectedShipmentMethod = null;
             let selectedPaymentMethod = null;
             const paymentMethodButtons = document.querySelectorAll(".payment_method");
-            const shipmentMethodButtons = document.querySelectorAll(".shipment_method");
+            const shipmentMethodButtons = document.querySelectorAll(".shipping_method");
 
             document.getElementById("correo-argentino-button").addEventListener("click", () => {
                 selectedShipmentMethod = "correo-argentino";
@@ -253,6 +262,10 @@
 
             document.getElementById("take-away-button").addEventListener("click", () => {
                 selectedShipmentMethod = "take-away";
+            })
+
+            document.getElementById("andreani-button").addEventListener("click", () => {
+                selectedShipmentMethod = "andreani";
             })
 
 
@@ -479,17 +492,14 @@
                     zip_code: document.getElementById('zip_code').value,
                     coupon_id: coupon_id,
                     payment_method: selectedPaymentMethod,
-                    shipment_method: selectedShipmentMethod
+                    shipping_method: selectedShipmentMethod
                 };
-
-                console.log(data);
 
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
 
                 $.ajax({
                     type: "POST",
@@ -499,7 +509,7 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (res) {
-                        window.open(res.init_point, '_blank');
+                        window.open(res.route, '_blank');
                     },
                     error: function (res, textStatus, errorThrown) {
                         // console.log(res);
@@ -508,7 +518,7 @@
 
             });
 
-
+            let coupon_id = null;
             //items summary
 
             function getItemsSummary() {
@@ -521,6 +531,11 @@
                     success: function (xhr, status, error) {
 
                         let isCouponApplied = xhr.is_coupon_applied;
+
+                        if(isCouponApplied){
+                            coupon_id = xhr.coupon_id;
+                        }
+
                         let products = xhr.products;
                         let html = "";
                         total = xhr.order_total;
@@ -570,6 +585,7 @@
                         $('#total-price').html(`<h1>$${total}</h1>`);
                         $('#items-summary-container').empty().append(html);
 
+
                         if(isCouponApplied){
                             $('#total-price').html(`<del><h1>$${oldOrderTotalBeforeCoupon}</h1></del> <h1>$${total}</h1>`);
                         }
@@ -616,7 +632,6 @@
             let total = 0;
 
             const btnValidateCoupon = document.getElementById('validate-coupon-button');
-            let coupon_id = null;
 
             btnValidateCoupon.addEventListener('click', () => {
 
