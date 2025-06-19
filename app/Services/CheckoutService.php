@@ -63,7 +63,7 @@ class CheckoutService
 
             return response()->json([
                 "success" => true,
-                "route" => route('order-success', $order->code)
+                "init_point" => route('order-success', $order->code)
             ]);
         }
 

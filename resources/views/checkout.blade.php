@@ -508,7 +508,8 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (res) {
-                        window.open(res.route, '_blank');
+
+                        window.open(res.init_point, '_blank');
                     },
                     error: function (res, textStatus, errorThrown) {
                         // console.log(res);
