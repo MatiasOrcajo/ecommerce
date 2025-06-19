@@ -41,7 +41,6 @@ class CheckoutController extends Controller
 
         return $this->checkoutService->processOrder($request);
 
-//        return $this->mpService->createPreference($request);
     }
 
 
@@ -62,12 +61,16 @@ class CheckoutController extends Controller
 
     /**
      * @param Request $request
-     * @return void
+     * @param Order $order
      */
     public function success(Request $request, Order $order)
     {
         $order->status = 'Pago recibido';
         $order->save();
+
+        Session::put("email_validated_$order->code", true);
+
+        return redirect()->route('order-success', $order->code);
 
     }
 

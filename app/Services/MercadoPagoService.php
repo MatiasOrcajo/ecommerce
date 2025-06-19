@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use MercadoPago\Client\Preference\PreferenceClient;
@@ -27,10 +28,10 @@ readonly class MercadoPagoService
      * products to prepare the necessary items array, and returns the created
      * preference as a JSON response.
      *
-     * @param Request $request The HTTP request containing data for order creation.
+     * @param Order $order
      * @return \Illuminate\Http\JsonResponse Returns the created payment preference as a JSON response.
      */
-    public function createPreference(Request $request)
+    public function createPreference(Order $order)
     {
 
         // Creates service record
@@ -40,7 +41,7 @@ readonly class MercadoPagoService
 //        $order->save();
 
         // Retrieves items to be purchased, with final price including discounts
-        $items = $this->orderProductsService->mapOrderProductToItem($order->id);
+//        $items = $this->orderProductsService->mapOrderProductToItem($order->id);
 
 //        dd($items);
 
@@ -55,11 +56,11 @@ readonly class MercadoPagoService
                 "items" => array(
                     array(
                         "id" => "1234",
-                        "title" => "Orden #{$order->id} atica.com.ar",
+                        "title" => "Orden #{$order->code} atica.com.ar",
                         "quantity" => 1,
                         "currency_id" => "ARS",
-//                        "unit_price" => $order->total_amount
-                        "unit_price" => 10
+                        "unit_price" => $order->total_amount
+//                        "unit_price" => 10
                     )
                 ),
                 "external_reference" => $order->id,

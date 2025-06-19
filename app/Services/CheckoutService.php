@@ -16,7 +16,7 @@ class CheckoutService
 {
 
 
-    public function __construct(private OrderService $orderService,
+    public function __construct(private OrderService         $orderService,
                                 private OrderProductsService $orderProductsService
     )
     {
@@ -47,12 +47,18 @@ class CheckoutService
         $order->save();
         Session::put("email_validated_$order->code", true);
 
-        if($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash"){
+        if ($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash") {
 
             return response()->json([
-               "success" => true,
-               "route" => route('order-success', $order->code)
+                "success" => true,
+                "route" => route('order-success', $order->code)
             ]);
+        }
+
+        if ($selectedPaymentMethod == "mercado-pago") {
+
+            return $this->mpService->createPreference($order);
+
         }
 
     }
