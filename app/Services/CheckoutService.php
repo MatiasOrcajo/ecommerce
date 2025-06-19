@@ -17,11 +17,23 @@ class CheckoutService
 
 
     public function __construct(private OrderService         $orderService,
-                                private OrderProductsService $orderProductsService
+                                private MercadoPagoService   $mpService,
     )
     {
     }
 
+
+    /**
+     * Processes an order based on the provided request data, including payment and shipping methods.
+     *
+     * Decodes the incoming JSON data to extract the payment and shipping methods.
+     * Creates and saves a new order using the provided data and selected methods.
+     * Depending on the selected payment method, it either returns a JSON response with a success status and
+     * order route, or initiates a payment process using an external service.
+     *
+     * @param Request $request The HTTP request containing order data in JSON format.
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response A JSON response or the result of an external payment process.
+     */
     public function processOrder(Request $request)
     {
 
@@ -39,8 +51,8 @@ class CheckoutService
 
 
         $request = json_decode($request->data);
-
         $selectedPaymentMethod = $request->payment_method;
+
         $order = $this->orderService->create($request);
         $order->shipping_method = $shippingMethods[$request->shipping_method];
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];

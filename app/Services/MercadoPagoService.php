@@ -12,9 +12,7 @@ use MercadoPago\MercadoPagoConfig;
 readonly class MercadoPagoService
 {
 
-    public function __construct(private OrderService $orderService,
-                                private OrderProductsService $orderProductsService
-    )
+    public function __construct()
     {
         MercadoPagoConfig::setAccessToken(config('mercadopago.access_token'));
     }
