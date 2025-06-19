@@ -16,7 +16,12 @@ class CheckoutController extends Controller
 
     use CartTrait;
 
-    public function __construct(private readonly MercadoPagoService $mpService, private readonly CheckoutService $checkoutService)
+//    public function __construct(private readonly MercadoPagoService $mpService, private readonly CheckoutService $checkoutService)
+//    {
+//
+//    }
+
+    public function __construct(private readonly CheckoutService $checkoutService)
     {
 
     }

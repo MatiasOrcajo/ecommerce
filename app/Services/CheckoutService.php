@@ -45,6 +45,7 @@ class CheckoutService
         $order->shipping_method = $shippingMethods[$request->shipping_method];
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];
         $order->save();
+        Session::put("email_validated_$order->code", true);
 
         if($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash"){
 

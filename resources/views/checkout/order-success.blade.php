@@ -18,8 +18,8 @@
                         <li class="list-group-item"><strong>Costo Total:</strong> ${{ $order->total_amount }}</li>
                         <li class="list-group-item"><strong>Nombre del
                                 Cliente:</strong> {{ $order->customer->name.' '.$order->customer->surname }}</li>
-                        <li class="list-group-item"><strong>Email del
-                                Cliente:</strong> {{ $order->customer->email }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ $order->customer->email }}</li>
+                        <li class="list-group-item"><strong>DNI:</strong> {{ $order->customer->dni }}</li>
                         <li class="list-group-item"><strong>Dirección de envío:</strong> {{ $order->shipping_address }}
                         </li>
                     </ul>
