@@ -8,6 +8,7 @@ use App\Services\MercadoPagoService;
 use App\Traits\CartTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use MercadoPago\Client\Preference\PreferenceClient;
 
@@ -63,8 +64,10 @@ class CheckoutController extends Controller
      * @param Request $request
      * @param Order $order
      */
-    public function success(Request $request, Order $order)
+    public function success(Request $request, $encrypted)
     {
+        $orderId = Crypt::decryptString($encrypted);
+        $order = Order::find($orderId);
         $order->status = 'Pago recibido';
         $order->save();
 
@@ -79,8 +82,10 @@ class CheckoutController extends Controller
      * @param Request $request
      * @return void
      */
-    public function failure(Request $request, Order $order)
+    public function failure(Request $request, $encrypted)
     {
+        $orderId = Crypt::decryptString($encrypted);
+        $order = Order::find($orderId);
         $order->status = 'Pago rechazado';
         $order->save();
 
@@ -92,8 +97,10 @@ class CheckoutController extends Controller
      * @param Request $request
      * @return void
      */
-    public function pending(Request $request, Order $order)
+    public function pending(Request $request, $encrypted)
     {
+        $orderId = Crypt::decryptString($encrypted);
+        $order = Order::find($orderId);
         $order->status = 'Pendiente de aprobación';
         $order->save();
 

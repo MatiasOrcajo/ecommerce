@@ -32,9 +32,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/orden/{code}', [\App\Http\Controllers\CheckoutController::class, 'processOrderSuccess'])->name('order-success')->middleware('order-success');
     Route::post('/orden/verificar-email/{code}', [\App\Http\Controllers\CheckoutController::class, 'processOrderSuccess'])->name('order.success.verify.email')->middleware('order-success');
 
-    Route::get('payment-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('payment-success');
-    Route::get('payment-failure/{order}', [\App\Http\Controllers\CheckoutController::class, 'failure'])->name('payment-failure');
-    Route::get('payment-pending/{order}', [\App\Http\Controllers\CheckoutController::class, 'pending'])->name('payment-pending');
+    Route::get('/payment-success/{encrypted}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('payment-success');
+    Route::get('/payment-failure/{encrypted}', [\App\Http\Controllers\CheckoutController::class, 'failure'])->name('payment-failure');
+    Route::get('/payment-pending/{encrypted}', [\App\Http\Controllers\CheckoutController::class, 'pending'])->name('payment-pending');
 
     Route::post('/mercadopago-notification-endpoint', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('mercadopago-notification-endpoint');
     Route::get('/consult-preference/{preferenceId}', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('consult-preference');
