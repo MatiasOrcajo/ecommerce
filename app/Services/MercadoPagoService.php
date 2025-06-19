@@ -33,15 +33,25 @@ readonly class MercadoPagoService
     public function createPreference(Order $order)
     {
 
+        // Creates service record
+//        $order = $this->orderService->create(json_decode($request->data));
+//        dd($order);
+//        $order->status = "Orden no paga por el cliente";
+//        $order->save();
+
+        // Retrieves items to be purchased, with final price including discounts
+//        $items = $this->orderProductsService->mapOrderProductToItem($order->id);
+
+//        dd($items);
+
         try {
             $client = new PreferenceClient();
-            $encryptedId = urlencode(Crypt::encryptString($order->id));
 
             $preference = $client->create([
                 "back_urls" => [
-                    "success" => "https://f278-2803-9800-9018-4b1f-dd9f-edf6-19e2-683f.ngrok-free.app/payment-success/" . Crypt::encryptString($order->id),
-                    "failure" => "https://f278-2803-9800-9018-4b1f-dd9f-edf6-19e2-683f.ngrok-free.app/payment-failure/" . Crypt::encryptString($order->id),
-                    "pending" => "https://f278-2803-9800-9018-4b1f-dd9f-edf6-19e2-683f.ngrok-free.app/payment-pending/" . Crypt::encryptString($order->id),
+                    "success" => url("/payment-success/" . Crypt::encryptString($order->id)),
+                    "failure" => url("/payment-failure/" . Crypt::encryptString($order->id)),
+                    "pending" => url("/payment-pending/" . Crypt::encryptString($order->id)),
                 ],
                 "items" => array(
                     array(
@@ -65,7 +75,6 @@ readonly class MercadoPagoService
 
             return response()->json(['error' => 'Failed to create preference', 'message' => $e->getMessage()], 500);
         }
-
 
         return response()->json($preference);
     }
