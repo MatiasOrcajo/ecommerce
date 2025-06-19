@@ -436,7 +436,6 @@
 
 
             //Validate coupon
-
             function getRemainingPercentageInDecimals(discount){
                 return 1 - (discount / 100)
             }
@@ -545,11 +544,14 @@
                             location.reload();
                         }
 
+                        let cartCounter = 0;
+
                         Object.entries(products).forEach(([key, product]) => {
 
                             Object.entries(product.sizes).forEach(([key, data]) => {
 
                                 let priceHtml = ``;
+                                cartCounter++;
 
                                 if (product.discount > 0) {
                                     priceHtml = `<del><h4>$${data.subtotal} </h4> </del>
@@ -580,7 +582,6 @@
 
 
                         })
-
 
                         $('#total-price').html(`<h1>$${total}</h1>`);
                         $('#items-summary-container').empty().append(html);

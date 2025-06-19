@@ -12,7 +12,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/productos/{slug}', [\App\Http\Controllers\IndexController::class, 'show'])->name('product');
 
-    Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('home')->middleware('cart-empty'); //cart-empty should redirect to home
+    Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('cart')->middleware('cart-empty'); //cart-empty should redirect to home
+
+    Route::get('/calculate-cart-total-items', [\App\Http\Controllers\CartController::class, 'calculateCartTotalItems']);
 
     Route::get('/clear-cart', [\App\Http\Controllers\CartController::class, 'clearCart']);
 

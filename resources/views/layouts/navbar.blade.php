@@ -16,7 +16,8 @@
             {{-- Columna IZQUIERDA: Buscador --}}
             <div class="col-lg-4 d-none d-lg-flex justify-content-start">
                 <form class="d-flex align-items-center w-100" style="max-width: 220px;">
-                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar" aria-label="Buscar">
+                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search"
+                           placeholder="Buscar" aria-label="Buscar">
                     <button class="btn p-0 ms-2" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
@@ -26,7 +27,8 @@
             {{-- Columna CENTRO: Logo --}}
             <div class="col-12 col-lg-4">
                 <div class="d-flex justify-content-center">
-                    <a class="navbar-brand fw-bold m-0 text-center" href="#" style="font-size: 2.5rem; letter-spacing: 0.1rem;">
+                    <a class="navbar-brand fw-bold m-0 text-center" href="{{route('index')}}"
+                       style="font-size: 2.5rem; letter-spacing: 0.1rem;">
                         Ática
                     </a>
                 </div>
@@ -34,9 +36,10 @@
 
             {{-- Columna DERECHA: Carrito --}}
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-                <a href="#" class="position-relative text-dark">
+                <a href="{{route('cart')}}" class="position-relative text-dark">
                     <i class="fa-solid fa-cart-shopping fs-5"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                    <span id="cart_counter"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                     0
                 </span>
                 </a>
@@ -80,7 +83,8 @@
         <div class="container-fluid">
 
             <!-- Toggler Offcanvas -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainOffcanvas" aria-controls="mainOffcanvas">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainOffcanvas"
+                    aria-controls="mainOffcanvas">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -99,7 +103,8 @@
 
                     <!-- Buscador -->
                     <form class="d-flex mb-4">
-                        <input class="form-control rounded-0 border-bottom" type="search" placeholder="Buscar" aria-label="Buscar">
+                        <input class="form-control rounded-0 border-bottom" type="search" placeholder="Buscar"
+                               aria-label="Buscar">
                         <button class="btn ms-2" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
@@ -115,7 +120,7 @@
                     <!-- Carrito -->
                     <a href="#" class="d-flex align-items-center text-dark">
                         <i class="fa-solid fa-cart-shopping fs-4"></i>
-                        <span class="badge bg-dark text-white ms-2">0</span>
+                        <span class="badge bg-dark text-white ms-2" id="cart_counter_responsive">0</span>
                         <span class="ms-2">Carrito</span>
                     </a>
 
@@ -144,9 +149,14 @@
 <style>
     /* Animación marquee CSS (reemplaza <marquee>) */
     @keyframes marquee {
-        0%   { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
     }
+
     .animate-marquee {
         white-space: nowrap;
         animation: marquee 15s linear infinite;
@@ -154,12 +164,10 @@
 </style>
 
 
-
 {{-- Espaciado para que el contenido no quede detrás del header fijo --}}
 <style>
 
-    html
-    {
+    html {
         overflow-x: hidden;
     }
 
@@ -172,6 +180,32 @@
         left: 0;
         height: 50%;
         display: inline-block;
-        width:100%;
+        width: 100%;
     }
 </style>
+
+<script>
+
+    $(document).ready(function () {
+        function updateCartCounter() {
+            $.ajax({
+                url: '/calculate-cart-total-items',
+                method: 'GET',
+                success: function (data) {
+                    // Assuming `data` contains the counter value
+                    $('#cart_counter').html(`<h1>${data}</h1>`);
+                    $('#cart_counter_responsive').html(`<h1>${data}</h1>`);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching cart counter:', error);
+                }
+            });
+        }
+
+        updateCartCounter();
+
+        setInterval(updateCartCounter, 6000);
+    });
+
+
+</script>
