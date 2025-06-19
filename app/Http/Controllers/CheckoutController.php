@@ -16,15 +16,15 @@ class CheckoutController extends Controller
 
     use CartTrait;
 
-//    public function __construct(private readonly MercadoPagoService $mpService, private readonly CheckoutService $checkoutService)
-//    {
-//
-//    }
-
-    public function __construct(private readonly CheckoutService $checkoutService)
+    public function __construct(private readonly MercadoPagoService $mpService, private readonly CheckoutService $checkoutService)
     {
 
     }
+
+//    public function __construct(private readonly CheckoutService $checkoutService)
+//    {
+//
+//    }
 
 
     public function index()
@@ -66,7 +66,7 @@ class CheckoutController extends Controller
      */
     public function success(Request $request, Order $order)
     {
-        $order->status = 'Orden recibida';
+        $order->status = 'Pago recibido';
         $order->save();
 
     }

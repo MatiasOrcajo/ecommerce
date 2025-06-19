@@ -78,7 +78,7 @@
                     render: function (data, type, full, meta) {
                         if (type === 'display') {
                             let id = full.id;
-                            let statusOptions = ['Orden recibida', 'Pago fallido', 'Pago pendiente de aprobación', 'No pago', "En proceso", "Envío realizado"]; // Personaliza tus opciones
+                            let statusOptions = ['Pago recibido', 'Pago fallido', 'Pago pendiente de aprobación', 'No pago', "En proceso", "Envío realizado"]; // Personaliza tus opciones
                             let selectHtml = `<select class="status-select" data-id="${id}">`;
 
                             statusOptions.forEach(status => {

@@ -35,7 +35,7 @@ class OrderFactory extends Factory
             'customer_id' => Customer::factory(),
             'order_date' => $orderDate,
             'total_amount' => $this->faker->randomFloat(2, 15000, 300000),
-            'status' => $this->faker->randomElement(['Orden recibida', 'Pago fallido', 'Pago pendiente de aprobación', 'No pago', "En proceso", "Envío realizado"]),
+            'status' => $this->faker->randomElement(['Pago recibido', 'Pago fallido', 'Pago pendiente de aprobación', 'No pago', "En proceso", "Envío realizado"]),
             'code' => $this->generateOrderCode(),
 //            'status' => $this->faker->randomElement(['completed']),
             'payment_method' => $this->faker->randomElement(['Mercado Pago', 'Transferencia', 'Efectivo']),

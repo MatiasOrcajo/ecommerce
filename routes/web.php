@@ -12,7 +12,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/productos/{slug}', [\App\Http\Controllers\IndexController::class, 'show'])->name('product');
 
-    Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('cart')->middleware('cart-empty'); //cart-empty should redirect to home
+    Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('cart')->middleware('cart-empty');
 
     Route::get('/calculate-cart-total-items', [\App\Http\Controllers\CartController::class, 'calculateCartTotalItems']);
 
@@ -35,6 +35,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('payment-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('payment-success');
     Route::get('payment-failure/{order}', [\App\Http\Controllers\CheckoutController::class, 'failure'])->name('payment-failure');
     Route::get('payment-pending/{order}', [\App\Http\Controllers\CheckoutController::class, 'pending'])->name('payment-pending');
+
     Route::post('/mercadopago-notification-endpoint', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('mercadopago-notification-endpoint');
     Route::get('/consult-preference/{preferenceId}', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('consult-preference');
 
