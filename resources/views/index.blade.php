@@ -2,7 +2,6 @@
 
 @section('content')
 
-
     <style>
         /* Contenedor de imágenes */
         .image-container {
@@ -14,8 +13,9 @@
         .image-container img {
             display: block;
             width: 100%;
-            height: auto;
+            height: 100%;
             transition: opacity 0.5s ease-in-out;
+            object-fit: cover;
         }
 
         /* La segunda imagen arranca oculta */
@@ -34,6 +34,28 @@
         .image-container:hover .img-second {
             opacity: 1;
         }
+
+        .color-box {
+            width: 1rem;
+            height: 1rem;
+            background-color: #000;
+            border-radius: 100%;
+            margin: 0 0.25rem;
+        }
+
+        .color-box-parent {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            z-index: 99;
+            width: fit-content;
+            padding: 8px 10px;
+            transform: translateX(-50%);
+            border-radius: 32px;
+            background-color: #fff;
+        }
+
+
     </style>
 
 
@@ -105,127 +127,23 @@
                         alt="Remera Juli - Hover">
 
                     <!-- Iconos superpuestos -->
-                    <button class="btn btn-dark position-absolute bottom-0 start-0 m-2">
-                        <i class="fas fa-shopping-bag"></i>
-                    </button>
                     <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-heart"></i>
+                        <i class="fas fa-shopping-bag"></i>
                     </button>
                 </div>
 
                 <!-- Body: título y precios -->
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-center mb-2">Remera Juli</h5>
-                    <p class="text-center mb-1 fw-bold">$19.900</p>
-                    <p class="text-center mb-2 text-muted">$17.910 con Transferencia bancaria</p>
-                    <p class="text-center small text-muted mb-0">
-                        6 cuotas sin interés de $3.316,67 a partir de $250.000
-                    </p>
-                </div>
-            </div>
-        </div>
+                <div class="card-body d-flex flex-column position-relative">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="color-box-parent d-flex justify-content-center align-items-center">
+                            <div class="color-box">
 
-        <div class="col-md-4">
-            <div class="card border-0 h-100">
+                            </div>
+                            <div class="color-box">
 
-                <!-- Imagen con hover -->
-                <div class="image-container">
-                    <!-- Imagen por defecto -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/dsc08356-9ee1442c9ba5a3e3fe17431121244703-1024-1024.webp"
-                        class="card-img-top img-first"
-                        alt="Remera Juli">
-                    <!-- Imagen que aparece al pasar el mouse -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/dsc08322-5707bccabda724606817431086677484-1024-1024.jpeg"
-                        class="card-img-top img-second"
-                        alt="Remera Juli - Hover">
-
-                    <!-- Iconos superpuestos -->
-                    <button class="btn btn-dark position-absolute bottom-0 start-0 m-2">
-                        <i class="fas fa-shopping-bag"></i>
-                    </button>
-                    <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-
-                <!-- Body: título y precios -->
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-center mb-2">Remera Juli</h5>
-                    <p class="text-center mb-1 fw-bold">$19.900</p>
-                    <p class="text-center mb-2 text-muted">$17.910 con Transferencia bancaria</p>
-                    <p class="text-center small text-muted mb-0">
-                        6 cuotas sin interés de $3.316,67 a partir de $250.000
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-0 h-100">
-
-                <!-- Imagen con hover -->
-                <div class="image-container">
-                    <!-- Imagen por defecto -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/dsc08356-9ee1442c9ba5a3e3fe17431121244703-1024-1024.webp"
-                        class="card-img-top img-first"
-                        alt="Remera Juli">
-                    <!-- Imagen que aparece al pasar el mouse -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/img_2132-c92a1e82140e5ec5fa17439931974082-1024-1024.jpeg"
-                        class="card-img-top img-second"
-                        alt="Remera Juli - Hover">
-
-                    <!-- Iconos superpuestos -->
-                    <button class="btn btn-dark position-absolute bottom-0 start-0 m-2">
-                        <i class="fas fa-shopping-bag"></i>
-                    </button>
-                    <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-
-                <!-- Body: título y precios -->
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-center mb-2">Remera Juli</h5>
-                    <p class="text-center mb-1 fw-bold">$19.900</p>
-                    <p class="text-center mb-2 text-muted">$17.910 con Transferencia bancaria</p>
-                    <p class="text-center small text-muted mb-0">
-                        6 cuotas sin interés de $3.316,67 a partir de $250.000
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-0 h-100">
-
-                <!-- Imagen con hover -->
-                <div class="image-container">
-                    <!-- Imagen por defecto -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/dsc08356-9ee1442c9ba5a3e3fe17431121244703-1024-1024.webp"
-                        class="card-img-top img-first"
-                        alt="Remera Juli">
-                    <!-- Imagen que aparece al pasar el mouse -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/img_2132-c92a1e82140e5ec5fa17439931974082-1024-1024.jpeg"
-                        class="card-img-top img-second"
-                        alt="Remera Juli - Hover">
-
-                    <!-- Iconos superpuestos -->
-                    <button class="btn btn-dark position-absolute bottom-0 start-0 m-2">
-                        <i class="fas fa-shopping-bag"></i>
-                    </button>
-                    <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-
-                <!-- Body: título y precios -->
-                <div class="card-body d-flex flex-column">
+                            </div>
+                        </div>
+                    </div>
                     <h5 class="card-title text-center mb-2">Remera Juli</h5>
                     <p class="text-center mb-1 fw-bold">$19.900</p>
                     <p class="text-center mb-2 text-muted">$17.910 con Transferencia bancaria</p>
@@ -259,7 +177,8 @@
         <div>
             <!-- Top bar -->
             <div class="bg-dark text-white d-flex justify-content-between align-items-center px-4 py-3">
-                <h5 class="m-0" style="font-size: 1.5rem">Unite a nuestro <strong>#ClubAtica</strong> y recibí muchos beneficios</h5>
+                <h5 class="m-0" style="font-size: 1.5rem">Unite a nuestro <strong>#ClubAtica</strong> y recibí muchos
+                    beneficios</h5>
             </div>
 
             <!-- Formulario -->
@@ -278,7 +197,8 @@
                         <input type="text" class="form-control form-control-lg" placeholder="Apellido" required>
                     </div>
                     <div class="mb-4">
-                        <input type="text" class="form-control form-control-lg" placeholder="cumpleaños (dd/mm)" pattern="\d{2}/\d{2}">
+                        <input type="text" class="form-control form-control-lg" placeholder="cumpleaños (dd/mm)"
+                               pattern="\d{2}/\d{2}">
                     </div>
 
                     <!-- Botón Enviar -->
@@ -291,6 +211,5 @@
 
 
     <!-- instagram -->
-
 
 @endsection
