@@ -18,7 +18,7 @@ class MercadopagoWebhookController extends Controller
      * Returns a JSON response indicating a successful operation.
      *
      * @param Request $request The incoming HTTP request object containing webhook data.
-     * @return \Illuminate\Http\JsonResponse The JSON response indicating the processing result.
+     * @return \Illuminate\Http\JsonResponse|array The JSON response indicating the processing result.
      */
     public function handle(Request $request)
     {
