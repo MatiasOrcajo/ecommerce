@@ -183,29 +183,3 @@
         width: 100%;
     }
 </style>
-
-<script>
-
-    $(document).ready(function () {
-        function updateCartCounter() {
-            $.ajax({
-                url: '/calculate-cart-total-items',
-                method: 'GET',
-                success: function (data) {
-                    // Assuming `data` contains the counter value
-                    $('#cart_counter').html(`<h1>${data}</h1>`);
-                    $('#cart_counter_responsive').html(`<h1>${data}</h1>`);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching cart counter:', error);
-                }
-            });
-        }
-
-        updateCartCounter();
-
-        setInterval(updateCartCounter, 6000);
-    });
-
-
-</script>
