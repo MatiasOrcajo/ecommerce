@@ -123,36 +123,22 @@
                 <!-- Carousel principal -->
                 <div id="productCarousel" class="carousel slide " data-bs-ride="false">
                     <div class="carousel-inner ">
-                        <div class="carousel-item active h-50">
-                            <div class="zoom-container">
-                                <img
-                                    src="https://acdn-us.mitiendanube.com/stores/001/235/896/products/juvia15377-ceef678ea8979c120e17443976253148-640-0.webp"
-                                    alt="Producto 1"
-                                    class="d-block product-image"
-                                    style="margin: 0 auto;"
-                                />
+                        @foreach($product->pictures as $index => $picture)
+                            @if($index == 0)
+                                <div class="carousel-item active h-50">
+                                    @else
+                                        <div class="carousel-item">
+                            @endif
+                                <div class="zoom-container">
+                                    <img
+                                        src="{{$picture->path}}"
+                                        alt="Producto 1"
+                                        class="d-block product-image"
+                                        style="margin: 0 auto;"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="zoom-container">
-                                <img
-                                    src="https://acdn-us.mitiendanube.com/stores/001/235/896/products/juvia15371-fef3314ea60073fc7917443976090898-640-0.webp"
-                                    alt="Producto 2"
-                                    class="d-block product-image"
-                                    style="margin: 0 auto;"
-                                />
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="zoom-container">
-                                <img
-                                    src="https://acdn-us.mitiendanube.com/stores/001/235/896/products/juvia15378-5cc5928087d1a0f55717443976383372-640-0.webp"
-                                    alt="Producto 3"
-                                    class="d-block product-image"
-                                    style="margin: 0 auto;"
-                                />
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                     <button
                         class="carousel-control-prev"
@@ -176,27 +162,20 @@
                 <div class="thumbnail-wrapper mt-3">
                     <button class="arrow-btn arrow-left" id="thumbPrev">‹</button>
                     <div class="thumbnail-container">
-                        <img
-                            src="https://acdn-us.mitiendanube.com/stores/001/235/896/products/juvia15377-ceef678ea8979c120e17443976253148-640-0.webp"
-                            class="thumbnail-item active"
-                            data-bs-target="#productCarousel"
-                            data-bs-slide-to="0"
-                            alt="Mini 1"
-                        />
-                        <img
-                            src="https://acdn-us.mitiendanube.com/stores/001/235/896/products/juvia15371-fef3314ea60073fc7917443976090898-640-0.webp"
-                            class="thumbnail-item"
-                            data-bs-target="#productCarousel"
-                            data-bs-slide-to="1"
-                            alt="Mini 2"
-                        />
-                        <img
-                            src="https://acdn-us.mitiendanube.com/stores/001/235/896/products/juvia15378-5cc5928087d1a0f55717443976383372-640-0.webp"
-                            class="thumbnail-item"
-                            data-bs-target="#productCarousel"
-                            data-bs-slide-to="2"
-                            alt="Mini 3"
-                        />
+                        @foreach($product->pictures as $index => $picture)
+                            <img
+                                src="{{$picture->path}}"
+                                @if($index == 0)
+                                    class="thumbnail-item active"
+                                @else
+                                    class="thumbnail-item"
+
+                                @endif
+                                data-bs-target="#productCarousel"
+                                data-bs-slide-to="0"
+                                alt="Mini 1"
+                            />
+                        @endforeach
                     </div>
                     <button class="arrow-btn arrow-right" id="thumbNext">›</button>
                 </div>
@@ -270,8 +249,7 @@
                     <i style="color: #6e6ee7" class="fab fa-cc-mastercard"></i>
                     <i style="color: #6e6ee7" class="fab fa-cc-amex"></i>
                 </div>
-                <p><strong>15% de descuento</strong> pagando con transferencia</p>
-                <p><i class="fas fa-truck"></i> Envío gratis superando los $30.000</p>
+                <p><strong>20% de descuento</strong> pagando con transferencia</p>
 
                 {{--                <div class="mb-3">--}}
                 {{--                    <label class="d-block mb-1"><strong>Color:</strong> NEGRO</label>--}}

@@ -10,7 +10,9 @@ class IndexController extends Controller
 
     public function index()
     {
-        return view('index');
+        $products = Product::where('featured', true)->with('pictures')->get();
+
+        return view('index', compact('products'));
     }
 
 

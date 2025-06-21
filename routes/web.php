@@ -10,7 +10,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index');
 
-    Route::get('/productos/{slug}', [\App\Http\Controllers\IndexController::class, 'show'])->name('product');
+    Route::get('/productos/{slug}', [\App\Http\Controllers\IndexController::class, 'show'])->name('product.show');
 
     Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('cart')->middleware('cart-empty');
 

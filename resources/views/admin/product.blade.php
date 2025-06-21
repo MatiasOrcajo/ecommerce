@@ -69,6 +69,12 @@
                             </label>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="color" class="form-label">Color</label>
+                            <input value="{{$product->color}}" type="text" class="form-control" id="color"
+                                   name="color">
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
                 </div>

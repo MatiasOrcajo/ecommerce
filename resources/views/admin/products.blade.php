@@ -38,11 +38,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">Descripcion</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="discount" class="form-label">Descuento (%)</label>
                         <input type="number" class="form-control" id="discount" name="discount" min="0" max="100">
                     </div>

@@ -31,7 +31,7 @@ class ProductFactory extends Factory
             'stock' => $this->faker->numberBetween(0, 100),
             'specs' => $this->faker->words(5, true),
             'code' => $this->faker->unique()->ean13(),
-            'featured' => $this->faker->boolean(),
+            'featured' => 0,
             'brand' => $this->faker->company(),
             'slug' => Str::slug($name),
             'created_at' => now(),

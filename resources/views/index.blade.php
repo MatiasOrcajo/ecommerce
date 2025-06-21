@@ -109,50 +109,66 @@
 
     </div>
     <div class="row g-4 mx-3">
+        @foreach($products as $product)
 
-        <div class="col-md-4">
-            <div class="card border-0 h-100 p-0">
+            <div class="col-md-4">
+                <div class="card border-0 h-100 p-0">
 
-                <!-- Imagen con hover -->
-                <div class="image-container">
-                    <!-- Imagen por defecto -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/dsc08356-9ee1442c9ba5a3e3fe17431121244703-1024-1024.webp"
-                        class="card-img-top img-first"
-                        alt="Remera Juli">
-                    <!-- Imagen que aparece al pasar el mouse -->
-                    <img
-                        src="https://acdn-us.mitiendanube.com/stores/001/126/411/products/img_2132-c92a1e82140e5ec5fa17439931974082-1024-1024.jpeg"
-                        class="card-img-top img-second"
-                        alt="Remera Juli - Hover">
+                    <!-- Imagen con hover -->
+                    <div class="image-container">
 
-                    <!-- Iconos superpuestos -->
-                    <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-shopping-bag"></i>
-                    </button>
-                </div>
+                        <!-- Imagen por defecto -->
+                        @php
+                            $pictures = $product->pictures->toArray();
+                            $firstPicture = $pictures[0];
+                            $secondPicture = $pictures[1];
+                        @endphp
 
-                <!-- Body: título y precios -->
-                <div class="card-body d-flex flex-column position-relative">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <div class="color-box-parent d-flex justify-content-center align-items-center">
-                            <div class="color-box">
+                        <img
+                            src="{{ $firstPicture["path"] }}"
+                            class="card-img-top img-first"
+                            alt="{{$product->name}}">
+                        <!-- Imagen que aparece al pasar el mouse -->
+                        <img
+                            src="{{ $secondPicture["path"] }}"
+                            class="card-img-top img-second"
+                            alt="{{$product->name}} - Hover">
 
-                            </div>
-                            <div class="color-box">
+                        <!-- Iconos superpuestos -->
+                        <a href="{{ route('product.show', $product->slug) }}">
+                            <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
+                                <i class="fas fa-shopping-bag"></i>
+                            </button>
+                        </a>
+                    </div>
 
+                    <!-- Body: título y precios -->
+                    <div class="card-body d-flex flex-column position-relative">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="color-box-parent d-flex justify-content-center align-items-center">
+                                <div class="color-box" style="background-color: {{$product->color}}">
+
+                                </div>
                             </div>
                         </div>
+                        <h5 class="card-title text-center mb-2">{{$product->name}}</h5>
+                        <p class="text-center mb-1 fw-bold">${{$product->price}}</p>
+                        <p class="text-center mb-2 text-muted">${{$product->price * 0.9}} con Transferencia bancaria</p>
+                        <p class="text-center small text-muted mb-0">
+                            6 cuotas sin interés de ${{$product->price / 3}}
+                        </p>
+
+
+                        <!-- Botón "Ver" -->
+                        <a href="{{ route('product.show', $product->slug) }}"
+                           class="btn btn-white border-black w-25 mx-auto mt-3 d-block">
+                            Ver
+                        </a>
+
                     </div>
-                    <h5 class="card-title text-center mb-2">Remera Juli</h5>
-                    <p class="text-center mb-1 fw-bold">$19.900</p>
-                    <p class="text-center mb-2 text-muted">$17.910 con Transferencia bancaria</p>
-                    <p class="text-center small text-muted mb-0">
-                        6 cuotas sin interés de $3.316,67 a partir de $250.000
-                    </p>
                 </div>
             </div>
-        </div>
+        @endforeach
 
         <!-- …repite más columnas según necesites… -->
 
@@ -209,7 +225,18 @@
     </div>
 
 
+<style>
+    .btn-white.border-black {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #000;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
 
-    <!-- instagram -->
+    .btn-white.border-black:hover {
+        background-color: #000;
+        color: #fff;
+    }
+</style>
 
 @endsection
