@@ -154,35 +154,36 @@
                 </div>
             </div>
 
-                <div class="col-lg-12">
-                    <div class="card shadow-lg p-4">
-                        <h2 class="mb-4">Descripción, medidas y referencia</h2>
+            <div class="col-lg-12">
+                <div class="card shadow-lg p-4">
+                    <h2 class="mb-4">Descripción, medidas y referencia</h2>
 
-                        <form method="POST" action="{{route('admin.product.create.size', $product->id)}}"
-                              enctype="multipart/form-data">
-                            @csrf
-                            @method("POST")
+                    <form method="POST" action="{{route('admin.product.create.size', $product->id)}}"
+                          enctype="multipart/form-data">
+                        @csrf
+                        @method("POST")
 
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Descripción:</label>
-                                <textarea class="form-control editor" name="description" cols="30" rows="10"></textarea>
-                            </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción:</label>
+                            <textarea class="form-control editor" name="description" cols="30" rows="10"></textarea>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="sizes_description" class="form-label">Medidas:</label>
-                                <textarea class="form-control editor" name="sizes_description" cols="30" rows="10"></textarea>
-                            </div>
+                        <div class="mb-3">
+                            <label for="sizes_description" class="form-label">Medidas:</label>
+                            <textarea class="form-control editor" name="sizes_description" cols="30"
+                                      rows="10"></textarea>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="model_reference" class="form-label">Referencia modelo:</label>
-                                <textarea class="form-control editor" name="model_reference" cols="30" rows="10"></textarea>
-                            </div>
+                        <div class="mb-3">
+                            <label for="model_reference" class="form-label">Referencia modelo:</label>
+                            <textarea class="form-control editor" name="model_reference" cols="30" rows="10"></textarea>
+                        </div>
 
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </form>
-                    </div>
-
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
                 </div>
+
+            </div>
 
         </div>
     </div>
@@ -213,7 +214,7 @@
             // ID del producto desde Blade
             const productId = '{{ $product->id }}';
             // URL para cargar talles
-            const listUrl   = `/api/products/${productId}/list-sizes`;
+            const listUrl = `/api/products/${productId}/list-sizes`;
 
             // Si ya existe una tabla, la destruimos
             if ($.fn.DataTable.isDataTable('#productSizes')) {
@@ -224,17 +225,17 @@
             // Inicializamos la DataTable
             const table = $('#productSizes').DataTable({
                 deferRender: true,
-                autoWidth:   true,
-                paging:      true,
-                stateSave:   true,
-                processing:  true,
-                ajax:        listUrl,
+                autoWidth: true,
+                paging: true,
+                stateSave: true,
+                processing: true,
+                ajax: listUrl,
                 columns: [
-                    { title: 'TALLE', data: 'size' },
+                    {title: 'TALLE', data: 'size'},
                     {
                         title: 'STOCK',
-                        data:  'stock',
-                        render: function(data, type, row) {
+                        data: 'stock',
+                        render: function (data, type, row) {
                             // Solo en modo "display" metemos el input
                             if (type === 'display') {
                                 return `
@@ -255,26 +256,26 @@
             });
 
             // Delegamos el evento change sobre los inputs
-            $('#productSizes tbody').on('change', '.stock-input', function() {
-                const $input   = $(this);
+            $('#productSizes tbody').on('change', '.stock-input', function () {
+                const $input = $(this);
                 const newStock = $input.val();
-                const sizeId   = $input.data('id');
+                const sizeId = $input.data('id');
 
                 $.ajax({
-                    url:    `/api/products/${productId}/update-size-stock/${sizeId}`,
-                    type:   'PUT',
-                    data:   { stock: newStock },
+                    url: `/api/products/${productId}/update-size-stock/${sizeId}`,
+                    type: 'PUT',
+                    data: {stock: newStock},
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    success: function(response) {
+                    success: function (response) {
                         // Opcional: actualizar el dato en la tabla sin recargarla
-                        const row = table.row( $input.closest('tr') );
-                        row.data( $.extend({}, row.data(), { stock: newStock }) ).draw(false);
+                        const row = table.row($input.closest('tr'));
+                        row.data($.extend({}, row.data(), {stock: newStock})).draw(false);
                         // Notificación opcional
                         console.log('Stock actualizado:', response);
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         alert('Error al actualizar el stock.');
                     }
                 });
