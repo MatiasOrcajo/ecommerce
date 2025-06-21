@@ -46,21 +46,27 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="description" class="form-label">Descripcion</label>
-                            <textarea class="form-control" id="description" name="description"
-                                      rows="3">{{$product->description}}</textarea>
-                        </div>
-
-                        <div class="mb-3">
                             <label for="discount" class="form-label">Descuento (%)</label>
                             <input value="{{$product->discount}}" type="number" class="form-control" id="discount"
                                    name="discount" min="0" max="100">
                         </div>
+
                         <div class="mb-3">
                             <label for="discount_until" class="form-label">Descuento válido hasta</label>
-                            <input value="{{\Carbon\Carbon::parse($product->discount_until)->format('Y-m-d')}}"
-                                   type="date" class="form-control" id="discount_until"
-                                   name="discount_until">
+                            <input value="{{ \Carbon\Carbon::parse($product->discount_until)->format('d-m-Y') }}"
+                                   type="text" class="form-control" id="discount_until"
+                                   name="discount_until" placeholder="dd-mm-aaaa">
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <!-- Campo oculto -->
+                            <input type="hidden" name="featured" value="0">
+
+                            <!-- Checkbox -->
+                            <input class="form-check-input" name="featured" type="checkbox" value="1" id="featured" {{$product->featured == 1 ? 'checked' : ''}}>
+                            <label class="form-check-label" for="featured">
+                                ¿Destacado?
+                            </label>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -158,25 +164,25 @@
                 <div class="card shadow-lg p-4">
                     <h2 class="mb-4">Descripción, medidas y referencia</h2>
 
-                    <form method="POST" action="{{route('admin.product.create.size', $product->id)}}"
+                    <form method="POST" action="{{route('admin.products.update.descriptions', $product->id)}}"
                           enctype="multipart/form-data">
                         @csrf
-                        @method("POST")
+                        @method("PUT")
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Descripción:</label>
-                            <textarea class="form-control editor" name="description" cols="30" rows="10"></textarea>
+                            <textarea class="form-control editor" name="description" cols="30" rows="10">{!! $product->description !!}</textarea>
                         </div>
 
                         <div class="mb-3">
                             <label for="sizes_description" class="form-label">Medidas:</label>
                             <textarea class="form-control editor" name="sizes_description" cols="30"
-                                      rows="10"></textarea>
+                                      rows="10">{!! $product->sizes_description !!}</textarea>
                         </div>
 
                         <div class="mb-3">
                             <label for="model_reference" class="form-label">Referencia modelo:</label>
-                            <textarea class="form-control editor" name="model_reference" cols="30" rows="10"></textarea>
+                            <textarea class="form-control editor" name="model_reference" cols="30" rows="10">{!! $product->model_reference !!}</textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar</button>

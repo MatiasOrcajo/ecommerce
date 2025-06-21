@@ -21,9 +21,9 @@ return new class extends Migration
             $table->unsignedInteger('sales')->default(0);
             $table->unsignedInteger('visits')->default(0);
             $table->unsignedInteger('stock')->default(0);
-            $table->string('description')->nullable();
-            $table->string('sizes_description')->nullable();
-            $table->string('model_reference')->nullable();
+            $table->text('description')->nullable();
+            $table->text('sizes_description')->nullable();
+            $table->text('model_reference')->nullable();
             $table->boolean('featured')->default(false);
             $table->string('specs')->nullable();
             $table->string('code')->nullable();

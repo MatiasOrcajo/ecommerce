@@ -75,6 +75,8 @@ Route::prefix('admin')->group(function () {
 
         Route::put('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
 
+        Route::put('/products/{product}/update-descriptions', [\App\Http\Controllers\Admin\ProductController::class, 'updateDescriptionSizesAndReferences'])->name('admin.products.update.descriptions');
+
         Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories');
 
         Route::post('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');

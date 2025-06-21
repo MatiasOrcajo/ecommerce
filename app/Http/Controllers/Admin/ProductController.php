@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Picture;
 use App\Models\Product;
 use App\Models\ProductSize;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -42,6 +43,7 @@ class ProductController extends Controller
                 "stock" => $product->stock,
                 "price" => $product->price,
                 "visits" => $product->visits,
+                "featured" => $product->featured,
                 "picture" => $product->pictures->first()->path ?? null,
             ];
         });
@@ -52,7 +54,8 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-
+        $date = Carbon::parse($request->discount_until);
+        $request['discount_until'] = $date->format('Y-m-d');
         $product->update($request->toArray());
 
         return back()->with('success', 'Producto editado correctamente');
@@ -110,6 +113,14 @@ class ProductController extends Controller
     {
         $productSize->stock = $request->stock;
         $productSize->save();
+    }
+
+
+    public function updateDescriptionSizesAndReferences(Request $request, Product $product)
+    {
+        $product->update($request->toArray());
+
+        return back()->with('success', 'Descripciones editadas correctamente');
     }
 
 

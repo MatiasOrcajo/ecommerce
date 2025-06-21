@@ -127,6 +127,20 @@
                     data: 'visits'
                 },
                 {
+                    title: "DESTACADO",
+                    data: 'featured',
+                    width: "5%",
+                    "render": function (data, type, full, meta) {
+                        if (data == 1) {
+                            return `Sí`
+                        }
+                        else{
+                            return `No`
+                        }
+
+                    }
+                },
+                {
                     title: "OPCION",
                     width: "5%",
                     sortable: false,
