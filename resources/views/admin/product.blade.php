@@ -154,6 +154,36 @@
                 </div>
             </div>
 
+                <div class="col-lg-12">
+                    <div class="card shadow-lg p-4">
+                        <h2 class="mb-4">Descripción, medidas y referencia</h2>
+
+                        <form method="POST" action="{{route('admin.product.create.size', $product->id)}}"
+                              enctype="multipart/form-data">
+                            @csrf
+                            @method("POST")
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Descripción:</label>
+                                <textarea class="form-control editor" name="description" cols="30" rows="10"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sizes_description" class="form-label">Medidas:</label>
+                                <textarea class="form-control editor" name="sizes_description" cols="30" rows="10"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="model_reference" class="form-label">Referencia modelo:</label>
+                                <textarea class="form-control editor" name="model_reference" cols="30" rows="10"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </form>
+                    </div>
+
+                </div>
+
         </div>
     </div>
 
@@ -162,6 +192,19 @@
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="{{asset('adminkit/js/app.js')}}"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <!-- CKEditor desde CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+    <script>
+        document.querySelectorAll('.editor').forEach((element) => {
+            console.log(element);
+            ClassicEditor
+                .create(element)
+                .catch(error => console.error(error));
+        });
+    </script>
+
 
     <script>
 
