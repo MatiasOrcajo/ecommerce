@@ -114,7 +114,7 @@
 
     <div class="container my-5 ">
         <div class="row gx-5">
-            <div class="col-12 d-block d-md-none mb-3">
+            <div class="col-12 d-block d-md-none my-3">
                 <h2 style="font-size: 24px">{{$product->name}}</h2>
             </div>
             <!-- Imágenes -->
@@ -230,7 +230,7 @@
                     <p class="h4 text-dark"><small><del>${{$product->price}}</del> %{{$product->discount}} off</small></p>
                     <p class="h3 text-dark">${{$productPrice}}</p>
                     <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
-                    <div class="border p-2 d-inline-block mb-3">
+                    <div class="border p-2 d-inline-block my-3">
                         3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
                     </div>
 
@@ -238,34 +238,62 @@
 
                     <p class="h3 text-dark">${{$product->price}}</p>
                     <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
-                    <div class="border p-2 d-inline-block mb-3">
+                    <div class="border p-2 d-inline-block my-3">
                         3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
                     </div>
                 @endif
 
-                <div class="mb-3">
-                    <span class="me-2">Medios de pago:</span>
-                    <i style="color: #6e6ee7" class="fab fa-cc-visa"></i>
-                    <i style="color: #6e6ee7" class="fab fa-cc-mastercard"></i>
-                    <i style="color: #6e6ee7" class="fab fa-cc-amex"></i>
-                </div>
-                <p><strong>20% de descuento</strong> pagando con transferencia</p>
+                <div class="my-3">
+                    <span class="me-2"><strong>Medios de pago:</strong></span>
+                    <div class="d-flex gap-2">
+                        <img
+                            src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp"
+                            data-src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp"
+                            class="me-1 mt-1" alt="visa" width="30" height="25">
 
-                {{--                <div class="mb-3">--}}
-                {{--                    <label class="d-block mb-1"><strong>Color:</strong> NEGRO</label>--}}
-                {{--                    <div class="d-flex gap-2">--}}
-                {{--                        <button class="btn p-0 border" style="background:#000; width:32px; height:32px;"></button>--}}
-                {{--                        <button class="btn p-0 border" style="background:#ccc; width:32px; height:32px;"></button>--}}
-                {{--                        <button class="btn p-0 border" style="background:#fff; width:32px; height:32px;"></button>--}}
-                {{--                    </div>--}}
-                {{--                </div>--}}
+                        <img
+                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
+                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
+                            class="me-1 mt-1" alt="visa" width="30" height="25">
+
+
+                        <img
+                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
+                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
+                            class="me-1 mt-1" alt="mastercard" width="30" height="25">
+
+
+                        <img
+                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
+                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
+                            class="me-1 mt-1" alt="amex" width="30" height="25">
+
+
+                        <img
+                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
+                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
+                            class="me-1 mt-1" alt="ar_tarjeta-naranja" width="30" height="25">
+                    </div>
+                </div>
+                <p><strong>10% de descuento</strong> pagando con transferencia</p>
+
+                <div class="my-3">
+                    <label class="d-block mb-1"><strong>Color:</strong></label>
+                    <div class="d-flex gap-2">
+                        <button class="btn p-0 border" style="background:{{$product->color}}; width:32px; height:32px;"></button>
+                    </div>
+                </div>
 
                 <div class="my-4">
-                    <label class="d-block mb-1" id="sizeSelector"><strong>Talle:</strong> S</label>
+                    <label class="d-block mb-1" id="sizeSelector"><strong>Talle:</strong></label>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-outline-secondary sizes">S</button>
-                        <button class="btn btn-outline-secondary sizes">M</button>
-                        <button class="btn btn-outline-secondary sizes">L</button>
+                        @foreach($product->sizes as $size)
+                            <button
+                                class="btn btn-outline-secondary sizes"
+                                @if($size->stock == 0) disabled @endif>
+                                {{$size->size}}
+                            </button>
+                        @endforeach
                     </div>
                 </div>
 

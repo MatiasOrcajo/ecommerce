@@ -8,19 +8,19 @@
                 <h5 class="fw-bold">Categorías</h5>
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-white text-decoration-none">Inicio</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Productos</a></li>
+                    <li><a href="/#destacados" class="text-white text-decoration-none">Destacados</a></li>
                     <li><a href="#" class="text-white text-decoration-none">Políticas &amp; FAQ</a></li>
                 </ul>
             </div>
 
             <!-- Contactános -->
             <div class="col-12 col-md-4 mb-4">
-                <h5 class="fw-bold">Contáctanos</h5>
+                <h5 class="fw-bold">Contactanos</h5>
                 <ul class="list-unstyled">
                     <li class="mt-1">+54 9 1128899281</li>
                     <li class="mt-1"><a href="mailto:info@paccaindumentaria.com.ar"
-                                        class="text-white text-decoration-none">info@paccaindumentaria.com.ar</a></li>
-                    <li class="mt-1">Av Gaona 3868 (showroom y fábrica para retirar)</li>
+                                        class="text-white text-decoration-none">info@atica.com.ar</a></li>
+                    <li class="mt-1">Bernardo de Irigoyen 630 (para retirar)</li>
                 </ul>
             </div>
 
@@ -38,67 +38,35 @@
                 <span class="d-block d-md-inline-block align-middle mb-3 mb-md-1 mr-md-2">Medios de pago</span>
                 <span class="d-flex flex-wrap align-middle">
 
-
-
+                    <img
+                        src="https://http2.mlstatic.com/D_NQ_NP_774991-MLA74959264979_032024-O.webp"
+                        data-src="https://http2.mlstatic.com/D_NQ_NP_774991-MLA74959264979_032024-O.webp"
+                        class="me-1 mt-1" alt="visa" width="45" height="25">
 
                     <img
                         src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
                         data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
-                        class="me-1 mt-1" alt="visa" width="40" height="25">
+                        class="me-1 mt-1" alt="visa" width="45" height="25">
 
 
                     <img
                         src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
                         data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
-                        class="me-1 mt-1" alt="mastercard" width="40" height="25">
+                        class="me-1 mt-1" alt="mastercard" width="45" height="25">
 
 
                     <img
                         src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
                         data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
-                        class="me-1 mt-1" alt="amex" width="40" height="25">
-
-
-                    <img
-                        src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/cabal@2x.png"
-                        data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/cabal@2x.png"
-                        class="me-1 mt-1" alt="ar_cabal" width="40" height="25">
+                        class="me-1 mt-1" alt="amex" width="45" height="25">
 
 
                     <img
                         src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
                         data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
-                        class="me-1 mt-1" alt="ar_tarjeta-naranja" width="40" height="25">
+                        class="me-1 mt-1" alt="ar_tarjeta-naranja" width="45" height="25">
 
 
-                    <img
-                        src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/custom@2x.png"
-                        data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/custom@2x.png"
-                        class="me-1 mt-1" alt="custom" width="40" height="25">
-
-
-                    <img
-                        src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/nativa@2x.png"
-                        data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/nativa@2x.png"
-                        class="me-1 mt-1" alt="nativa" width="40" height="25">
-
-
-                    <img
-                        src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/cencosud@2x.png"
-                        data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/cencosud@2x.png"
-                        class="me-1 mt-1" alt="ar_cencosud" width="40" height="25">
-
-
-                    <img
-                        src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/argencard@2x.png"
-                        data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/argencard@2x.png"
-                        class="me-1 mt-1" alt="ar_argencard" width="40" height="25">
-
-
-                    <img
-                        src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/cabaldebit@2x.png"
-                        data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/cabaldebit@2x.png"
-                        class="me-1 mt-1" alt="ar_cabaldebit" width="40" height="25">
 
                 </span>
             </div>
@@ -108,16 +76,15 @@
                 <span class="d-flex align-middle">
 
 
-
-
                     <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/shipping/api/2682@2x.png"
                          data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/shipping/api/2682@2x.png"
-                         class="me-1 mt-1" alt="api_2682" width="40" height="25">
+                         class="me-1 mt-1" alt="api_2682" width="45" height="25">
+
+                    <img src="https://iot.org.ar/wp-content/uploads/2020/11/logo-andreani.jpg"
+                         data-src="https://iot.org.ar/wp-content/uploads/2020/11/logo-andreani.jpg"
+                         class="me-1 mt-1" alt="api_2682" width="45" height="25">
 
 
-                    <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/shipping/api/6053@2x.png"
-                         data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/shipping/api/6053@2x.png"
-                         class="me-1 mt-1" alt="api_6053" width="40" height="25">
 
                 </span>
             </div>

@@ -68,20 +68,20 @@
 
 
     {{--    info desktop--}}
-    <div class="row d-flex justify-content-center align-items-center mx-5 my-5 py-5">
-        <div class="col-4 d-flex justify-content-center align-items-center border-end">
+    <div class="d-none d-lg-flex row justify-content-center align-items-center mx-5 my-5 py-5">
+        <div class="col-lg-4 d-flex justify-content-center align-items-center border-end">
             <div class="me-3">
-                <i class="fa-solid fa-truck"></i>
+                <i style="font-size: 2rem" class="fa-solid fa-truck"></i>
             </div>
             <div>
                 <h3>ENVÍOS GRATIS</h3>
-                <p>En compras +$250.000</p>
+                <p>En todas tus compras</p>
             </div>
         </div>
 
-        <div class="col-4 d-flex justify-content-center align-items-center border-end">
+        <div class="col-lg-4 d-flex justify-content-center align-items-center border-end">
             <div class="me-3">
-                <i class="fa-solid fa-location-dot"></i>
+                <i style="font-size: 2rem" class="fa-solid fa-location-dot"></i>
             </div>
             <div>
                 <h3>ENVÍOS A TODO EL PAÍS</h3>
@@ -89,9 +89,41 @@
             </div>
         </div>
 
-        <div class="col-4 d-flex justify-content-center align-items-center">
+        <div class="col-lg-4 d-flex justify-content-center align-items-center">
             <div class="me-3">
-                <i class="fa-solid fa-credit-card"></i>
+                <i style="font-size: 2rem" class="fa-solid fa-credit-card"></i>
+            </div>
+            <div>
+                <h3>3 CUOTAS SIN INTERÉS</h3>
+                <p>Con todas las tarjetas</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-block d-lg-none mt-5">
+        <div class="col-12 my-4 d-flex justify-content-center align-items-center">
+            <div class="me-3">
+                <i style="font-size: 2rem" class="fa-solid fa-truck"></i>
+            </div>
+            <div>
+                <h3>ENVÍOS GRATIS</h3>
+                <p>En todas tus compras</p>
+            </div>
+        </div>
+
+        <div class="col-12 my-4 d-flex justify-content-center align-items-center">
+            <div class="me-3">
+                <i style="font-size: 2rem" class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+                <h3>ENVÍOS A TODO EL PAÍS</h3>
+                <p>Comprá desde cualquier lugar</p>
+            </div>
+        </div>
+
+        <div class="col-12 my-4 d-flex justify-content-center align-items-center">
+            <div class="me-3">
+                <i style="font-size: 2rem" class="fa-solid fa-credit-card"></i>
             </div>
             <div>
                 <h3>3 CUOTAS SIN INTERÉS</h3>
@@ -104,7 +136,7 @@
     {{--    products--}}
 
     <!-- Contenedor principal -->
-    <div class="mt-5 py-2">
+    <div class="mt-5 py-2" id="destacados">
         <h2 class="d-block mt-5 text-center" style="font-size: 4rem">destacados.</h2>
 
     </div>
@@ -188,7 +220,7 @@
 
 
     <!-- Newsletter Subscription Form (Bootstrap 5) -->
-    <div class="p-0 mb-5 w-100 translate-y-0 d-flex justify-content-center align-items-center">
+    <div class="p-0 px-3 mb-5 w-100 translate-y-0 d-flex justify-content-center align-items-center">
 
         <div>
             <!-- Top bar -->
