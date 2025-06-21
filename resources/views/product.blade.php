@@ -206,10 +206,9 @@
                         <div class="bg-light border rounded p-2">
                             <em>Descripción</em>
                         </div>
-                        <p class="mt-2 mb-0">
-                            Cardigan cuello redondo de lanilla, lleva botones a contra tono. Al ser de lanilla es bien
-                            abrigado y liviano. Largo a la cadera.
-                        </p>
+                        <div class="mt-2">
+                            {!! $product->description !!}
+                        </div>
                     </div>
 
                     <!-- Medidas -->
@@ -218,21 +217,7 @@
                             <em>Medidas</em>
                         </div>
                         <div class="mt-2">
-                            <p class="fw-bold mb-1">Talle 1:</p>
-                            <ul class="mb-3">
-                                <li>Contorno de busto (sin estirar): 90 cm</li>
-                                <li>Contorno de cadera (sin estirar): 90 cm</li>
-                                <li>Largo manga: 59 cm</li>
-                                <li>Largo total: 50 cm</li>
-                            </ul>
-
-                            <p class="fw-bold mb-1">Talle 2:</p>
-                            <ul class="mb-0">
-                                <li>Contorno de busto (sin estirar): 92 cm</li>
-                                <li>Contorno de cadera (sin estirar): 92 cm</li>
-                                <li>Largo manga: 60 cm</li>
-                                <li>Largo total: 51 cm</li>
-                            </ul>
+                            {!! $product->sizes_description !!}
                         </div>
                     </div>
 
@@ -241,7 +226,9 @@
                         <div class="bg-light border rounded p-2">
                             <em>Referencia Modelo</em>
                         </div>
-                        <p class="mt-2 mb-0">Talle: S //</p>
+                        <div class="mt-2">
+                            {!! $product->model_reference !!}
+                        </div>
                     </div>
 
                 </div>
@@ -323,102 +310,120 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
-            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
 
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
 
-    <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+    </style>
 
-    <script>
+    @push('scripts')
+        <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
 
-        let selectedSize;
-        let selectedQuantity;
+        <script>
 
-        document.querySelectorAll(".sizes").forEach(function (element){
-            element.addEventListener('click', function (e){
+            let selectedSize;
+            let selectedQuantity;
 
-                selectedSize = e.target.innerHTML;
-                document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize;
-                document.querySelectorAll(".sizes").forEach(function (element){
-                    element.classList.remove('active');
-                });
-                e.target.classList.add('active');
+            document.querySelectorAll(".sizes").forEach(function (element){
+                element.addEventListener('click', function (e){
 
-            })
-        })
+                    selectedSize = e.target.innerHTML;
+                    document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize;
+                    document.querySelectorAll(".sizes").forEach(function (element){
+                        element.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
 
-
-        $('#add-product-to-cart').click(function(){
-            const id = {{$product->id}};
-            const route = '/carts/products/' + id
-
-            if(selectedSize == undefined){
-               toastr.error('Debe seleccionar un talle');
-            }
-            else{
-                $.ajax({
-                    type: "POST",
-                    url: route,
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        size: selectedSize,
-                        quantity: $('#quantity').val(),
-                    },
-                    success: function (xhr, status, error) {
-                        toastr.success('Producto agregado al carrito');
-                        updateCartCounter();
-
-                    }
                 })
-            }
-        })
+            })
 
 
-        // Carousel y thumbnails
-        const carouselEl = document.getElementById('productCarousel');
-        const carousel = new bootstrap.Carousel(carouselEl, {ride: false});
-        const thumbs = document.querySelectorAll('.thumbnail-item');
-        const thumbContainer = document.querySelector('.thumbnail-container');
+            $('#add-product-to-cart').click(function(){
+                const id = {{$product->id}};
+                const route = '/carts/products/' + id
 
-        // Flechas de scroll de thumbnails
-        document.getElementById('thumbPrev').onclick = () => {
-            thumbContainer.scrollBy({left: -100, behavior: 'smooth'});
-        };
-        document.getElementById('thumbNext').onclick = () => {
-            thumbContainer.scrollBy({left: 100, behavior: 'smooth'});
-        };
+                if(selectedSize == undefined){
+                    toastr.error('Debe seleccionar un talle');
+                }
+                else{
+                    $.ajax({
+                        type: "POST",
+                        url: route,
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            size: selectedSize,
+                            quantity: $('#quantity').val(),
+                        },
+                        success: function (xhr, status, error) {
+                            toastr.success('Producto agregado al carrito');
+                            updateCartCounter();
 
-        // Sincronizar thumbnail activo
-        carouselEl.addEventListener('slid.bs.carousel', () => {
-            const items = Array.from(carouselEl.querySelectorAll('.carousel-item'));
-            const idx = items.findIndex(i => i.classList.contains('active'));
-            thumbs.forEach((t, i) => t.classList.toggle('active', i === idx));
-        });
+                        }
+                    })
+                }
+            })
 
-        // Click en thumbnail cambia slide
-        thumbs.forEach((thumb, i) => {
-            thumb.addEventListener('click', () => carousel.to(i));
-        });
 
-        // Zoom pan: transformar el origen al mover el mouse
-        document.querySelectorAll('.zoom-container').forEach(container => {
-            const img = container.querySelector('img');
-            container.addEventListener('mouseenter', () => {
-                container.classList.add('zoom-active');
+            // Carousel y thumbnails
+            const carouselEl = document.getElementById('productCarousel');
+            const carousel = new bootstrap.Carousel(carouselEl, {ride: false});
+            const thumbs = document.querySelectorAll('.thumbnail-item');
+            const thumbContainer = document.querySelector('.thumbnail-container');
+
+            // Flechas de scroll de thumbnails
+            document.getElementById('thumbPrev').onclick = () => {
+                thumbContainer.scrollBy({left: -100, behavior: 'smooth'});
+            };
+            document.getElementById('thumbNext').onclick = () => {
+                thumbContainer.scrollBy({left: 100, behavior: 'smooth'});
+            };
+
+            // Sincronizar thumbnail activo
+            carouselEl.addEventListener('slid.bs.carousel', () => {
+                const items = Array.from(carouselEl.querySelectorAll('.carousel-item'));
+                const idx = items.findIndex(i => i.classList.contains('active'));
+                thumbs.forEach((t, i) => t.classList.toggle('active', i === idx));
             });
-            container.addEventListener('mousemove', e => {
-                const {left, top, width, height} = container.getBoundingClientRect();
-                const x = ((e.clientX - left) / width) * 100;
-                const y = ((e.clientY - top) / height) * 100;
-                img.style.transformOrigin = `${x}% ${y}%`;
+
+            // Click en thumbnail cambia slide
+            thumbs.forEach((thumb, i) => {
+                thumb.addEventListener('click', () => carousel.to(i));
             });
-            container.addEventListener('mouseleave', () => {
-                container.classList.remove('zoom-active');
-                img.style.transformOrigin = 'center center';
+
+            // Zoom pan: transformar el origen al mover el mouse
+            document.querySelectorAll('.zoom-container').forEach(container => {
+                const img = container.querySelector('img');
+                container.addEventListener('mouseenter', () => {
+                    container.classList.add('zoom-active');
+                });
+                container.addEventListener('mousemove', e => {
+                    const {left, top, width, height} = container.getBoundingClientRect();
+                    const x = ((e.clientX - left) / width) * 100;
+                    const y = ((e.clientY - top) / height) * 100;
+                    img.style.transformOrigin = `${x}% ${y}%`;
+                });
+                container.addEventListener('mouseleave', () => {
+                    container.classList.remove('zoom-active');
+                    img.style.transformOrigin = 'center center';
+                });
             });
-        });
-    </script>
+        </script>
+    @endpush
+
 
 @endsection

@@ -24,6 +24,9 @@
         <script src="{{asset('/js/toastr.min.js')}}"></script>
 
 
+        <!-- No olvides incluir el JS de Bootstrap (con Popper) justo antes del cierre de body -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -50,8 +53,11 @@
 
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
-        <script type="module" src="{{asset('/js/mercadopago.js')}}"></script>
+        <!-- jQuery (si lo necesitas para tus propios scripts) -->
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+        <!-- Bootstrap Bundle (Popper incluido) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Tus scripts específicos -->
+        @stack('scripts')
     </body>
 </html>

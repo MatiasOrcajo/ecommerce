@@ -1,93 +1,76 @@
-{{-- resources/views/partials/navbar.blade.php --}}
 
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<header class=" d-none d-lg-block fixed-top">
+<header class="d-none d-lg-block fixed-top">
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center py-0">
         <marquee behavior="scroll" direction="left">
-            MÍNIMO DE COMPRA $55.000 - 3 CUOTAS SIN INTERÉS - 15% OFF CON TRANSFERENCIA - ENVÍOS GRATIS A DOMICILIO X
-            CORREO A PARTIR DE $250.000
+            MÍNIMO DE COMPRA $55.000 – 3 CUOTAS SIN INTERÉS – 15% OFF CON TRANSFERENCIA – ENVÍOS GRATIS A DOMICILIO X CORREO A PARTIR DE $250.000
         </marquee>
     </div>
 
-    {{-- Navbar Blanca --}}
+    {{-- Navbar Blanca (buscador, logo, carrito) --}}
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm pb-0">
-        <div class="mx-4 container-fluid d-flex align-items-center">
-
-            {{-- Columna IZQUIERDA: Buscador --}}
+        <div class="container-fluid d-flex align-items-center">
             <div class="col-lg-4 d-none d-lg-flex justify-content-start">
                 <form class="d-flex align-items-center w-100" style="max-width: 220px;">
-                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search"
-                           placeholder="Buscar" aria-label="Buscar">
-                    <button class="btn p-0 ms-2" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
+                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar">
+                    <button class="btn p-0 ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
 
-            {{-- Columna CENTRO: Logo --}}
             <div class="col-12 col-lg-4">
                 <div class="d-flex justify-content-center">
-                    <a class="navbar-brand fw-bold m-0 text-center" href="{{route('index')}}"
+                    <a class="navbar-brand fw-bold m-0 text-center" href="{{ route('index') }}"
                        style="font-size: 2.5rem; letter-spacing: 0.1rem;">
                         Ática
                     </a>
                 </div>
             </div>
 
-            {{-- Columna DERECHA: Carrito --}}
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-                <a href="{{route('cart')}}" class="position-relative text-dark">
+                <a href="{{ route('cart') }}" class="position-relative text-dark">
                     <i class="fa-solid fa-cart-shopping fs-5"></i>
                     <span id="cart_counter"
-                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                    0
-                </span>
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">0</span>
                 </a>
             </div>
-
         </div>
-
-
     </nav>
 
+    {{-- Navbar de Links --}}
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-0">
-        <div class="container-fluid d-flex align-items-center">
-            {{-- Columna CENTRO: Logo --}}
-            <div class="d-lg-flex justify-content-center col-lg-12">
-                <div class="d-flex">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Inicio</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <!-- Enlace con el toggle del desplegable -->
-                            <a class="nav-link dropdown-toggle" id="productosDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                Collections
-                            </a>
-                            <!-- Contenido enumerado del desplegable -->
-                            <ul class="dropdown-menu" aria-labelledby="productosDropdown">
-                                <li><a class="dropdown-item" href="#">Collection A</a></li>
-                                <li><a class="dropdown-item" href="#">Collection A</a></li>
-                                <li><a class="dropdown-item" href="#">Collection A</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contacto</a>
-                        </li>
+        <div class="container-fluid">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Inicio</a>
+                </li>
+
+                <!-- ↓ Dropdown Collections ↓ -->
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        id="collectionsDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Collections
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
+                        <li><a class="dropdown-item" href="#">Collection A</a></li>
+                        <li><a class="dropdown-item" href="#">Collection B</a></li>
+                        <li><a class="dropdown-item" href="#">Collection C</a></li>
                     </ul>
-                </div>
-            </div>
+                </li>
+                <!-- ↑ Fin dropdown ↑ -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                </li>
+            </ul>
         </div>
     </nav>
-
 </header>
-
 
 <header class="d-lg-none fixed-top">
 
