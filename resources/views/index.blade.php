@@ -111,7 +111,7 @@
     <div class="row g-4 mx-3">
 
         <div class="col-md-4">
-            <div class="card border-0 h-100">
+            <div class="card border-0 h-100 p-0">
 
                 <!-- Imagen con hover -->
                 <div class="image-container">
@@ -172,7 +172,7 @@
 
 
     <!-- Newsletter Subscription Form (Bootstrap 5) -->
-    <div class="container p-0 w-75 translate-y-0">
+    <div class="p-0 mb-5 w-100 translate-y-0 d-flex justify-content-center align-items-center">
 
         <div>
             <!-- Top bar -->

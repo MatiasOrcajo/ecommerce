@@ -1,5 +1,10 @@
 {{-- resources/views/partials/navbar.blade.php --}}
 
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <header class=" d-none d-lg-block fixed-top">
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center py-0">
@@ -49,6 +54,7 @@
 
 
     </nav>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-0">
         <div class="container-fluid d-flex align-items-center">
             {{-- Columna CENTRO: Logo --}}
@@ -56,10 +62,20 @@
                 <div class="d-flex">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                            <a class="nav-link active" aria-current="page" href="/">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Productos</a>
+                        <li class="nav-item dropdown">
+                            <!-- Enlace con el toggle del desplegable -->
+                            <a class="nav-link dropdown-toggle" id="productosDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Collections
+                            </a>
+                            <!-- Contenido enumerado del desplegable -->
+                            <ul class="dropdown-menu" aria-labelledby="productosDropdown">
+                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contacto</a>
@@ -67,10 +83,7 @@
                     </ul>
                 </div>
             </div>
-
         </div>
-
-
     </nav>
 
 </header>
@@ -112,8 +125,18 @@
 
                     <!-- Enlaces -->
                     <ul class="navbar-nav mb-4">
-                        <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Productos</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
+                        <!-- Elemento desplegable -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="productDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Collections
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="productDropdown">
+                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
                     </ul>
 
