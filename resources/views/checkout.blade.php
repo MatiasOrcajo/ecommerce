@@ -17,7 +17,7 @@
                             </div>
                             <div>
                                 <div class="li-step-title">Cliente</div>
-                                <div class="li-step-description">Ingresa tus datos</div>
+                                <div class="li-step-description">Ingresá tus datos</div>
                             </div>
                         </li>
                         <!-- Segundo paso: Pago -->
@@ -27,7 +27,7 @@
                             </div>
                             <div>
                                 <div class="li-step-title">Pago</div>
-                                <div class="li-step-description">Elige cómo pagar</div>
+                                <div class="li-step-description">Elegí cómo pagar</div>
                             </div>
                         </li>
                     </ul>

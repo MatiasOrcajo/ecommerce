@@ -26,9 +26,11 @@
                         <label for="category" class="form-label">Categoría</label>
                         <select class="form-select" id="category" name="category_id" required>
                             <option value="" selected disabled>Seleccionar categoría</option>
-                            <option value="1">Electrónica</option>
-                            <option value="2">Ropa</option>
-                            <option value="3">Hogar</option>
+                            @foreach($categories as $category)
+
+                                <option value="{{$category->id}}">{{$category->name}}</option>
+
+                            @endforeach
                         </select>
                     </div>
 
@@ -128,8 +130,7 @@
                     "render": function (data, type, full, meta) {
                         if (data == 1) {
                             return `Sí`
-                        }
-                        else{
+                        } else {
                             return `No`
                         }
 

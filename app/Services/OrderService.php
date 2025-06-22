@@ -60,7 +60,7 @@ class OrderService
             'code' => $this->generateOrderCode(),
             'status' => 'No pago',
             'shipping_address' => $shippingAddress,
-            'expiration_date' => Carbon::now()->addDays(4),
+            'expiration_date' => Carbon::now()->addDays(3),
             'coupon_id' => $this->getCouponAppliedId(),
         ]);
 
@@ -113,6 +113,39 @@ class OrderService
             fn($total, $product) => $total + $product["total_amount_with_discount"],
             0
         );
+    }
+
+
+    /**
+     *
+     */
+    public static function liberateStockFromExpiredOrders()
+    {
+        // obtengo todas las ordenes expiradas y sin pagar
+        $orders = Order::where('expiration_date', '<', Carbon::now())
+            ->whereNotIn('status', ['Pago recibido', 'Envío realizado', 'En proceso', 'Expirado'])
+            ->get();
+
+        //todo hacerlo a mano para testearlo
+        //mapeo todas las ordenes
+        foreach ($orders as $order) {
+
+            //por cada orden, mapeo todos los productos asociados
+            foreach ($order->products as $orderProduct) {
+                $product = $orderProduct->product;
+
+                $productSizeRecordToUpdateStock = \App\Models\ProductSize::where('product_id', $product->id)
+                    ->where('size', $orderProduct->size)
+                    ->first();
+
+                $productSizeRecordToUpdateStock->stock += $orderProduct->quantity;
+                $productSizeRecordToUpdateStock->save();
+
+            }
+
+            $order->status = 'Expirado';
+            $order->save();
+        }
     }
 
 

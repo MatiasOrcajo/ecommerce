@@ -31,6 +31,15 @@ class OrderProductsService
         foreach ($products as $index => $product) {
             foreach($product["sizes"] as $size => $value){
 
+                //descuento el stock
+                $productInDb = Product::find($product["id"]);
+                $productInDb->sizes->where('size', $size)->first()->decrement('stock', $value['quantity']);
+
+                if($productInDb->sizes->where('size', $size)->first()->stock < 0){
+
+                    throw new \Exception("No hay stock suficiente del producto ".$productInDb->name. "El stock actual es: " . $productInDb->sizes->where('size', $size)->first()->stock);
+                }
+
                 // Crear el registro utilizando asignación masiva.
                 \App\Models\OrderProducts::create([
                     'product_id'    => $product["id"],
