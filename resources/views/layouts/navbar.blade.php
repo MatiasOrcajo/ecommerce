@@ -172,20 +172,15 @@
 
 {{-- Espaciado para que el contenido no quede detrás del header fijo --}}
 <style>
-
-    html {
-        overflow-x: hidden;
-    }
-
     body {
         padding-top: 120px;
     }
 
-    footer {
-        bottom: 0;
-        left: 0;
-        height: 50%;
-        display: inline-block;
-        width: 100%;
+
+    @media (max-width: 991.98px) {
+        body {
+            padding-top: 3rem;
+        }
     }
+
 </style>

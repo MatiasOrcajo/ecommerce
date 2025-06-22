@@ -4,27 +4,31 @@
 
     <style>
 
+        main{
+            overflow-x: hidden;
+        }
+
+        .product-page-container {
+            /* altura mínima para que, incluso en pantallas grandes,
+       siempre se extienda hasta “casi” el footer */
+            min-height: calc(100vh - 30rem);
+            /* espacio final igual a la altura del footer */
+            padding-bottom: 30rem;
+        }
+
         @media (max-width: 991.98px) {
             main {
-                padding-bottom: 5rem;
-                width: 100%;
-                display: inline-block;
+                padding-bottom: 8rem; /* espacio extra debajo para que no tape el footer */
             }
 
-            body {
-                padding-top: 5rem;
-            }
-
-        }
-
-        @media (min-width: 992px) {
-            main {
-                padding-bottom: 0;
-                width: 100%;
-                display: inline-block;
+            .product-page-container {
+                /* altura mínima para que, incluso en pantallas grandes,
+           siempre se extienda hasta “casi” el footer */
+                min-height: calc(100vh - 50rem);
+                /* espacio final igual a la altura del footer */
+                padding-bottom: 50rem;
             }
         }
-
 
         /* Contenedor y zoom */
         .zoom-container {
@@ -106,12 +110,9 @@
             right: 0.2rem;
         }
 
-
-        main {
-            overflow-x: hidden;
-        }
     </style>
 
+<div class="product-page-container">
     <div class="container my-5 ">
         <div class="row gx-5">
             <div class="col-12 d-block d-md-none my-3">
@@ -128,193 +129,197 @@
                                 <div class="carousel-item active h-50">
                                     @else
                                         <div class="carousel-item">
-                            @endif
-                                <div class="zoom-container">
-                                    <img
-                                        src="{{$picture->path}}"
-                                        alt="Producto 1"
-                                        class="d-block product-image"
-                                        style="margin: 0 auto;"
-                                    />
+                                            @endif
+                                            <div class="zoom-container">
+                                                <img
+                                                    src="{{$picture->path}}"
+                                                    alt="Producto 1"
+                                                    class="d-block product-image"
+                                                    style="margin: 0 auto;"
+                                                />
+                                            </div>
+                                        </div>
+                                        @endforeach
                                 </div>
+                                <button
+                                    class="carousel-control-prev"
+                                    type="button"
+                                    data-bs-target="#productCarousel"
+                                    data-bs-slide="prev"
+                                >
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button
+                                    class="carousel-control-next"
+                                    type="button"
+                                    data-bs-target="#productCarousel"
+                                    data-bs-slide="next"
+                                >
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                    </div>
+
+                    <!-- Thumbnails con flechas -->
+                    <div class="thumbnail-wrapper mt-3">
+                        <button class="arrow-btn arrow-left" id="thumbPrev">‹</button>
+                        <div class="thumbnail-container">
+                            @foreach($product->pictures as $index => $picture)
+                                <img
+                                    src="{{$picture->path}}"
+                                    @if($index == 0)
+                                        class="thumbnail-item active"
+                                    @else
+                                        class="thumbnail-item"
+
+                                    @endif
+                                    data-bs-target="#productCarousel"
+                                    data-bs-slide-to="0"
+                                    alt="Mini 1"
+                                />
+                            @endforeach
+                        </div>
+                        <button class="arrow-btn arrow-right" id="thumbNext">›</button>
+                    </div>
+
+                    <div class="my-3">
+                        <div class="mb-4">
+                            <div class="bg-light border rounded p-2">
+                                <em>Descripción</em>
                             </div>
-                        @endforeach
+                            <div class="mt-2">
+                                {!! $product->description !!}
+                            </div>
+                        </div>
+
+                        <!-- Medidas -->
+                        <div class="mb-4">
+                            <div class="bg-light border rounded p-2">
+                                <em>Medidas</em>
+                            </div>
+                            <div class="mt-2">
+                                {!! $product->sizes_description !!}
+                            </div>
+                        </div>
+
+                        <!-- Referencia Modelo -->
+                        <div class="mb-4">
+                            <div class="bg-light border rounded p-2">
+                                <em>Referencia Modelo</em>
+                            </div>
+                            <div class="mt-2">
+                                {!! $product->model_reference !!}
+                            </div>
+                        </div>
                     </div>
-                    <button
-                        class="carousel-control-prev"
-                        type="button"
-                        data-bs-target="#productCarousel"
-                        data-bs-slide="prev"
-                    >
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button
-                        class="carousel-control-next"
-                        type="button"
-                        data-bs-target="#productCarousel"
-                        data-bs-slide="next"
-                    >
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
                 </div>
 
-                <!-- Thumbnails con flechas -->
-                <div class="thumbnail-wrapper mt-3">
-                    <button class="arrow-btn arrow-left" id="thumbPrev">‹</button>
-                    <div class="thumbnail-container">
-                        @foreach($product->pictures as $index => $picture)
+
+                <!-- Información del producto -->
+                <div class="col-md-6">
+                    <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{$product->name}}</h2>
+
+                    @php
+                        $productPrice = $product->discount != 0 ? $product->price * (1 - ($product->discount / 100)) : $product->price;
+                        $threeInstallments = round($productPrice/3, 2);
+                        $productPriceWithBankTransferCondition = round($productPrice * (1 - (10 / 100)), 2);
+                    @endphp
+
+                    @if($product->discount != 0)
+
+                        <p class="h4 text-dark"><small>
+                                <del>${{$product->price}}</del>
+                                %{{$product->discount}} off</small></p>
+                        <p class="h3 text-dark">${{$productPrice}}</p>
+                        <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
+                        <div class="border p-2 d-inline-block my-3">
+                            3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
+                        </div>
+
+                    @else
+
+                        <p class="h3 text-dark">${{$product->price}}</p>
+                        <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
+                        <div class="border p-2 d-inline-block my-3">
+                            3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
+                        </div>
+                    @endif
+
+                    <div class="my-3">
+                        <span class="me-2"><strong>Medios de pago:</strong></span>
+                        <div class="d-flex gap-2">
                             <img
-                                src="{{$picture->path}}"
-                                @if($index == 0)
-                                    class="thumbnail-item active"
-                                @else
-                                    class="thumbnail-item"
+                                src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp"
+                                data-src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp"
+                                class="me-1 mt-1" alt="visa" width="30" height="25">
 
-                                @endif
-                                data-bs-target="#productCarousel"
-                                data-bs-slide-to="0"
-                                alt="Mini 1"
-                            />
-                        @endforeach
+                            <img
+                                src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
+                                data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
+                                class="me-1 mt-1" alt="visa" width="30" height="25">
+
+
+                            <img
+                                src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
+                                data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
+                                class="me-1 mt-1" alt="mastercard" width="30" height="25">
+
+
+                            <img
+                                src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
+                                data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
+                                class="me-1 mt-1" alt="amex" width="30" height="25">
+
+
+                            <img
+                                src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
+                                data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
+                                class="me-1 mt-1" alt="ar_tarjeta-naranja" width="30" height="25">
+                        </div>
                     </div>
-                    <button class="arrow-btn arrow-right" id="thumbNext">›</button>
-                </div>
+                    <p><strong>10% de descuento</strong> pagando con transferencia</p>
 
-                <div class="my-3">
+                    <div class="my-3">
+                        <label class="d-block mb-1"><strong>Color:</strong></label>
+                        <div class="d-flex gap-2">
+                            <button class="btn p-0 border"
+                                    style="background:{{$product->color}}; width:32px; height:32px;"></button>
+                        </div>
+                    </div>
+
+                    <div class="my-4">
+                        <label class="d-block mb-1" id="sizeSelector"><strong>Talle:</strong></label>
+                        <div class="d-flex gap-2">
+                            @foreach($product->sizes as $size)
+                                <button
+                                    class="btn btn-outline-secondary sizes"
+                                    @if($size->stock == 0) disabled @endif>
+                                    {{$size->size}}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
                     <div class="mb-4">
-                        <div class="bg-light border rounded p-2">
-                            <em>Descripción</em>
-                        </div>
-                        <div class="mt-2">
-                            {!! $product->description !!}
-                        </div>
+                        <label class="form-label"><strong>Cantidad</strong></label>
+                        <input
+                            id="quantity"
+                            type="number"
+                            class="form-control"
+                            value="1"
+                            min="1"
+                            style="max-width:100px;"
+                        />
                     </div>
 
-                    <!-- Medidas -->
-                    <div class="mb-4">
-                        <div class="bg-light border rounded p-2">
-                            <em>Medidas</em>
-                        </div>
-                        <div class="mt-2">
-                            {!! $product->sizes_description !!}
-                        </div>
-                    </div>
-
-                    <!-- Referencia Modelo -->
-                    <div class="mb-4">
-                        <div class="bg-light border rounded p-2">
-                            <em>Referencia Modelo</em>
-                        </div>
-                        <div class="mt-2">
-                            {!! $product->model_reference !!}
-                        </div>
-                    </div>
-
+                    <button id="add-product-to-cart" class="btn btn-dark btn-lg w-100">
+                        AGREGAR AL CARRITO
+                    </button>
                 </div>
-
-
-            </div>
-
-            <!-- Información del producto -->
-            <div class="col-md-6">
-                <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{$product->name}}</h2>
-
-                @php
-                    $productPrice = $product->discount != 0 ? $product->price * (1 - ($product->discount / 100)) : $product->price;
-                    $threeInstallments = round($productPrice/3, 2);
-                    $productPriceWithBankTransferCondition = round($productPrice * (1 - (10 / 100)), 2);
-                @endphp
-
-                @if($product->discount != 0)
-
-                    <p class="h4 text-dark"><small><del>${{$product->price}}</del> %{{$product->discount}} off</small></p>
-                    <p class="h3 text-dark">${{$productPrice}}</p>
-                    <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
-                    <div class="border p-2 d-inline-block my-3">
-                        3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
-                    </div>
-
-                @else
-
-                    <p class="h3 text-dark">${{$product->price}}</p>
-                    <p class="text-secondary">${{$productPriceWithBankTransferCondition}} con Transferencia</p>
-                    <div class="border p-2 d-inline-block my-3">
-                        3 CUOTAS SIN INTERÉS DE <strong>${{$threeInstallments}}</strong>
-                    </div>
-                @endif
-
-                <div class="my-3">
-                    <span class="me-2"><strong>Medios de pago:</strong></span>
-                    <div class="d-flex gap-2">
-                        <img
-                            src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp"
-                            data-src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp"
-                            class="me-1 mt-1" alt="visa" width="30" height="25">
-
-                        <img
-                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
-                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png"
-                            class="me-1 mt-1" alt="visa" width="30" height="25">
-
-
-                        <img
-                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
-                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png"
-                            class="me-1 mt-1" alt="mastercard" width="30" height="25">
-
-
-                        <img
-                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
-                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png"
-                            class="me-1 mt-1" alt="amex" width="30" height="25">
-
-
-                        <img
-                            src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
-                            data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png"
-                            class="me-1 mt-1" alt="ar_tarjeta-naranja" width="30" height="25">
-                    </div>
-                </div>
-                <p><strong>10% de descuento</strong> pagando con transferencia</p>
-
-                <div class="my-3">
-                    <label class="d-block mb-1"><strong>Color:</strong></label>
-                    <div class="d-flex gap-2">
-                        <button class="btn p-0 border" style="background:{{$product->color}}; width:32px; height:32px;"></button>
-                    </div>
-                </div>
-
-                <div class="my-4">
-                    <label class="d-block mb-1" id="sizeSelector"><strong>Talle:</strong></label>
-                    <div class="d-flex gap-2">
-                        @foreach($product->sizes as $size)
-                            <button
-                                class="btn btn-outline-secondary sizes"
-                                @if($size->stock == 0) disabled @endif>
-                                {{$size->size}}
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label"><strong>Cantidad</strong></label>
-                    <input
-                        id="quantity"
-                        type="number"
-                        class="form-control"
-                        value="1"
-                        min="1"
-                        style="max-width:100px;"
-                    />
-                </div>
-
-                <button id="add-product-to-cart" class="btn btn-dark btn-lg w-100">
-                    AGREGAR AL CARRITO
-                </button>
             </div>
         </div>
     </div>
+
+</div>
 
     <style>
         table {
@@ -345,12 +350,12 @@
             let selectedSize;
             let selectedQuantity;
 
-            document.querySelectorAll(".sizes").forEach(function (element){
-                element.addEventListener('click', function (e){
+            document.querySelectorAll(".sizes").forEach(function (element) {
+                element.addEventListener('click', function (e) {
 
                     selectedSize = e.target.innerHTML;
                     document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize;
-                    document.querySelectorAll(".sizes").forEach(function (element){
+                    document.querySelectorAll(".sizes").forEach(function (element) {
                         element.classList.remove('active');
                     });
                     e.target.classList.add('active');
@@ -359,14 +364,13 @@
             })
 
 
-            $('#add-product-to-cart').click(function(){
+            $('#add-product-to-cart').click(function () {
                 const id = {{$product->id}};
                 const route = '/carts/products/' + id
 
-                if(selectedSize == undefined){
+                if (selectedSize == undefined) {
                     toastr.error('Debe seleccionar un talle');
-                }
-                else{
+                } else {
                     $.ajax({
                         type: "POST",
                         url: route,
@@ -430,6 +434,5 @@
             });
         </script>
     @endpush
-
 
 @endsection
