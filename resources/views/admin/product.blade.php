@@ -63,16 +63,11 @@
                             <input type="hidden" name="featured" value="0">
 
                             <!-- Checkbox -->
-                            <input class="form-check-input" name="featured" type="checkbox" value="1" id="featured" {{$product->featured == 1 ? 'checked' : ''}}>
+                            <input class="form-check-input" name="featured" type="checkbox" value="1"
+                                   id="featured" {{$product->featured == 1 ? 'checked' : ''}}>
                             <label class="form-check-label" for="featured">
                                 ¿Destacado?
                             </label>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="color" class="form-label">Color</label>
-                            <input value="{{$product->color}}" type="text" class="form-control" id="color"
-                                   name="color">
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -131,7 +126,7 @@
 
             <div class="col-lg-4">
                 <div class="card shadow-lg p-4">
-                    <h2 class="mb-4">Añadir talles</h2>
+                    <h2 class="mb-4">Añadir talles y colores</h2>
 
                     <form method="POST" action="{{route('admin.product.create.size', $product->id)}}"
                           enctype="multipart/form-data">
@@ -140,6 +135,18 @@
                         <div class="mb-3">
                             <label for="name" class="form-label">Talle:</label>
                             <input type="text" class="form-control" id="size" name="size"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="color" class="form-label">Color:</label>
+                            <input type="text" class="form-control" id="size" name="color"
+                                   required placeholder="HEX code">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="color_name" class="form-label">Nombre del color:</label>
+                            <input type="text" class="form-control" id="size" name="color_name"
                                    required>
                         </div>
 
@@ -177,7 +184,8 @@
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Descripción:</label>
-                            <textarea class="form-control editor" name="description" cols="30" rows="10">{!! $product->description !!}</textarea>
+                            <textarea class="form-control editor" name="description" cols="30"
+                                      rows="10">{!! $product->description !!}</textarea>
                         </div>
 
                         <div class="mb-3">
@@ -188,7 +196,8 @@
 
                         <div class="mb-3">
                             <label for="model_reference" class="form-label">Referencia modelo:</label>
-                            <textarea class="form-control editor" name="model_reference" cols="30" rows="10">{!! $product->model_reference !!}</textarea>
+                            <textarea class="form-control editor" name="model_reference" cols="30"
+                                      rows="10">{!! $product->model_reference !!}</textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -243,7 +252,36 @@
                 processing: true,
                 ajax: listUrl,
                 columns: [
-                    {title: 'TALLE', data: 'size'},
+                    {
+                        title: 'TALLE',
+                        data: 'size'
+                    },
+                    {
+                        title: 'COLOR',
+                        data: 'color',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                return `
+          <div class="d-flex gap-2">
+
+<div style="
+            background-color: ${data};
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          " title="${data}"></div> <p class="m-0">${data}</p>
+</div>
+        `;
+                            }
+                            // Para ordenamiento, filtrar, etc., devolvemos el valor crudo
+                            return data;
+                        }
+                    },
+                    {
+                      title: "NOMBRE COLOR",
+                      data: 'color_name'
+                    },
                     {
                         title: 'STOCK',
                         data: 'stock',
@@ -263,7 +301,7 @@
                             // En modos de ordenamiento, filtrado, etc.
                             return data;
                         }
-                    }
+                    },
                 ]
             });
 
@@ -292,62 +330,63 @@
                     }
                 });
             });
-        });
+        })
+            ;
 
 
-        document.addEventListener("DOMContentLoaded", function () {
-            function setupDestroyListeners() {
-                document.querySelectorAll(".destroyPicture").forEach(element => {
-                    element.addEventListener("click", function () {
-                        const pictureId = this.getAttribute("data-id");
-                        const deleteUrl = this.getAttribute("data-url");
+            document.addEventListener("DOMContentLoaded", function () {
+                function setupDestroyListeners() {
+                    document.querySelectorAll(".destroyPicture").forEach(element => {
+                        element.addEventListener("click", function () {
+                            const pictureId = this.getAttribute("data-id");
+                            const deleteUrl = this.getAttribute("data-url");
 
-                        if (!deleteUrl) {
-                            console.error("URL de eliminación no encontrada");
-                            return;
-                        }
+                            if (!deleteUrl) {
+                                console.error("URL de eliminación no encontrada");
+                                return;
+                            }
 
-                        if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
+                            if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
 
 
-                            $.ajax({
-                                url: deleteUrl,
-                                type: "DELETE",
-                                data: {
-                                    "_token": "{{ csrf_token() }}",
-                                },
-                                success: function (response) {
-                                    location.reload();
-                                },
-                            });
-                        }
+                                $.ajax({
+                                    url: deleteUrl,
+                                    type: "DELETE",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                    },
+                                    success: function (response) {
+                                        location.reload();
+                                    },
+                                });
+                            }
+                        });
                     });
+                }
+
+                setupDestroyListeners();
+            });
+
+
+            function previewImages(event) {
+                const previewContainer = document.getElementById("preview");
+                previewContainer.innerHTML = ""; // Limpia la vista previa anterior
+
+                const files = event.target.files;
+                if (files.length === 0) return;
+
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.classList.add("img-thumbnail", "m-2");
+                        img.style.width = "150px";
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
                 });
             }
-
-            setupDestroyListeners();
-        });
-
-
-        function previewImages(event) {
-            const previewContainer = document.getElementById("preview");
-            previewContainer.innerHTML = ""; // Limpia la vista previa anterior
-
-            const files = event.target.files;
-            if (files.length === 0) return;
-
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.classList.add("img-thumbnail", "m-2");
-                    img.style.width = "150px";
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
 
 
     </script>

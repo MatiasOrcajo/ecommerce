@@ -59,10 +59,21 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class, 'product_id');
     }
 
+    public function colors()
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id');
+    }
+
 
     public function getRouteKeyName()
     {
         return 'slug'; // Indica que usaremos el campo 'slug' para obtener el modelo en las rutas
+    }
+
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 
 

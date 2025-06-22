@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products');
             $table->string('size');
+            $table->string('color');
             $table->foreignId('order_id')->references('id')->on('orders');
             $table->unsignedInteger('quantity');
             $table->float('unit_price');

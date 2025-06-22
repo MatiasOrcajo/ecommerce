@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pictures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products');
+            $table->foreignId('product_variant_id')->nullable()->constrained('product_variants')->onDelete('cascade');
             $table->unsignedInteger('order')->nullable();
             $table->string('path');
             $table->timestamps();

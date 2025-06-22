@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->references('id')->on('products');
             $table->string('size');
             $table->string('color');
+            $table->string('color_name');
             $table->unsignedBigInteger('stock');
             $table->timestamps();
         });

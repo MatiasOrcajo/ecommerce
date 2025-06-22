@@ -25,9 +25,7 @@ return new class extends Migration
             $table->text('sizes_description')->nullable();
             $table->text('model_reference')->nullable();
             $table->boolean('featured')->default(false);
-            $table->string('specs')->nullable();
             $table->string('code')->nullable();
-            $table->string('brand')->nullable();
             $table->string('slug');
             $table->timestamps();
         });

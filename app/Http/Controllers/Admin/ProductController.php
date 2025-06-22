@@ -91,6 +91,8 @@ class ProductController extends Controller
         $productVariant = new ProductVariant();
         $productVariant->size = $request->size;
         $productVariant->stock = $request->stock;
+        $productVariant->color = $request->color;
+        $productVariant->color_name = $request->color_name;
         $productVariant->product_id = $product->id;
         $productVariant->save();
 
@@ -101,11 +103,13 @@ class ProductController extends Controller
 
     public function listSizes(Product $product)
     {
-        return DataTables::of($product->sizes->map(function ($size) {
+        return DataTables::of($product->variants->map(function ($variant) {
             return [
-                "id" => $size->id,
-                "size" => $size->size,
-                "stock" => $size->stock,
+                "id" => $variant->id,
+                "size" => $variant->size,
+                "color" => $variant->color,
+                "color_name" => $variant->color_name,
+                "stock" => $variant->stock,
             ];
         }))->make(true);
     }
