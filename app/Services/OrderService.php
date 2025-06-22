@@ -134,7 +134,7 @@ class OrderService
             foreach ($order->products as $orderProduct) {
                 $product = $orderProduct->product;
 
-                $productSizeRecordToUpdateStock = \App\Models\ProductSize::where('product_id', $product->id)
+                $productSizeRecordToUpdateStock = \App\Models\ProductVariant::where('product_id', $product->id)
                     ->where('size', $orderProduct->size)
                     ->first();
 

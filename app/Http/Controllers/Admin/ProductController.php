@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Picture;
 use App\Models\Product;
-use App\Models\ProductSize;
+use App\Models\ProductVariant;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -88,11 +88,11 @@ class ProductController extends Controller
 
     public function createSize(Product $product, Request $request)
     {
-        $productSize = new ProductSize();
-        $productSize->size = $request->size;
-        $productSize->stock = $request->stock;
-        $productSize->product_id = $product->id;
-        $productSize->save();
+        $productVariant = new ProductVariant();
+        $productVariant->size = $request->size;
+        $productVariant->stock = $request->stock;
+        $productVariant->product_id = $product->id;
+        $productVariant->save();
 
         return back()->with('success', 'Talle añadido correctamente');
 
@@ -111,10 +111,10 @@ class ProductController extends Controller
     }
 
 
-    public function updateSizeStock(Product $product, ProductSize $productSize, Request $request)
+    public function updateSizeStock(Product $product, ProductVariant $productVariant, Request $request)
     {
-        $productSize->stock = $request->stock;
-        $productSize->save();
+        $productVariant->stock = $request->stock;
+        $productVariant->save();
     }
 
 

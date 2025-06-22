@@ -10,7 +10,7 @@ use App\Models\Order;
 use App\Models\OrderProducts;
 use App\Models\Picture;
 use App\Models\Product;
-use App\Models\ProductSize;
+use App\Models\ProductVariant;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Factories\ProductSizeFactory;
@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('visitors')->insert($visitors);
 
-        ProductSize::factory(1000)->create();
+        ProductVariant::factory(1000)->create();
 
     }
 
