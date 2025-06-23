@@ -79,9 +79,18 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $categories = Category::all();
-        $product->load('pictures');
+        $productVariants = $product->variants();
 
-        return view('admin.product', compact('product', 'categories'));
+        $productColors = [
+            "ids_product_variants" => array_unique($productVariants->pluck('id')->toArray()),
+            "colors_names" => array_unique($productVariants->pluck('color_name')->toArray()),
+        ];
+
+        $picturesByProductVariants = $productVariants->whereHas('pictures')
+            ->with('pictures')
+            ->get();
+
+        return view('admin.product', compact('product', 'categories', 'productVariants', 'productColors', 'picturesByProductVariants'));
     }
 
 

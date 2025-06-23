@@ -23,7 +23,6 @@ class PictureController extends Controller
      */
     public function store(Request $request, Product $product)
     {
-
         foreach ($request->images as $file) {
 
             $reqPicture = $file->store('public/images');
@@ -32,6 +31,7 @@ class PictureController extends Controller
             $picture = new Picture();
             $picture->product_id = $product->id;
             $picture->order = 1;
+            $picture->product_variant_id = $request->product_variant_id;
             $picture->path = $reqPictureUrl;
             $picture->save();
 
@@ -70,9 +70,9 @@ class PictureController extends Controller
     public function editOrder(Product $product, Request $request)
     {
 
-        $datos = collect($request->all())->except(['_token', '_method']);
+        $data = collect($request->all())->except(['_token', '_method']);
 
-        foreach ($datos as $key => $value) {
+        foreach ($data as $key => $value) {
             $picture = Picture::find($key);
             $picture->order = $value;
             $picture->save();

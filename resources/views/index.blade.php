@@ -144,27 +144,38 @@
         @foreach($products as $product)
 
             <div class="col-md-4">
-                <div class="card border-0 h-100 p-0">
+                <div class="card border-0 h-75 p-0">
 
                     <!-- Imagen con hover -->
                     <div class="image-container">
 
                         <!-- Imagen por defecto -->
                         @php
-                            $pictures = $product->pictures->toArray();
-                            $firstPicture = $pictures[0];
-                            $secondPicture = $pictures[1];
+
+                            $colors = array_unique($product->variants->pluck("color")->toArray());
+                            $productVariants = $product->variants;
+
+                            $pictures = $productVariants->map(fn($productVariant) => $productVariant->pictures);
+                            $filtered = $pictures
+                                    ->filter(fn($sub) => $sub->isNotEmpty())
+                                    ->values()
+                                    ->toArray();
+
                         @endphp
 
-                        <img
-                            src="{{ $firstPicture["path"] }}"
-                            class="card-img-top img-first"
-                            alt="{{$product->name}}">
-                        <!-- Imagen que aparece al pasar el mouse -->
-                        <img
-                            src="{{ $secondPicture["path"] }}"
-                            class="card-img-top img-second"
-                            alt="{{$product->name}} - Hover">
+
+                                <img
+                                    src="{{ $filtered[0][0]["path"] }}"
+                                    class="card-img-top img-first"
+                                    alt="{{$product->name}}">
+                                <!-- Imagen que aparece al pasar el mouse -->
+                                <img
+                                    src="{{ $filtered[0][1]["path"] }}"
+                                    class="card-img-top img-second"
+                                    alt="{{$product->name}} - Hover">
+
+
+
 
                         <!-- Iconos superpuestos -->
                         <a href="{{ route('product.show', $product->slug) }}">
@@ -178,9 +189,11 @@
                     <div class="card-body d-flex flex-column position-relative">
                         <div class="d-flex justify-content-center align-items-center">
                             <div class="color-box-parent d-flex justify-content-center align-items-center">
-                                <div class="color-box" style="background-color: {{$product->color}}">
+                                @foreach($colors as $color)
+                                    <div class="color-box" style="background-color: {{$color}}; border: 1px solid grey">
 
-                                </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                         <h5 class="card-title text-center mb-2">{{$product->name}}</h5>
@@ -257,18 +270,18 @@
     </div>
 
 
-<style>
-    .btn-white.border-black {
-        background-color: #fff;
-        color: #000;
-        border: 1px solid #000;
-        transition: background-color 0.2s ease, color 0.2s ease;
-    }
+    <style>
+        .btn-white.border-black {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #000;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
 
-    .btn-white.border-black:hover {
-        background-color: #000;
-        color: #fff;
-    }
-</style>
+        .btn-white.border-black:hover {
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
 
 @endsection

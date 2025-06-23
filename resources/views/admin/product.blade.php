@@ -76,55 +76,8 @@
 
             </div>
 
+
             <div class="col-lg-8">
-                <div class="card shadow-lg p-4">
-                    <h2 class="mb-4">Imagenes del producto</h2>
-                    <small>La primera será la imagen de portada del producto</small>
-
-                    <div id="board" class="d-flex flex-wrap">
-                        <form action="{{route('admin.pictures.edit.order', $product->id)}}" method="POST">
-                            @csrf
-                            @method("PUT")
-                            <div class="row">
-                                @foreach ($product->pictures as $picture)
-                                    <div style="width: 150px; position: relative;" class="m-2">
-                                        <img src="{{$picture->path}}" style="width: 150px" class="img-thumbnail m-2">
-                                        <div
-                                            style="position: absolute; top: 0; right: 0; background-color: red; color: white; padding: 3px; opacity: 0.8; cursor: pointer;"
-                                            class="destroyPicture" data-id="{{$picture->id}}"
-                                            data-url="{{route('admin.pictures.destroy', $picture->id)}}">
-                                            X
-                                        </div>
-                                        <div>
-                                            <input style="max-width: 100%;" type="number" name="{{$picture->id}}"
-                                                   value="{{$picture->order}}">
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <button type="submit" class="btn btn-success mb-5">Guardar orden</button>
-
-                        </form>
-                    </div> <!-- Vista imagenes -->
-
-                    <form action="{{route('admin.pictures.store', $product->id)}}" method="POST"
-                          enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="images" class="form-label">Selecciona imágenes:</label>
-                            <input type="file" class="form-control" id="images" name="images[]" multiple
-                                   accept="image/*" onchange="previewImages(event)">
-                        </div>
-                        <div id="preview" class="d-flex flex-wrap"></div> <!-- Vista previa -->
-                        <div class="text-center mt-3" style="float: left;">
-                            <button type="submit" class="btn btn-success">Subir Imágenes</button>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
-
-            <div class="col-lg-4">
                 <div class="card shadow-lg p-4">
                     <h2 class="mb-4">Añadir talles y colores</h2>
 
@@ -162,7 +115,7 @@
 
             </div>
 
-            <div class="col-lg-8">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">Lista de Talles</div>
                     <div class="card-body">
@@ -172,6 +125,113 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-12">
+                <div class="card shadow-lg p-4">
+                    <h2 class="mb-4">Imagenes del producto</h2>
+                    <small>La primera será la imagen de portada del producto</small>
+
+                    <div id="board" class="d-flex flex-wrap">
+                        <form action="{{ route('admin.pictures.edit.order', $product->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="row">
+                                @foreach ($picturesByProductVariants as $productVariant)
+                                    {{-- Variante: color swatch + nombre --}}
+                                    <div class="col-12 mt-5 d-flex align-items-center">
+                                        <p class="me-2 mb-0">Color:</p>
+                                        <div
+                                            style="
+                                                background-color: {{ $productVariant->color }};
+                                                width: 32px;
+                                                height: 32px;
+                                                border: 1px solid #ccc;
+                                                border-radius: 4px;
+                                            "
+                                            title="{{ $productVariant->color_name }}"
+                                        ></div>
+                                        <p class="ms-2 mb-0">{{ $productVariant->color_name }}</p>
+                                    </div>
+
+                                    {{-- Imágenes de la variante --}}
+                                    @foreach ($productVariant->pictures as $picture)
+                                        <div class="m-2 position-relative" style="width: 150px;">
+                                            <img
+                                                src="{{ $picture->path }}"
+                                                class="img-thumbnail"
+                                                style="width: 100%;"
+                                            >
+                                            <div
+                                                class="destroyPicture"
+                                                data-id="{{ $picture->id }}"
+                                                data-url="{{ route('admin.pictures.destroy', $picture->id) }}"
+                                                style="
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                background-color: red;
+                                color: white;
+                                padding: 3px;
+                                opacity: 0.8;
+                                cursor: pointer;
+                            "
+                                            >X
+                                            </div>
+                                            <div class="mt-2">
+                                                <input
+                                                    type="number"
+                                                    name="{{ $picture->id }}"
+                                                    value="{{ $picture->order }}"
+                                                    class="form-control form-control-sm"
+                                                    style="max-width: 100%;"
+                                                >
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endforeach
+                            </div> {{-- cierre de .row --}}
+
+                            <button type="submit" class="btn btn-success mb-5">
+                                Guardar orden
+                            </button>
+                        </form>
+                    </div>
+
+
+                    <form action="{{route('admin.pictures.store', $product->id)}}" method="POST"
+                          enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Seleccionar imágenes:</label>
+                            <input type="file" class="form-control" id="images" name="images[]" multiple
+                                   accept="image/*" onchange="previewImages(event)">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="color" class="form-label">Color correspondiente:</label>
+                            <select class="form-select" id="category" name="product_variant_id" required>
+                                <option value="" selected disabled>Seleccionar color</option>
+                                @foreach($productColors["colors_names"] as $index => $color)
+
+                                    {{--                                    id de product_variants--}}
+                                    <option value="{{$productColors["ids_product_variants"][$index]}}">
+                                        <span>{{ $color }}</span>
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        <div id="preview" class="d-flex flex-wrap"></div> <!-- Vista previa -->
+                        <div class="text-center mt-3" style="float: left;">
+                            <button type="submit" class="btn btn-success">Subir Imágenes</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
 
             <div class="col-lg-12">
                 <div class="card shadow-lg p-4">
@@ -279,8 +339,8 @@
                         }
                     },
                     {
-                      title: "NOMBRE COLOR",
-                      data: 'color_name'
+                        title: "NOMBRE COLOR",
+                        data: 'color_name'
                     },
                     {
                         title: 'STOCK',
@@ -331,62 +391,62 @@
                 });
             });
         })
-            ;
+        ;
 
 
-            document.addEventListener("DOMContentLoaded", function () {
-                function setupDestroyListeners() {
-                    document.querySelectorAll(".destroyPicture").forEach(element => {
-                        element.addEventListener("click", function () {
-                            const pictureId = this.getAttribute("data-id");
-                            const deleteUrl = this.getAttribute("data-url");
+        document.addEventListener("DOMContentLoaded", function () {
+            function setupDestroyListeners() {
+                document.querySelectorAll(".destroyPicture").forEach(element => {
+                    element.addEventListener("click", function () {
+                        const pictureId = this.getAttribute("data-id");
+                        const deleteUrl = this.getAttribute("data-url");
 
-                            if (!deleteUrl) {
-                                console.error("URL de eliminación no encontrada");
-                                return;
-                            }
+                        if (!deleteUrl) {
+                            console.error("URL de eliminación no encontrada");
+                            return;
+                        }
 
-                            if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
+                        if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
 
 
-                                $.ajax({
-                                    url: deleteUrl,
-                                    type: "DELETE",
-                                    data: {
-                                        "_token": "{{ csrf_token() }}",
-                                    },
-                                    success: function (response) {
-                                        location.reload();
-                                    },
-                                });
-                            }
-                        });
+                            $.ajax({
+                                url: deleteUrl,
+                                type: "DELETE",
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                },
+                                success: function (response) {
+                                    location.reload();
+                                },
+                            });
+                        }
                     });
-                }
-
-                setupDestroyListeners();
-            });
-
-
-            function previewImages(event) {
-                const previewContainer = document.getElementById("preview");
-                previewContainer.innerHTML = ""; // Limpia la vista previa anterior
-
-                const files = event.target.files;
-                if (files.length === 0) return;
-
-                Array.from(files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const img = document.createElement("img");
-                        img.src = e.target.result;
-                        img.classList.add("img-thumbnail", "m-2");
-                        img.style.width = "150px";
-                        previewContainer.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
                 });
             }
+
+            setupDestroyListeners();
+        });
+
+
+        function previewImages(event) {
+            const previewContainer = document.getElementById("preview");
+            previewContainer.innerHTML = ""; // Limpia la vista previa anterior
+
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.classList.add("img-thumbnail", "m-2");
+                    img.style.width = "150px";
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
 
 
     </script>
