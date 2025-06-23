@@ -116,6 +116,21 @@ class ProductController extends Controller
     }
 
 
+    /**
+     * Obtiene dos imagenes de un producto segun un color
+     *
+     * todo implementar esta funcion para traer todas las imagenes de un color en la vista de producto
+     *
+     * @param Product $product
+     * @param Request $request
+     * @return mixed
+     */
+    public function searchProductImagesByColor(Product $product, Request $request)
+    {
+        return $product->variants()->where('color', $request->color)->first()->pictures()->orderBy('order')->take(2)->get();
+    }
+
+
 
 
 

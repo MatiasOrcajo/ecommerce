@@ -155,7 +155,7 @@
                             $colors = array_unique($product->variants->pluck("color")->toArray());
                             $productVariants = $product->variants;
 
-                            $pictures = $productVariants->map(fn($productVariant) => $productVariant->pictures);
+                            $pictures = $productVariants->map(fn($productVariant) => $productVariant->pictures()->orderBy('order')->get());
                             $filtered = $pictures
                                     ->filter(fn($sub) => $sub->isNotEmpty())
                                     ->values()
@@ -163,18 +163,15 @@
 
                         @endphp
 
-
-                                <img
-                                    src="{{ $filtered[0][0]["path"] }}"
-                                    class="card-img-top img-first"
-                                    alt="{{$product->name}}">
-                                <!-- Imagen que aparece al pasar el mouse -->
-                                <img
-                                    src="{{ $filtered[0][1]["path"] }}"
-                                    class="card-img-top img-second"
-                                    alt="{{$product->name}} - Hover">
-
-
+                        <img
+                            src="{{ $filtered[0][0]["path"] }}"
+                            class="card-img-top img-first"
+                            alt="{{$product->name}}">
+                        <!-- Imagen que aparece al pasar el mouse -->
+                        <img
+                            src="{{ $filtered[0][1]["path"] }}"
+                            class="card-img-top img-second"
+                            alt="{{$product->name}} - Hover">
 
 
                         <!-- Iconos superpuestos -->
@@ -190,7 +187,7 @@
                         <div class="d-flex justify-content-center align-items-center">
                             <div class="color-box-parent d-flex justify-content-center align-items-center">
                                 @foreach($colors as $color)
-                                    <div class="color-box" style="background-color: {{$color}}; border: 1px solid grey">
+                                    <div class="color-box" style="background-color: {{$color}}; border: 1px solid grey" data-color="{{$color}}" data-product-id="{{$product->id}}" data-product-slug="{{$product->slug}}">
 
                                     </div>
                                 @endforeach
@@ -283,5 +280,71 @@
             color: #fff;
         }
     </style>
+
+    @push("scripts")
+
+        <script>
+
+            /**
+             * @param {Function} callback Función que recibirá el elemento clicado y el índice.
+             */
+            function initColorBoxListeners(callback) {
+
+                const boxes = document.querySelectorAll('.color-box');
+                boxes.forEach((box, index) => {
+                    box.addEventListener('click', () => {
+                        callback(box, index);
+                    });
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                initColorBoxListeners((box, idx) => {
+                    const color = box.dataset.color;
+                    const productId = box.dataset.productId;
+                    const productSlug = box.dataset.productSlug;
+                    const container = box.closest('.card').querySelector('.image-container');
+                    const url = `/products/${productId}/search-pictures-by-color`;
+
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        data: {
+                            color: encodeURI(color)  // convierte "#" en "%23"
+                        },
+                        success: function(response) {
+
+                            const firstPath = response[0]["path"];
+                            const secondPath = response[1]["path"];
+
+                            container.innerHTML = `<img
+                            src="${firstPath}"
+                            class="card-img-top img-first">
+                        <!-- Imagen que aparece al pasar el mouse -->
+                        <img
+                            src="${secondPath}"
+                            class="card-img-top img-second">
+
+                        <a href="/productos/${productSlug}">
+                            <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
+                                <i class="fas fa-shopping-bag"></i>
+                            </button>
+                        </a>
+
+                        `
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error al traer imágenes:', status, error);
+                        }
+                    });
+
+                });
+            });
+
+
+        </script>
+
+    @endpush
 
 @endsection

@@ -46,6 +46,10 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::post('/carts/products/{product}', [\App\Http\Controllers\CartController::class, 'addProduct']);
 
+    //search product pictures by color
+    Route::get('/products/{product}/search-pictures-by-color', [\App\Http\Controllers\ProductController::class, 'searchProductImagesByColor']);
+
+
 
 
 
