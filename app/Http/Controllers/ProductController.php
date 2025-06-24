@@ -131,6 +131,38 @@ class ProductController extends Controller
     }
 
 
+    /**
+     * @param $slug
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
+    public function show($slug)
+    {
+        $product = Product::where("slug", $slug)->firstOrFail();
+
+        return view('product', compact('product'));
+    }
+
+
+    /**
+     * @param Product $product
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getVariants(Product $product)
+    {
+        $productVariants = $product->variants;
+        $availableColors = $productVariants->select(["color", "color_name"])->unique('color_name')->toArray();
+        $availableSizes = $productVariants->select("size")->unique('size')->toArray();
+        $productsVariantsArray = $productVariants->select(["size", "color", "stock"])->toArray();
+
+        $data = [
+            "availableColors" => $availableColors,
+            "availableSizes" => $availableSizes,
+            "productsVariantsArray" => $productsVariantsArray,
+        ];
+
+        return response()->json($data);
+    }
+
 
 
 

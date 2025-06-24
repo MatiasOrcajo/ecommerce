@@ -8,7 +8,7 @@
     </div>
 
     {{-- Navbar Blanca (buscador, logo, carrito) --}}
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm pb-0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm pb-0 px-3">
         <div class="container-fluid d-flex align-items-center">
             <div class="col-lg-4 d-none d-lg-flex justify-content-start">
                 <form class="d-flex align-items-center w-100" style="max-width: 220px;">

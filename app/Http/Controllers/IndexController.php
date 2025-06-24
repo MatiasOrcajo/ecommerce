@@ -15,12 +15,4 @@ class IndexController extends Controller
         return view('index', compact('products'));
     }
 
-
-    public function show($slug)
-    {
-        $product = Product::where("slug", $slug)->firstOrFail();
-
-        return view('product', compact('product'));
-    }
-
 }

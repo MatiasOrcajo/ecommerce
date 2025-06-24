@@ -34,7 +34,7 @@ Route::group(['middleware' => ['web']], function () {
             }
         }
 
-        return $data;
+        return json_encode($data);
 
     });
 
@@ -42,7 +42,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index');
 
-    Route::get('/productos/{slug}', [\App\Http\Controllers\IndexController::class, 'show'])->name('product.show');
+    Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
+
+    Route::get('/products/{product}/get-variants', [\App\Http\Controllers\ProductController::class, 'getVariants'])->name('product.variants.show');
 
     Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('cart')->middleware('cart-empty');
 

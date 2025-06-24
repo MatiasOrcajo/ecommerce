@@ -140,77 +140,7 @@
         <h2 class="d-block mt-5 text-center" style="font-size: 4rem">destacados.</h2>
 
     </div>
-    <div class="row g-4 mx-3">
-        @foreach($products as $product)
-
-            <div class="col-md-4">
-                <div class="card border-0 h-75 p-0">
-
-                    <!-- Imagen con hover -->
-                    <div class="image-container">
-
-                        <!-- Imagen por defecto -->
-                        @php
-
-                            $colors = array_unique($product->variants->pluck("color")->toArray());
-                            $productVariants = $product->variants;
-
-                            $pictures = $productVariants->map(fn($productVariant) => $productVariant->pictures()->orderBy('order')->get());
-                            $filtered = $pictures
-                                    ->filter(fn($sub) => $sub->isNotEmpty())
-                                    ->values()
-                                    ->toArray();
-
-                        @endphp
-
-                        <img
-                            src="{{ $filtered[0][0]["path"] }}"
-                            class="card-img-top img-first"
-                            alt="{{$product->name}}">
-                        <!-- Imagen que aparece al pasar el mouse -->
-                        <img
-                            src="{{ $filtered[0][1]["path"] }}"
-                            class="card-img-top img-second"
-                            alt="{{$product->name}} - Hover">
-
-
-                        <!-- Iconos superpuestos -->
-                        <a href="{{ route('product.show', $product->slug) }}">
-                            <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                                <i class="fas fa-shopping-bag"></i>
-                            </button>
-                        </a>
-                    </div>
-
-                    <!-- Body: título y precios -->
-                    <div class="card-body d-flex flex-column position-relative">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="color-box-parent d-flex justify-content-center align-items-center">
-                                @foreach($colors as $color)
-                                    <div class="color-box" style="background-color: {{$color}}; border: 1px solid grey" data-color="{{$color}}" data-product-id="{{$product->id}}" data-product-slug="{{$product->slug}}">
-
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <h5 class="card-title text-center mb-2">{{$product->name}}</h5>
-                        <p class="text-center mb-1 fw-bold">${{$product->price}}</p>
-                        <p class="text-center mb-2 text-muted">${{$product->price * 0.9}} con Transferencia bancaria</p>
-                        <p class="text-center small text-muted mb-0">
-                            6 cuotas sin interés de ${{$product->price / 3}}
-                        </p>
-
-
-                        <!-- Botón "Ver" -->
-                        <a href="{{ route('product.show', $product->slug) }}"
-                           class="btn btn-white border-black w-25 mx-auto mt-3 d-block">
-                            Ver
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-        @endforeach
+    <div class="row g-4 mx-3" id="products-container">
 
         <!-- …repite más columnas según necesites… -->
 
@@ -281,70 +211,131 @@
         }
     </style>
 
-    @push("scripts")
+    <!-- en tu Blade, donde quieras que vayan las cards: -->
+    <div id="products-container" class="row g-4 mx-3"></div>
 
+    @push('scripts')
         <script>
-
-            /**
-             * @param {Function} callback Función que recibirá el elemento clicado y el índice.
-             */
-            function initColorBoxListeners(callback) {
-
-                const boxes = document.querySelectorAll('.color-box');
-                boxes.forEach((box, index) => {
-                    box.addEventListener('click', () => {
-                        callback(box, index);
-                    });
-                });
-            }
-
             document.addEventListener('DOMContentLoaded', () => {
-                initColorBoxListeners((box, idx) => {
-                    const color = box.dataset.color;
-                    const productId = box.dataset.productId;
-                    const productSlug = box.dataset.productSlug;
-                    const container = box.closest('.card').querySelector('.image-container');
-                    const url = `/products/${productId}/search-pictures-by-color`;
+                // 1) Hacemos la petición a la ruta que devuelve el JSON
+                fetch('/test-array-featured-products')
+                    .then(res => res.json())
+                    .then(data => renderProducts(data))
+                    .catch(err => console.error(err));
 
-                    $.ajax({
-                        url: url,
-                        method: 'GET',
-                        data: {
-                            color: encodeURI(color)  // convierte "#" en "%23"
-                        },
-                        success: function(response) {
+                function renderProducts(data) {
+                    const container = document.getElementById('products-container');
+                    let html = '';
 
-                            const firstPath = response[0]["path"];
-                            const secondPath = response[1]["path"];
+                    // 2) Por cada producto en el JSON
+                    Object.values(data).forEach(item => {
+                        const { product, colors } = item;
+                        const colorNames = colors.names; // ["Visón","Negro",…]
 
-                            container.innerHTML = `<img
-                            src="${firstPath}"
-                            class="card-img-top img-first">
-                        <!-- Imagen que aparece al pasar el mouse -->
-                        <img
-                            src="${secondPath}"
-                            class="card-img-top img-second">
+                        // Montamos un array de variantes: { colorCode, pics }
+                        const variants = colorNames.map((_, idx) => {
+                            // colors[idx] es algo tipo {"#96897d": [[path1, path2]]}
+                            const entry = colors[idx];
+                            const code = Object.keys(entry)[0];
+                            const pics = entry[code][0]; // [path1, path2]
+                            return { colorCode: code, pics };
+                        });
 
-                        <a href="/productos/${productSlug}">
-                            <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                                <i class="fas fa-shopping-bag"></i>
-                            </button>
-                        </a>
+                        // Preparamos la primera y segunda imagen
+                        const firstImg  = variants[0].pics[0];
+                        const secondImg = variants[0].pics[1] || variants[0].pics[0];
 
-                        `
+                        // Montamos los swatches
+                        let swatches = '';
+                        variants.forEach((v, i) => {
+                            swatches += `
 
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error al traer imágenes:', status, error);
-                        }
+          <div
+            class="color-box mx-1"
+            data-variant-index="${i}"
+            style="
+              width:24px; height:24px;
+              background-color:${v.colorCode};
+              border:1px solid #ccc;
+              cursor:pointer;
+            "
+            title="${colorNames[i]}"
+          ></div>
+        `;
+                        });
+
+                        // Montamos el card completo, respetando TODA la estructura y clases
+                        html += `
+        <div class="col-md-4">
+          <div class="card border-0 h-75 p-0">
+
+            <div
+              class="image-container"
+              data-variants='${JSON.stringify(variants)}'
+            >
+              <img
+                src="${firstImg}"
+                class="card-img-top img-first"
+                alt="${product.name}"
+              >
+              <img
+                src="${secondImg}"
+                class="card-img-top img-second"
+                alt="${product.name} - Hover"
+              >
+              <a href="/productos/${product.slug}">
+                <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
+                  <i class="fas fa-shopping-bag"></i>
+                </button>
+              </a>
+            </div>
+
+            <div class="card-body d-flex flex-column position-relative">
+              <div class="d-flex justify-content-center mb-3">
+                <div class="color-box-parent d-flex justify-content-center align-items-center">
+                ${swatches}
+                </div>
+              </div>
+              <h5 class="card-title text-center mb-2">${product.name}</h5>
+              <p class="text-center mb-1 fw-bold">$${product.price}</p>
+              <p class="text-center mb-2 text-muted">$${(product.price*0.9).toFixed(2)} con Transferencia bancaria</p>
+              <p class="text-center small text-muted mb-0">
+                6 cuotas sin interés de $${(product.price/3).toFixed(2)}
+              </p>
+              <a
+                href="/productos/${product.slug}"
+                class="btn btn-white border-black w-25 mx-auto mt-3 d-block"
+              >Ver</a>
+            </div>
+          </div>
+        </div>
+      `;
                     });
 
-                });
+                    // 3) Inyectamos todo de una vez
+                    container.innerHTML = html;
+
+                    // 4) Adjuntamos los clicks PARA CADA CARD por separado
+                    container.querySelectorAll('.image-container').forEach(container => {
+                        const variants = JSON.parse(container.dataset.variants);
+                        const imgFirst = container.querySelector('.img-first');
+                        const imgSecond= container.querySelector('.img-second');
+                        const card     = container.closest('.card');
+
+                        card.querySelectorAll('.color-box').forEach(box => {
+                            box.addEventListener('click', () => {
+                                const i = parseInt(box.dataset.variantIndex, 10);
+                                const pics = variants[i].pics || [];
+                                if (!pics.length) return;
+                                imgFirst.src  = pics[0];
+                                imgSecond.src = pics[1] || pics[0];
+                            });
+                        });
+                    });
+                }
             });
-
-
         </script>
-
     @endpush
+
 
 @endsection

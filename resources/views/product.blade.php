@@ -347,6 +347,23 @@
 
         <script>
 
+            let availableColors;
+            let availableSizes;
+            let productsVariantsArray;
+
+
+
+            fetch("{{route('product.variants.show', $product->id)}}")
+                .then(res => res.json())
+                .then(function (data){
+                    availableColors = data.availableColors;
+                    availableSizes = data.availableSizes;
+                    productsVariantsArray = data.productsVariantsArray;
+
+                    console.log(availableColors)
+                })
+                .catch(err => console.error(err));
+
             let selectedSize;
             let selectedQuantity;
 
