@@ -4,6 +4,23 @@
 
     <style>
 
+        .no-stock {
+            opacity: 0.5;
+            pointer-events: none;
+            position: relative;
+            border: 1px dashed #999 !important;
+            color: #666 !important;
+        }
+
+        .no-stock::after {
+            content: "Sin stock";
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 0.65rem;
+            color: #999;
+        }
+
         main{
             overflow-x: hidden;
         }
@@ -126,37 +143,37 @@
                     <div class="carousel-inner ">
                         @foreach($product->pictures as $index => $picture)
                             @if($index == 0)
-                                <div class="carousel-item active h-50">
-                                    @else
-                                        <div class="carousel-item">
-                                            @endif
-                                            <div class="zoom-container">
-                                                <img
-                                                    src="{{$picture->path}}"
-                                                    alt="Producto 1"
-                                                    class="d-block product-image"
-                                                    style="margin: 0 auto;"
-                                                />
-                                            </div>
-                                        </div>
-                                        @endforeach
+                     <div class="carousel-item active h-50">
+                            @else
+                                <div class="carousel-item">
+                                    @endif
+                                    <div class="zoom-container">
+                                        <img
+                                            src="{{$picture->path}}"
+                                            alt="Producto 1"
+                                            class="d-block product-image"
+                                            style="margin: 0 auto;"
+                                        />
+                                    </div>
                                 </div>
-                                <button
-                                    class="carousel-control-prev"
-                                    type="button"
-                                    data-bs-target="#productCarousel"
-                                    data-bs-slide="prev"
-                                >
-                                    <span class="carousel-control-prev-icon"></span>
-                                </button>
-                                <button
-                                    class="carousel-control-next"
-                                    type="button"
-                                    data-bs-target="#productCarousel"
-                                    data-bs-slide="next"
-                                >
-                                    <span class="carousel-control-next-icon"></span>
-                                </button>
+                                @endforeach
+                        </div>
+                        <button
+                            class="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#productCarousel"
+                            data-bs-slide="prev"
+                        >
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button
+                            class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#productCarousel"
+                            data-bs-slide="next"
+                        >
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
                     </div>
 
                     <!-- Thumbnails con flechas -->
@@ -280,22 +297,15 @@
 
                     <div class="my-3">
                         <label class="d-block mb-1"><strong>Color:</strong></label>
-                        <div class="d-flex gap-2">
-                            <button class="btn p-0 border"
-                                    style="background:{{$product->color}}; width:32px; height:32px;"></button>
+                        <div class="d-flex gap-2" id="colors-container">
+
                         </div>
                     </div>
 
                     <div class="my-4">
                         <label class="d-block mb-1" id="sizeSelector"><strong>Talle:</strong></label>
-                        <div class="d-flex gap-2">
-                            @foreach($product->sizes as $size)
-                                <button
-                                    class="btn btn-outline-secondary sizes"
-                                    @if($size->stock == 0) disabled @endif>
-                                    {{$size->size}}
-                                </button>
-                            @endforeach
+                        <div class="d-flex gap-2" id="sizes-container">
+
                         </div>
                     </div>
 
@@ -350,8 +360,105 @@
             let availableColors;
             let availableSizes;
             let productsVariantsArray;
+            let selectedColor;
+            let selectedSize;
+
+            function addEventListerToAvailableSizes(){
+
+                const sizeBoxes = document.querySelectorAll(".size-box");
+
+                sizeBoxes.forEach(function(box){
+                    box.addEventListener('click', function (e){
+
+                        sizeBoxes.forEach(function(b){
+                            b.style.border = 'none';
+                            b.style.outline = 'none';
+                            b.style.outlineOffset = 'none';
+                            b.style.boxShadow = 'none';
+                        });
+
+                        selectedSize = e.target.dataset.size;
+                        e.target.style.outline = '2px solid black';
+                        e.target.style.outlineOffset = '1px';
+
+                    });
+                });
+
+            }
+
+            function printAvailableColors(){
+
+                let html = '';
+                Object.entries(availableColors).forEach(([key, color]) => {
+
+                    html+=`<div class="btn btn-outline-secondary color-box" data-color="${color.color}"
+                        style="background:${color.color}; width:32px; height:32px;" title="${color.color_name}"></div>`
+                })
+
+                $("#colors-container").html(html);
+
+                const colorBoxes = document.querySelectorAll(".color-box");
+
+                colorBoxes.forEach(function(box){
+                    box.addEventListener('click', function (e){
+
+                        colorBoxes.forEach(function(b){
+                            b.style.border = 'none';
+                            b.style.outline = 'none';
+                            b.style.outlineOffset = 'none';
+                            b.style.boxShadow = 'none';
+                        });
+
+                        selectedColor = e.target.dataset.color;
+                        e.target.style.outline = '2px solid black';
+                        e.target.style.outlineOffset = '1px';
+
+                        printSizes(true);
+
+                    });
+                });
+
+            }
 
 
+            function printSizes(isSearch = false, availableSizes = undefined){
+                let html = '';
+
+                if(isSearch){
+                    let availableSizeAndStockForThisColor = searchAvailableSizesAndStockBySelectedColor();
+
+                    printSizes(false, availableSizeAndStockForThisColor);
+                }
+                else{
+
+                    Object.entries(availableSizes).forEach(([key, size]) => {
+                        html += `<div
+                    class="btn btn-outline-secondary size-box sizes ${size.stock == 0 ? 'no-stock' : ''}"
+                    data-size="${size.size}"
+                    data-stock="${size.stock}"
+                    >
+                    ${size.size}
+                    </div>`
+                    });
+
+                    $("#sizes-container").html(html);
+                }
+
+
+                document.querySelectorAll(".sizes").forEach(function (element) {
+                    element.addEventListener('click', function (e) {
+
+                        selectedSize = e.target.innerHTML;
+                        document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize;
+                        document.querySelectorAll(".sizes").forEach(function (element) {
+                            element.classList.remove('active');
+                        });
+                        e.target.classList.add('active');
+
+                    })
+                })
+
+            }
 
             fetch("{{route('product.variants.show', $product->id)}}")
                 .then(res => res.json())
@@ -359,27 +466,34 @@
                     availableColors = data.availableColors;
                     availableSizes = data.availableSizes;
                     productsVariantsArray = data.productsVariantsArray;
+                    console.log(productsVariantsArray)
+                    printAvailableColors();
+                    addEventListerToAvailableSizes();
+                    printSizes(false, availableSizes);
 
-                    console.log(availableColors)
                 })
                 .catch(err => console.error(err));
 
-            let selectedSize;
+
+            function searchAvailableSizesAndStockBySelectedColor() {
+                let availableSizesAndStock = [];
+
+                Object.entries(productsVariantsArray).forEach(([index, productVariant]) => {
+                    if (productVariant.color == selectedColor) {
+                        availableSizesAndStock.push({
+                            size: productVariant.size,
+                            stock: productVariant.stock
+                        });
+                    }
+                });
+
+                return availableSizesAndStock;
+            }
+
+
+
+
             let selectedQuantity;
-
-            document.querySelectorAll(".sizes").forEach(function (element) {
-                element.addEventListener('click', function (e) {
-
-                    selectedSize = e.target.innerHTML;
-                    document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize;
-                    document.querySelectorAll(".sizes").forEach(function (element) {
-                        element.classList.remove('active');
-                    });
-                    e.target.classList.add('active');
-
-                })
-            })
-
 
             $('#add-product-to-cart').click(function () {
                 const id = {{$product->id}};
