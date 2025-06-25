@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Picture;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -150,7 +151,19 @@ class ProductController extends Controller
     public function getVariants(Product $product)
     {
         $productVariants = $product->variants;
-        $availableColors = $productVariants->select(["color", "color_name"])->unique('color_name')->toArray();
+        $availableColors = $productVariants->select(["id", "color", "color_name"])->unique('color_name')->toArray();
+        $pictures = Picture::whereIn('product_variant_id', $productVariants->pluck('id'))->get();
+        $availableColors = collect($availableColors)
+            ->transform(function ($color) use ($pictures) {
+                $paths = [];
+                $pics = $pictures->where('product_variant_id', $color['id']);
+                $paths["paths"] = $pics->map(fn ($pic) => $pic->path);
+                $color['pics'] = $paths;
+
+                return $color;
+            })
+            ->toArray();
+
         $availableSizes = $productVariants->select("size")->unique('size')->toArray();
         $productsVariantsArray = $productVariants->select(["size", "color", "stock"])->toArray();
 

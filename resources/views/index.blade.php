@@ -140,7 +140,9 @@
         <h2 class="d-block mt-5 text-center" style="font-size: 4rem">destacados.</h2>
 
     </div>
-    <div class="row g-4 mx-3" id="products-container">
+    <div id="products-container"
+         class="row row-cols-3 g-4 mx-3 justify-content-center">
+    </div>
 
         <!-- …repite más columnas según necesites… -->
 
@@ -211,13 +213,10 @@
         }
     </style>
 
-    <!-- en tu Blade, donde quieras que vayan las cards: -->
-    <div id="products-container" class="row g-4 mx-3"></div>
 
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                // 1) Hacemos la petición a la ruta que devuelve el JSON
                 fetch('/test-array-featured-products')
                     .then(res => res.json())
                     .then(data => renderProducts(data))
@@ -227,29 +226,26 @@
                     const container = document.getElementById('products-container');
                     let html = '';
 
-                    // 2) Por cada producto en el JSON
                     Object.values(data).forEach(item => {
                         const { product, colors } = item;
-                        const colorNames = colors.names; // ["Visón","Negro",…]
+                        const colorNames = colors.names;
 
-                        // Montamos un array de variantes: { colorCode, pics }
+                        // Construyo variantes [{ colorCode, pics }]
                         const variants = colorNames.map((_, idx) => {
-                            // colors[idx] es algo tipo {"#96897d": [[path1, path2]]}
                             const entry = colors[idx];
-                            const code = Object.keys(entry)[0];
-                            const pics = entry[code][0]; // [path1, path2]
+                            const code  = Object.keys(entry)[0];
+                            const pics  = entry[code][0];
                             return { colorCode: code, pics };
                         });
 
-                        // Preparamos la primera y segunda imagen
+                        // Primeras dos imágenes
                         const firstImg  = variants[0].pics[0];
                         const secondImg = variants[0].pics[1] || variants[0].pics[0];
 
-                        // Montamos los swatches
+                        // Swatches
                         let swatches = '';
                         variants.forEach((v, i) => {
                             swatches += `
-
           <div
             class="color-box mx-1"
             data-variant-index="${i}"
@@ -264,15 +260,12 @@
         `;
                         });
 
-                        // Montamos el card completo, respetando TODA la estructura y clases
+                        // **Generación de la card**
                         html += `
-        <div class="col-md-4">
-          <div class="card border-0 h-75 p-0">
-
-            <div
-              class="image-container"
-              data-variants='${JSON.stringify(variants)}'
-            >
+        <div class="col">
+          <div class="card border-0 p-0 h-100">
+            <div class="ratio image-container"
+                    style="--bs-aspect-ratio:120%;"  data-variants='${JSON.stringify(variants)}'>
               <img
                 src="${firstImg}"
                 class="card-img-top img-first"
@@ -289,45 +282,47 @@
                 </button>
               </a>
             </div>
-
             <div class="card-body d-flex flex-column position-relative">
               <div class="d-flex justify-content-center mb-3">
                 <div class="color-box-parent d-flex justify-content-center align-items-center">
-                ${swatches}
+                  ${swatches}
                 </div>
               </div>
               <h5 class="card-title text-center mb-2">${product.name}</h5>
               <p class="text-center mb-1 fw-bold">$${product.price}</p>
-              <p class="text-center mb-2 text-muted">$${(product.price*0.9).toFixed(2)} con Transferencia bancaria</p>
+              <p class="text-center mb-2 text-muted">
+                $${(product.price * 0.9).toFixed(2)} con Transferencia bancaria
+              </p>
               <p class="text-center small text-muted mb-0">
-                6 cuotas sin interés de $${(product.price/3).toFixed(2)}
+                6 cuotas sin interés de $${(product.price / 3).toFixed(2)}
               </p>
               <a
                 href="/productos/${product.slug}"
-                class="btn btn-white border-black w-25 mx-auto mt-3 d-block"
-              >Ver</a>
+                class="btn btn-white border-black w-25 mx-auto mt-auto d-block"
+              >
+                Ver
+              </a>
             </div>
           </div>
         </div>
       `;
                     });
 
-                    // 3) Inyectamos todo de una vez
                     container.innerHTML = html;
 
-                    // 4) Adjuntamos los clicks PARA CADA CARD por separado
+                    // Click sobre swatches
                     container.querySelectorAll('.image-container').forEach(container => {
                         const variants = JSON.parse(container.dataset.variants);
                         const imgFirst = container.querySelector('.img-first');
-                        const imgSecond= container.querySelector('.img-second');
-                        const card     = container.closest('.card');
+                        const imgSecond = container.querySelector('.img-second');
+                        const card = container.closest('.card');
 
                         card.querySelectorAll('.color-box').forEach(box => {
                             box.addEventListener('click', () => {
                                 const i = parseInt(box.dataset.variantIndex, 10);
                                 const pics = variants[i].pics || [];
                                 if (!pics.length) return;
-                                imgFirst.src  = pics[0];
+                                imgFirst.src = pics[0];
                                 imgSecond.src = pics[1] || pics[0];
                             });
                         });
