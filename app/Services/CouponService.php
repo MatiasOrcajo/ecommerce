@@ -30,7 +30,7 @@ class CouponService
     {
         $sessionCart = Session::get('cart');
 
-        if($sessionCart[array_key_first($sessionCart)]["is_coupon_applied"]){
+        if($sessionCart["is_coupon_applied"]){
             throw new \Error("Ya tiene un cupón aplicado");
         }
 
@@ -57,11 +57,11 @@ class CouponService
         $coupon->quantity -= 1;
         $coupon->save();
 
-        $sessionCart[array_key_first($sessionCart)]["is_coupon_applied"] = true;
-        $sessionCart[array_key_first($sessionCart)]["coupon_id"] = $coupon->id;
-        $sessionCart[array_key_first($sessionCart)]["coupon_code"] = $coupon->code;
-        $sessionCart[array_key_first($sessionCart)]["coupon_discount"] = $coupon->discount;
-        $sessionCart[array_key_first($sessionCart)]["order_total"] = $this->calculateNewTotalAfterApplyingCoupon($sessionCart);
+        $sessionCart["is_coupon_applied"] = true;
+        $sessionCart["coupon_id"] = $coupon->id;
+        $sessionCart["coupon_code"] = $coupon->code;
+        $sessionCart["coupon_discount"] = $coupon->discount;
+        $sessionCart["order_total"] = $this->calculateNewTotalAfterApplyingCoupon($sessionCart);
         Session::put('cart', $sessionCart);
         Session::save();
 

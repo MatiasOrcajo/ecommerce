@@ -73,9 +73,9 @@ trait CartTrait
      */
     public function calculateNewTotalAfterApplyingCoupon($sessionCart)
     {
-        $previousTotal = $sessionCart[array_key_first($sessionCart)]["order_total"];
+        $previousTotal = $sessionCart["order_total"];
 
-        return $previousTotal * $this->getRemainingPercentageInDecimals($sessionCart[array_key_first($sessionCart)]["coupon_discount"]);
+        return $previousTotal * $this->getRemainingPercentageInDecimals($sessionCart["coupon_discount"]);
     }
 
 
@@ -116,7 +116,7 @@ trait CartTrait
     public function calculateCartTotalAmount()
     {
         $sessionCart = Session::get('cart');
-        $productsInCart = $sessionCart[array_key_first($sessionCart)]["products"];
+        $productsInCart = $sessionCart["products"];
         $total = 0;
 
         //calcula el total de cada producto sin tener en cuenta los descuentos por cupón
@@ -126,16 +126,16 @@ trait CartTrait
         }
 
         //este dato debe ser siempre el total sin descuentos por cupón
-        $sessionCart[array_key_first($sessionCart)]["old_order_total_before_coupon_was_applied"] = $total;
+        $sessionCart["old_order_total_before_coupon_was_applied"] = $total;
         //si existe un cupón de descuento aplicado
-        if($sessionCart[array_key_first($sessionCart)]["is_coupon_applied"]){
+        if($sessionCart["is_coupon_applied"]){
 
-            $sessionCart[array_key_first($sessionCart)]["order_total"] = $total * $this->getRemainingPercentageInDecimals($sessionCart[array_key_first($sessionCart)]["coupon_discount"]);
+            $sessionCart["order_total"] = $total * $this->getRemainingPercentageInDecimals($sessionCart["coupon_discount"]);
 
         }
         else{
             //si no existe
-            $sessionCart[array_key_first($sessionCart)]["order_total"] = $total;
+            $sessionCart["order_total"] = $total;
         }
 
         $this->saveCartInSession($sessionCart);
@@ -169,22 +169,22 @@ trait CartTrait
      */
     private function calculateTotalAmountByProductInCart(&$sessionCart, Product $product)
     {
-        $sizes = $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"];
-        $price = $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["price"];
-        $discount = $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["discount"];
+        $sizes = $sessionCart["products"][$product->id]["sizes"];
+        $price = $sessionCart["products"][$product->id]["price"];
+        $discount = $sessionCart["products"][$product->id]["discount"];
 
         $acc = 0;
 
         foreach ($sizes as $index => $size) {
 
-            $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"][$index]["total_amount_with_discounts"] =
+            $sessionCart["products"][$product->id]["sizes"][$index]["total_amount_with_discounts"] =
                 round(( $price *
                         $this->getRemainingPercentageInDecimals($discount))
                     * $size["quantity"], 2);
 
-            $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"][$index]["subtotal"] = $price * $size["quantity"];
+            $sessionCart["products"][$product->id]["sizes"][$index]["subtotal"] = $price * $size["quantity"];
 
-            $acc += $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"][$index]["total_amount_with_discounts"];
+            $acc += $sessionCart["products"][$product->id]["sizes"][$index]["total_amount_with_discounts"];
 
             $this->saveCartInSession($sessionCart);
         }
