@@ -260,8 +260,42 @@
         <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                let availableColors, productsVariantsArray;
+
                 let selectedColor, selectedSize;
+                const productId = {{$product->id}};
+
+                $('#add-product-to-cart').click(function () {
+                    const id = {{$product->id}};
+                    const route = '/carts/products/' + id
+
+                    if (selectedSize == undefined) {
+                        toastr.error('Debe seleccionar un talle');
+                    }
+                    else if (selectedColor == undefined){
+                        toastr.error('Debe seleccionar un color');
+
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: route,
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr('content'),
+                                size: selectedSize,
+                                color: selectedColor,
+                                product_id: productId,
+                                quantity: $('#quantity').val(),
+                            },
+                            success: function (xhr, status, error) {
+                                toastr.success('Producto agregado al carrito');
+                                updateCartCounter();
+
+                            }
+                        })
+                    }
+                })
+
+                let availableColors, productsVariantsArray;
 
                 function normalizePaths(pics) {
                     return Array.isArray(pics.paths) ? pics.paths : Object.values(pics.paths);
@@ -308,6 +342,7 @@
                     const colorObj = availableColors.find(c => c.color === selectedColor);
                     if (!colorObj) return;
                     const paths = normalizePaths(colorObj.pics);
+
                     const innerHtml = paths.map((path, i) => `
                         <div class="carousel-item ${i === 0 ? 'active' : ''}">
                             <div class="zoom-container d-flex justify-content-center align-items-center">
@@ -327,6 +362,7 @@
 
                 function printAvailableColors() {
                     const container = document.getElementById('colors-container');
+                    console.log(availableColors);
                     container.innerHTML = availableColors.map((c, i) => `
                         <div class="btn btn-outline-secondary color-box" data-color="${c.color}" title="${c.color_name}" style="background:${c.color}; width:32px; height:32px; margin-right:0.5rem;"></div>
                     `).join('');

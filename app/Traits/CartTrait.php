@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Support\Facades\Session;
 
 trait CartTrait
@@ -10,9 +11,9 @@ trait CartTrait
 
     public function __construct()
     {
-        if($this->getCart() != null){
-            $this->calculateCartTotalAmount();
-        }
+//        if($this->getCart() != null){
+//            $this->calculateCartTotalAmount();
+//        }
     }
 
 
@@ -78,6 +79,30 @@ trait CartTrait
     }
 
 
+    public function calculateTotalForEachItemInCart()
+    {
+        $sessionCart = Session::get('cart');
+        $productsInCart = $sessionCart["products"];
+
+        foreach ($productsInCart as $index => $product) {
+            $totalBeforeDiscounts = $product["price"] * $product["quantity"];
+
+            if($product["discount"] != null){
+                $totalAfterDiscounts = $product["price"] * $product["quantity"] * $this->getRemainingPercentageInDecimals($product["discount"]);
+                $product["totalAfterDiscounts"] = $totalAfterDiscounts;
+            }
+
+            $product["total_before_discounts"] = $totalBeforeDiscounts;
+
+
+            dd($totalAfterDiscounts);
+
+
+        }
+
+    }
+
+
     /**
      * Calculates the total amount of the cart, including handling coupon discounts if applied.
      *
@@ -95,7 +120,7 @@ trait CartTrait
 
         //calcula el total de cada producto sin tener en cuenta los descuentos por cupón
         foreach ($productsInCart as $index => $product) {
-            $product = Product::find($index);
+            $product = ProductVariant::find($product["product_variant_id"])->product;
             $total += $this->calculateTotalAmountByProductInCart($sessionCart, $product);
         }
 

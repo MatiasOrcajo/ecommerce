@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Traits\CartTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +54,6 @@ class CartService
      */
     public function addProduct(Product $product, Request $request)
     {
-
         $sessionCart = null;
 
         //If cart isn't stored in session
@@ -62,49 +62,37 @@ class CartService
             $createdCartInstance = $this->create();
             $createdCartInstance->status = Constants::ACTIVE;
             $createdCartInstance->save();
-            $sessionCart[$createdCartInstance->id] = [];
-            $sessionCart[$createdCartInstance->id]["is_coupon_applied"] = false;
+            $sessionCart["cart_id"] = $createdCartInstance->id;
+            $sessionCart["is_coupon_applied"] = false;
             Session::put('cart', $sessionCart);
         } else {
             $sessionCart = Session::get('cart');
         }
 
 
-        if( isset($sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"])){
+        $productVariant = ProductVariant::where('size', $request->size)
+                            ->where('color', $request->color)
+                            ->where('product_id', $request->product_id)
+                            ->firstOrFail();
 
-            $newSize = [
-                $request->size =>
-                    [
-                    "quantity" => $request->quantity,
-                ]
-            ];
-
-            $key = array_key_first($sessionCart);
-            $sizes = &$sessionCart[$key]["products"][$product->id]["sizes"];
-
-            $sizes = array_merge($sizes, $newSize);
-
-            $sessionCart[array_key_first($sessionCart)]["products"][$product->id]["sizes"] = $sizes;
+        if($productVariant->stock < $request->quantity){
+            throw new \Exception("No hay stock suficiente. Por favor seleccione menos cantidad.");
         }
-        else{
 
-            $sessionCart[array_key_first($sessionCart)]["products"][$product->id] = [
-                "id" => $product->id,
-                "name" => $product->name,
-                "price" => $product->price,
-                "sizes" => [
-                    $request->size => [
-                        "quantity" => $request->quantity,
-                    ]
-                ],
-                "discount" => $product->discount,
-                "picture" => $product->pictures->first()->path,
-            ];
-        }
+        $sessionCart["products"][] = [
+            "product_variant_id" => $productVariant->id,
+            "name" => $productVariant->product->name,
+            "price" => $productVariant->product->price,
+            "size" => $productVariant->size,
+            "color" => $productVariant->color,
+            "quantity" => $request->quantity,
+            "discount" => $productVariant->product->discount,
+            "picture" => $productVariant->pictures()->orderBy('order')->get()->first()->path,
+        ];
 
         $this->saveCartInSession($sessionCart);
 
-        $this->calculateCartTotalAmount();
+        $this->calculateTotalForEachItemInCart();
 
         return response()->json(Session::get('cart'));
     }

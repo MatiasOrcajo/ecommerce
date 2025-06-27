@@ -20,9 +20,9 @@ class CartController extends Controller
 
     public function __construct(private readonly CartService $cartService)
     {
-        if($this->getCart() != null){
-            $this->calculateCartTotalAmount();
-        }
+//        if($this->getCart() != null){
+//            $this->calculateCartTotalAmount();
+//        }
     }
 
     public function seeCart()
