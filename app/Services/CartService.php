@@ -81,13 +81,7 @@ class CartService
 
         $sessionCart["products"][] = [
             "product_variant_id" => $productVariant->id,
-            "name" => $productVariant->product->name,
-            "price" => $productVariant->product->price,
-            "size" => $productVariant->size,
-            "color" => $productVariant->color,
             "quantity" => $request->quantity,
-            "discount" => $productVariant->product->discount,
-            "picture" => $productVariant->pictures()->orderBy('order')->get()->first()->path,
         ];
 
         $this->saveCartInSession($sessionCart);

@@ -84,21 +84,23 @@ trait CartTrait
         $sessionCart = Session::get('cart');
         $productsInCart = $sessionCart["products"];
 
-        foreach ($productsInCart as $index => $product) {
-            $totalBeforeDiscounts = $product["price"] * $product["quantity"];
+        foreach ($productsInCart as $index => $productInCart) {
 
-            if($product["discount"] != null){
-                $totalAfterDiscounts = $product["price"] * $product["quantity"] * $this->getRemainingPercentageInDecimals($product["discount"]);
-                $product["totalAfterDiscounts"] = $totalAfterDiscounts;
+            $product = ProductVariant::find($productInCart["product_variant_id"])->product;
+            $totalBeforeDiscounts = $product->price * $productInCart["quantity"];
+
+            if($product->discount != null){
+                $totalAfterDiscounts = $product->price * $productInCart["quantity"] * $this->getRemainingPercentageInDecimals($product->discount);
+                $productInCart["totalAfterDiscounts"] = $totalAfterDiscounts;
             }
 
-            $product["total_before_discounts"] = $totalBeforeDiscounts;
+            $productInCart["total_before_discounts"] = $totalBeforeDiscounts;
 
-
-            dd($totalAfterDiscounts);
-
+            $sessionCart["products"][$index] = $productInCart;
 
         }
+
+        $this->saveCartInSession($sessionCart);
 
     }
 
@@ -116,7 +118,6 @@ trait CartTrait
         $sessionCart = Session::get('cart');
         $productsInCart = $sessionCart[array_key_first($sessionCart)]["products"];
         $total = 0;
-
 
         //calcula el total de cada producto sin tener en cuenta los descuentos por cupón
         foreach ($productsInCart as $index => $product) {
