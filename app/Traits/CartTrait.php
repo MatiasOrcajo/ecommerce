@@ -24,7 +24,7 @@ trait CartTrait
      */
     public function getCouponAppliedId()
     {
-        return Session::get('cart')[array_key_first(Session::get('cart'))]["coupon_id"] ?? null;
+        return Session::get('cart')["coupon_id"] ?? null;
     }
 
 
@@ -35,7 +35,7 @@ trait CartTrait
      */
     public function getCartTotal()
     {
-        return Session::get('cart')[array_key_first(Session::get('cart'))]["order_total"];
+        return Session::get('cart')["order_total"];
     }
 
 
@@ -79,6 +79,13 @@ trait CartTrait
     }
 
 
+    /**
+     * Calculates total amount for each item in cart
+     *
+     * al pedo
+     *
+     * @return void
+     */
     public function calculateTotalForEachItemInCart()
     {
         $sessionCart = Session::get('cart');

@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Traits\CartTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ use MercadoPago\MercadoPagoConfig;
 class CheckoutService
 {
 
+    use CartTrait;
 
     public function __construct(private OrderService         $orderService,
                                 private MercadoPagoService   $mpService,
@@ -53,7 +55,7 @@ class CheckoutService
         $request = json_decode($request->data);
         $selectedPaymentMethod = $request->payment_method;
 
-        $order = $this->orderService->create($request);
+        $order = $this->orderService->create($request, $this->getCartInfo());
         $order->shipping_method = $shippingMethods[$request->shipping_method];
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];
         $order->save();
@@ -73,6 +75,61 @@ class CheckoutService
 
         }
 
+    }
+
+
+
+    public function getCartInfo()
+    {
+        $cart = $this->getCart();
+        $data = [];
+
+        if($cart["is_coupon_applied"]){
+            $data["is_coupon_applied"] = $cart["is_coupon_applied"];
+            $data["coupon_code"] = $cart["coupon_code"];
+            $data["coupon_discount"] = $cart["coupon_discount"];
+
+        }
+
+        $order_total = 0;
+
+        foreach ($cart["products"] as $productInCart) {
+            $productVariant = ProductVariant::find($productInCart["product_variant_id"]);
+            $product = $productVariant->product;
+            $subtotal = $product->price * $productInCart["quantity"];
+            $total = $product->discount ? $product->price * $this->getRemainingPercentageInDecimals($product->discount) : $product->price;
+            $total = $total * $productInCart["quantity"];
+
+            $productVariantColorPic = ProductVariant::where('color', $productVariant->color)
+                ->where('product_id', $product->id)
+                ->whereHas('pictures')
+                ->first()
+                ->pictures
+                ->first()
+                ->path;
+
+
+            $data["products"][] = [
+                "product_name" => $product->name,
+                "quantity" => $productInCart["quantity"],
+                "subtotal" => $subtotal,
+                "total" => $total,
+                "pic" => $productVariantColorPic,
+                "color" => $productVariant->color,
+                "size" => $productVariant->size,
+                "color_name" => $productVariant->color_name,
+                "slug" => $product->slug
+
+            ];
+
+
+            $order_total += $total;
+        }
+
+        $data["order_total"] = $order_total;
+        $data["order_total_after_coupon_applied"] = $cart["is_coupon_applied"] ? $data["order_total"] * $this->getRemainingPercentageInDecimals(Coupon::where("code", $cart["coupon_code"])->first()->discount) : $data["order_total"];
+
+        return $data;
     }
 
 

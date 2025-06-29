@@ -5,7 +5,7 @@
     <div class="container mt-4" style="max-width: 100%; ">
         <div class="row">
             <!-- Formulario de compra -->
-            <div class="col-md-7 steps-container" style="padding-bottom: 10rem;">
+            <div class="col-md-7 steps-container" style="padding-bottom: 20rem;">
                 <div id="stepForm" class="step-form-container">
                     <!-- Step navigation -->
                     <ul class="nav nav-pills mb-4 ul-steps" id="steps">
@@ -231,7 +231,7 @@
                         </div>
                         <div class="d-flex justify-content-between align-content-center mt-3">
                             <h2>Total</h2>
-                            <div id="total-price" class="text-success">
+                            <div id="order_total" class="text-success">
 
                             </div>
                         </div>
@@ -362,8 +362,72 @@
                             let locality = response.data.municipios;
                             let html = "";
                             locality.forEach(locality => {
+                                if(locality.nombre.includes("Comuna")){
+                                    return;
+                                }
                                 html += `<option value="${locality.nombre}">${locality.nombre}</option>`
                             });
+
+                            const barriosCABA = [
+                                "Agronomía",
+                                "Almagro",
+                                "Balvanera",
+                                "Barracas",
+                                "Belgrano",
+                                "Boedo",
+                                "Caballito",
+                                "Chacarita",
+                                "Coghlan",
+                                "Colegiales",
+                                "Constitución",
+                                "Flores",
+                                "Floresta",
+                                "La Boca",
+                                "La Paternal",
+                                "Liniers",
+                                "Mataderos",
+                                "Monte Castro",
+                                "Monserrat",
+                                "Nueva Pompeya",
+                                "Núñez",
+                                "Palermo",
+                                "Parque Avellaneda",
+                                "Parque Chacabuco",
+                                "Parque Chas",
+                                "Parque Patricios",
+                                "Puerto Madero",
+                                "Recoleta",
+                                "Retiro",
+                                "Saavedra",
+                                "San Cristóbal",
+                                "San Nicolás",
+                                "San Telmo",
+                                "Vélez Sársfield",
+                                "Versalles",
+                                "Villa Crespo",
+                                "Villa del Parque",
+                                "Villa Devoto",
+                                "Villa General Mitre",
+                                "Villa Lugano",
+                                "Villa Luro",
+                                "Villa Ortúzar",
+                                "Villa Pueyrredón",
+                                "Villa Real",
+                                "Villa Riachuelo",
+                                "Villa Santa Rita",
+                                "Villa Soldati",
+                                "Villa Urquiza"
+                            ];
+
+                            if(event.target.value == "Ciudad Autónoma de Buenos Aires"){
+                                barriosCABA.forEach(locality => {
+
+                                    html += `<option value="${locality}">${locality}</option>`
+                                })
+                            }
+
+
+
 
                             html += `<option selected="true" disabled="disabled">Seleccione una opción</option>`
 
@@ -373,8 +437,6 @@
             }
 
             listProvinces();
-
-
 
             const steps = document.querySelectorAll("#steps .li-step");
             const tabs = document.querySelectorAll(".tab-pane");
@@ -540,7 +602,8 @@
 
                         let products = xhr.products;
                         let html = "";
-                        total = xhr.order_total;
+                        total = xhr.total;
+                        total = xhr.total;
                         oldOrderTotalBeforeCoupon = xhr.old_order_total_before_coupon_was_applied;
 
                         if(Object.entries(products).length <= 0){
@@ -551,53 +614,56 @@
 
                         Object.entries(products).forEach(([key, product]) => {
 
-                            Object.entries(product.sizes).forEach(([key, data]) => {
+                            let priceHtml = ``;
+                            cartCounter++;
 
-                                let priceHtml = ``;
-                                cartCounter++;
-
-                                if (product.discount > 0) {
-                                    priceHtml = `<del><h4>$${data.subtotal} </h4> </del>
-                                             <h4 class="text-success">$${data.total_amount_with_discounts
-                                    }</h4>
+                            if (product.subtotal > product.total) {
+                                priceHtml = `<del><h4>$${product.subtotal} </h4> </del>
+                                             <h4 class="text-success">$${product.total
+                                }</h4>
                                             `
-                                } else {
-                                    priceHtml = `<h4 class="text-success">$${data.total_amount_with_discounts
-                                    }</h4> `
+                            } else {
+                                priceHtml = `<h4 class="text-success">$${product.total
+                                }</h4> `
 
-                                }
+                            }
 
-                                html += `
+                            html += `
 
                                 <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
-                                    <button class="x-cart-button delete_cart_product" data-size="${key}" id="${product.id}">X</button>
+                                    <button class="x-cart-button delete_cart_product" data-size="${key}" id="${product.product_name}">X</button>
                                     <div class="order-summary-thumbnail">
-                                        <img src="${product.picture}"
+                                        <img src="${product.pic}"
                                              alt="" class="img-fluid">
-                                            <div class="item-quantity">${data.quantity}</div>
+                                            <div class="item-quantity">${product.quantity}</div>
                                     </div>
-                                    <h5 class="d-block mx-3">${product.name} Talle: ${key}</h5>
-                                    ${priceHtml}
+                                    <a href="/productos/${product.slug}" target="_blank">
+                                        <div class="d-flex align-tems-center justify-content-center">
+                                        <h5 class="d-block mx-3">${product.product_name} <br> Talle: ${product.size} <br>
+                                         <div class="color-box" data-color="${product.color}" title="${product.color_name}" style="background:${product.color}; width:18px; height:18px; margin-right:0.5rem;"></div>
+                                        </h5>
+                                        ${priceHtml}
+                                    </div>
+                                    </a>
                                 </div>
                                 `
 
-                            })
-
-
                         })
 
-                        $('#total-price').html(`<h1>$${total}</h1>`);
+                        $('#order_total').html(`<h1>$${xhr.order_total}</h1>`);
                         $('#items-summary-container').empty().append(html);
 
-
                         if(isCouponApplied){
-                            $('#total-price').html(`<del><h1>$${oldOrderTotalBeforeCoupon}</h1></del> <h1>$${total}</h1>`);
+                            $('#order_total').html(`<del><h1>$${xhr.order_total}</h1></del> <h1>$${xhr.order_total_after_coupon_applied}</h1>`);
+
+                            $('#coupon-validated-success').html("Cupón validado");
+                            $('#coupon-validated-failed').html("");
+                            $('#coupon-success-code').html(`Aplicado ${xhr.coupon_discount}% OFF`)
                         }
 
 
                         document.querySelectorAll('.delete_cart_product').forEach(element => {
                             element.addEventListener('click', (event) => {
-
 
                                 const size = event.target.getAttribute('data-size');
                                 const id = event.target.id;
@@ -645,9 +711,6 @@
 
                 axios.get(`{{route('validate-coupon')}}` + '?code=' + coupon)
                     .then(response => {
-                        $('#coupon-validated-success').html("Cupón validado");
-                        $('#coupon-validated-failed').html("");
-                        $('#coupon-success-code').html(`Aplicado ${response.data.coupon_discount}% OFF`)
 
                         getItemsSummary();
 

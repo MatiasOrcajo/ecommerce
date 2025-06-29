@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use App\Services\CheckoutService;
 use App\Services\MercadoPagoService;
 use App\Traits\CartTrait;
@@ -113,9 +115,8 @@ class CheckoutController extends Controller
      */
     public function getCartInfo(): JsonResponse
     {
-        $cart = $this->getCart();
 
-        return response()->json($cart[array_key_first($cart)]);
+        return response()->json($this->checkoutService->getCartInfo());
     }
 
 

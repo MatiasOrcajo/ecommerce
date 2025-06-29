@@ -10,12 +10,10 @@ class OrderProducts extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'size',
+        'product_variants_id',
         'order_id',
         'quantity',
         'unit_price',
-        'subtotal',
         'total',
         'discount',
     ];
@@ -24,9 +22,9 @@ class OrderProducts extends Model
     /**
      * Defines a relationship where this model belongs to a Product.
      */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function productVariant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variants_id');
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Support\Facades\Session;
 
 class OrderProductsService
@@ -24,37 +25,37 @@ class OrderProductsService
      * @param \App\Models\Order $order The order model instance for which the products are being created.
      * @return void
      */
-    public function create(Order $order)
+    public function create(Order $order, array $cartInfo)
     {
-        $cart = Session::get('cart')[array_key_first(Session::get('cart'))];
-        $products = $cart["products"];
-        foreach ($products as $index => $product) {
-            foreach($product["sizes"] as $size => $value){
+        foreach ($cartInfo["products"] as $index => $product) {
 
-                //descuento el stock
-                $productInDb = Product::find($product["id"]);
-                $productInDb->sizes->where('size', $size)->first()->decrement('stock', $value['quantity']);
+            //descuento el stock
+            $productInDb = Product::where("name", $product["product_name"])->first();
+            $productVariant = ProductVariant::where("product_id", $productInDb->id)
+                ->where("color", $product["color"])
+                ->where("size", $product["size"])
+                ->first();
 
-                if($productInDb->sizes->where('size', $size)->first()->stock < 0){
+            $productVariant->decrement('stock', $product['quantity']);
 
-                    throw new \Exception("No hay stock suficiente del producto ".$productInDb->name. "El stock actual es: " . $productInDb->sizes->where('size', $size)->first()->stock);
-                }
+            if ($productVariant->stock < 0) {
 
-                // Crear el registro utilizando asignación masiva.
-                \App\Models\OrderProducts::create([
-                    'product_id'    => $product["id"],
-                    'size'          => $size,
-                    'order_id'      => $order->id,
-                    'quantity'      => $value['quantity'],
-                    'unit_price'    => $value['subtotal'],
-                    'discount'      => $product['discount'],
-                    //el total de la orden puede ser menor
-                    //dependiendo de si está aplicado un cupón o no
-                    //el precio final real del producto en ese caso
-                    //deberá evaluarse haciendo el descuento de cupón de la orden
-                    'total'  => $value['total_amount_with_discounts'],
-                ]);
+                throw new \Exception("No hay stock suficiente del producto " . $productInDb->name . "El stock actual es: " . $productVariant->stock);
             }
+
+            // Crear el registro utilizando asignación masiva.
+            \App\Models\OrderProducts::create([
+                'product_variants_id' => $productVariant->id,
+                'order_id' => $order->id,
+                'quantity' => $product['quantity'],
+                'unit_price' => $productInDb->price,
+                'discount' => $productInDb->discount,
+                //el total de la orden puede ser menor
+                //dependiendo de si está aplicado un cupón o no
+                //el precio final real del producto en ese caso
+                //deberá evaluarse haciendo el descuento de cupón de la orden
+                'total' => $product['total'],
+            ]);
 
         }
 
@@ -74,7 +75,7 @@ class OrderProductsService
     {
         $order = Order::with(['products.product.pictures'])->find($orderId);
 
-        return $order->products->reduce(function(array $acc, \App\Models\OrderProducts $orderProduct){
+        return $order->products->reduce(function (array $acc, \App\Models\OrderProducts $orderProduct) {
             $acc[] = [
                 "id" => $orderProduct->product->id,
                 "title" => $orderProduct->product->name,
@@ -89,7 +90,6 @@ class OrderProductsService
             return $acc;
         }, []);
     }
-
 
 
 }

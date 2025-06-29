@@ -86,7 +86,7 @@ class CartService
 
         $this->saveCartInSession($sessionCart);
 
-        $this->calculateTotalForEachItemInCart();
+//        $this->calculateTotalForEachItemInCart();
 
         return response()->json(Session::get('cart'));
     }
@@ -101,15 +101,17 @@ class CartService
      * @return \Illuminate\Http\JsonResponse
      *
      */
-    public function deleteProduct(Product $product, Request $request)
+    public function deleteProduct(Request $request)
     {
 
-        $cart = Cart::find(array_key_first(Session::get('cart')));
         $cartInSession = Session::get('cart');
+        $targetProductInCart = collect($cartInSession["products"])->where("product_variant_id", $request->product_variant_id)->first();
 
-        unset($cartInSession[$cart->id]["products"][$product->id]["sizes"][$request->size]);
+        dd($targetProductInCart);
 
-        if (empty($cartInSession[$cart->id])) {
+        unset($targetProductInCart);
+
+        if (empty($cartInSession)) {
             $cart->status = Constants::EMPTY_BY_CUSTOMER;
             $cart->save();
         }

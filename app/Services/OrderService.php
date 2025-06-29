@@ -34,7 +34,7 @@ class OrderService
      *
      * @return \App\Models\Order The newly created order instance.
      */
-    public function create($customerData)
+    public function create($customerData, $cartInfo)
     {
         // Calculate the total cart amount
         // receives array of products
@@ -56,7 +56,7 @@ class OrderService
         $order = Order::create([
             'customer_id' => $customer->id,
             'order_date' => Carbon::now(),
-            'total_amount' => $this->getCartTotal(),
+            'total_amount' => $cartInfo["order_total_after_coupon_applied"],
             'code' => $this->generateOrderCode(),
             'status' => 'No pago',
             'shipping_address' => $shippingAddress,
@@ -64,7 +64,7 @@ class OrderService
             'coupon_id' => $this->getCouponAppliedId(),
         ]);
 
-        $this->orderProducts->create($order);
+        $this->orderProducts->create($order, $cartInfo);
 
         return $order;
     }
