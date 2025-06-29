@@ -1,5 +1,5 @@
 
-<footer class="bg-dark text-white" style="{{Route::is('cart') || Route::is('order-success') ? 'margin-top: 20rem' : 'margin-top: 2rem'}}">
+<footer class="bg-dark text-white" style="{{Route::is('cart') || Route::is('order-success') ? 'margin-top: 22rem' : 'margin-top: 2rem'}}">
     <div class="container pt-5 h-auto">
 
         <!-- Primera fila: Categorías, Contacto, RRSS -->

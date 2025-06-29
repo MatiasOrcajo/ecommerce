@@ -28,54 +28,56 @@
                 <!-- Detalle del Pedido -->
                 <div class="mb-3">
                     <h5>Detalle del Pedido:</h5>
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Color</th>
-                            <th>Talle</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Descuento %</th>
-                            <th>Subtotal</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($order->products as $orderProduct)
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                             <tr>
-                                <td>{{ $orderProduct->productVariant->product->name }}</td>
-                                <td><div
-                                        style="
+                                <th>Producto</th>
+                                <th>Color</th>
+                                <th>Talle</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Descuento %</th>
+                                <th>Subtotal</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($order->products as $orderProduct)
+                                <tr>
+                                    <td>{{ $orderProduct->productVariant->product->name }}</td>
+                                    <td><div
+                                            style="
                                                 background-color: {{ $orderProduct->productVariant->color }};
                                                 width: 32px;
                                                 height: 32px;
                                                 border: 1px solid #ccc;
                                                 border-radius: 4px;
                                             "
-                                        title="{{ $orderProduct->productVariant->color_name }}"
-                                    ></div>{{ $orderProduct->productVariant->color_name }}</td>
-                                <td>{{ $orderProduct->productVariant->size }}</td>
-                                <td>{{ $orderProduct->quantity }}</td>
-                                <td>${{ $orderProduct->unit_price }}</td>
-                                <td>{{ $orderProduct->discount }}</td>
-                                <td>${{ $orderProduct->total }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                        <tfoot>
-                        @if($order->coupon_id !== null)
-                            <tr>
-                                <td colspan="6" class="text-end"><strong>Descuento:</strong></td>
-                                <td><strong>{{ $order->coupon->discount }}%</strong></td>
-                            </tr>
-                        @endif
+                                            title="{{ $orderProduct->productVariant->color_name }}"
+                                        ></div>{{ $orderProduct->productVariant->color_name }}</td>
+                                    <td>{{ $orderProduct->productVariant->size }}</td>
+                                    <td>{{ $orderProduct->quantity }}</td>
+                                    <td>${{ $orderProduct->unit_price }}</td>
+                                    <td>{{ $orderProduct->discount }}</td>
+                                    <td>${{ $orderProduct->total }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                            <tfoot>
+                            @if($order->coupon_id !== null)
+                                <tr>
+                                    <td colspan="6" class="text-end"><strong>Descuento:</strong></td>
+                                    <td><strong>{{ $order->coupon->discount }}%</strong></td>
+                                </tr>
+                            @endif
 
-                        <tr>
-                            <td colspan="6" class="text-end"><strong>Total:</strong></td>
-                            <td><strong>${{ $order->total_amount }}</strong></td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                            <tr>
+                                <td colspan="6" class="text-end"><strong>Total:</strong></td>
+                                <td><strong>${{ $order->total_amount }}</strong></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Status de Envío -->
