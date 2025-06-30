@@ -8,11 +8,11 @@
     </div>
 
     {{-- Navbar Blanca (buscador, logo, carrito) --}}
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm pb-0 px-3">
+    <nav class="navbar navbar-expand-lg navbar-light pb-0 px-3" style="background:#fffdfa">
         <div class="container-fluid d-flex align-items-center">
             <div class="col-lg-4 d-none d-lg-flex justify-content-start">
                 <form class="d-flex align-items-center w-100" style="max-width: 220px;">
-                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar">
+                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar" style="background-color:#fffdfa">
                     <button class="btn p-0 ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
@@ -37,7 +37,7 @@
     </nav>
 
     {{-- Navbar de Links --}}
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-0">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm p-0" style="background:#fffdfa">
         <div class="container-fluid">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -75,7 +75,7 @@
 <header class="d-lg-none fixed-top">
 
     <!-- Navbar Principal -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light  shadow-sm" style="background:#fffdfa">
         <div class="container-fluid">
 
             <!-- Toggler Offcanvas -->

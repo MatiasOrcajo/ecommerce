@@ -2,10 +2,17 @@
 
 @section('content')
 
+    <style>
+        input, option, select{
+            background-color: #fffdfa !important;
+        }
+    </style>
+
+
     <div class="container mt-4" style="max-width: 100%; ">
         <div class="row">
             <!-- Formulario de compra -->
-            <div class="col-md-7 steps-container" style="padding-bottom: 20rem;">
+            <div class="col-md-7 steps-container" style="padding-bottom: 20rem; background: #fffdfa;">
                 <div id="stepForm" class="step-form-container">
                     <!-- Step navigation -->
                     <ul class="nav nav-pills mb-4 ul-steps" id="steps">

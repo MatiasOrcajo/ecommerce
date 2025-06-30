@@ -137,16 +137,46 @@
 
     <!-- Contenedor principal -->
     <div class="mt-5 py-2" id="destacados">
-        <h2 class="d-block mt-5 text-center" style="font-size: 4rem">destacados.</h2>
+        <h2 class="d-block mt-5 text-center" style="font-size: 4rem">best sellers.</h2>
 
     </div>
     <div id="products-container"
-         class="row row-cols-3 g-4 mx-3 justify-content-center">
+         class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center">
     </div>
 
-        <!-- …repite más columnas según necesites… -->
-
+    <div class="container-fluid px-0">
+        <div class="video-wrapper w-100">
+            <video autoplay muted loop playsinline>
+                <source src="/storage/videos/loop.mp4" type="video/mp4">
+                Tu navegador no soporta la reproducción de vídeo.
+            </video>
+        </div>
     </div>
+
+    <style>
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 60vh;        /* Altura del vídeo: ajustá según necesites */
+            overflow: hidden;    /* Oculta las partes que sobresalgan */
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;     /* Siempre al menos 100% ancho */
+            min-height: 70%;    /* Aumenta la altura para “estirar” */
+            transform: translate(-50%, -50%);
+            object-fit: cover;   /* Rellena el contenedor recortando si hace falta */
+        }
+
+        /* Opcional: diferente altura en móviles */
+        @media (max-width: 576px) {
+            .video-wrapper {
+                height: 70vh;
+            }
+        }
+    </style>
 
     <div class="my-5 py-5">
         <div class="d-flex justify-content-center align-items-center">
@@ -215,6 +245,9 @@
 
 
     @push('scripts')
+
+        <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
+
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 fetch('/test-array-featured-products')
@@ -227,85 +260,96 @@
                     let html = '';
 
                     Object.values(data).forEach(item => {
-                        const { product, colors } = item;
+                        const {product, colors} = item;
+
                         const colorNames = colors.names;
 
                         // Construyo variantes [{ colorCode, pics }]
                         const variants = colorNames.map((_, idx) => {
                             const entry = colors[idx];
-                            const code  = Object.keys(entry)[0];
-                            const pics  = entry[code][0];
-                            return { colorCode: code, pics };
+                            const code = Object.keys(entry)[0];
+                            const pics = entry[code][0];
+                            return {colorCode: code, pics};
                         });
 
                         // Primeras dos imágenes
-                        const firstImg  = variants[0].pics[0];
+                        const firstImg = variants[0].pics[0];
                         const secondImg = variants[0].pics[1] || variants[0].pics[0];
 
                         // Swatches
                         let swatches = '';
                         variants.forEach((v, i) => {
                             swatches += `
-          <div
-            class="color-box mx-1"
-            data-variant-index="${i}"
-            style="
-              width:24px; height:24px;
-              background-color:${v.colorCode};
-              border:1px solid #ccc;
-              cursor:pointer;
-            "
-            title="${colorNames[i]}"
-          ></div>
-        `;
+                          <div
+                            class="color-box mx-1"
+                            data-variant-index="${i}"
+                            style="
+                              width:24px; height:24px;
+                              background-color:${v.colorCode};
+                              border:1px solid #ccc;
+                              cursor:pointer;
+                            "
+                            title="${colorNames[i]}"
+                          ></div>
+                        `;
                         });
 
                         // **Generación de la card**
                         html += `
-        <div class="col">
-          <div class="card border-0 p-0 h-100">
-            <div class="ratio image-container"
-                    style="--bs-aspect-ratio:120%;"  data-variants='${JSON.stringify(variants)}'>
-              <img
-                src="${firstImg}"
-                class="card-img-top img-first"
-                alt="${product.name}"
-              >
-              <img
-                src="${secondImg}"
-                class="card-img-top img-second"
-                alt="${product.name} - Hover"
-              >
-              <a href="/productos/${product.slug}">
-                <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                  <i class="fas fa-shopping-bag"></i>
-                </button>
-              </a>
-            </div>
-            <div class="card-body d-flex flex-column position-relative">
-              <div class="d-flex justify-content-center mb-3">
-                <div class="color-box-parent d-flex justify-content-center align-items-center">
-                  ${swatches}
-                </div>
-              </div>
-              <h5 class="card-title text-center mb-2">${product.name}</h5>
-              <p class="text-center mb-1 fw-bold">$${product.price}</p>
-              <p class="text-center mb-2 text-muted">
-                $${(product.price * 0.9).toFixed(2)} con Transferencia bancaria
-              </p>
-              <p class="text-center small text-muted mb-0">
-                6 cuotas sin interés de $${(product.price / 3).toFixed(2)}
-              </p>
-              <a
-                href="/productos/${product.slug}"
-                class="btn btn-white border-black w-25 mx-auto mt-auto d-block"
-              >
-                Ver
-              </a>
-            </div>
-          </div>
-        </div>
-      `;
+                          <div class="col">
+                            <div class="card border-0 p-0 h-100">
+                              <div class="ratio image-container"
+                                   style="--bs-aspect-ratio:120%;"
+                                   data-variants='${JSON.stringify(variants)}'>
+                                <img
+                                  src="${firstImg}"
+                                  class="card-img-top img-first"
+                                  alt="${product.name}"
+                                >
+                                <img
+                                  src="${secondImg}"
+                                  class="card-img-top img-second"
+                                  alt="${product.name} - Hover"
+                                >
+                                <a href="/productos/${product.slug}">
+                                  <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
+                                    <i class="fas fa-shopping-bag"></i>
+                                  </button>
+                                </a>
+                              </div>
+                              <div class="card-body d-flex flex-column position-relative">
+                                <div class="d-flex justify-content-center mb-3">
+                                  <div class="color-box-parent d-flex justify-content-center align-items-center">
+                                    ${swatches}
+                                  </div>
+                                </div>
+                                <h5 class="card-title text-center mb-2">${product.name}</h5>
+
+                                ${product.discount
+                                                    ? `<p class="text-center mb-1 fw-bold">
+                                       <del>$${product.price.toFixed(2)}</del>
+                                       $${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                                     </p>`
+                                                    : `<p class="text-center mb-1 fw-bold">$${product.price.toFixed(2)}</p>`
+                                                }
+
+                                <p class="text-center mb-2 text-muted">
+                                  $${(product.price * 0.9).toFixed(2)} con Transferencia bancaria
+                                </p>
+                                <p class="text-center small text-muted mb-0">
+                                  6 cuotas sin interés de $${(product.price / 6).toFixed(2)}
+                                </p>
+                                <a
+                                  href="/productos/${product.slug}"
+                                  class="btn btn-white border-black w-25 mx-auto mt-auto d-block"
+                                >
+                                  Shop
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        `;
+
                     });
 
                     container.innerHTML = html;
@@ -329,8 +373,9 @@
                     });
                 }
             });
+
+            updateCartCounter();
         </script>
     @endpush
-
 
 @endsection

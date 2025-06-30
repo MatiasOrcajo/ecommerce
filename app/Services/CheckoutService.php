@@ -20,6 +20,7 @@ class CheckoutService
 
     public function __construct(private OrderService         $orderService,
                                 private MercadoPagoService   $mpService,
+                                private CartService   $cartService,
     )
     {
     }
@@ -63,6 +64,8 @@ class CheckoutService
 
         if ($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash") {
 
+            $this->cartService->clearCart();
+
             return response()->json([
                 "success" => true,
                 "init_point" => route('order-success', $order->code)
@@ -78,7 +81,11 @@ class CheckoutService
     }
 
 
-
+    /**
+     * Obtiene toda la información del carrito
+     *
+     * @return array
+     */
     public function getCartInfo()
     {
         $cart = $this->getCart();

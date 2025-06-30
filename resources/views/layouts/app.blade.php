@@ -27,6 +27,12 @@
     <link type="text/css" rel="stylesheet" href="{{asset('css/toastr.css')}}">
     <script src="{{asset('/js/toastr.min.js')}}"></script>
 
+    <style>
+        body{
+            background: #fffdfa;
+        }
+    </style>
+
 
     <!-- No olvides incluir el JS de Bootstrap (con Popper) justo antes del cierre de body -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -35,12 +41,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
-<div class="d-flex flex-column min-vh-100 bg-white">
+<div class="d-flex flex-column min-vh-100 ">
     @include('layouts.navbar')
     @include('layouts.popup')
 
     @isset($header)
-        <header class="bg-white shadow">
+        <header class=" shadow">
             <!-- … -->
         </header>
     @endisset

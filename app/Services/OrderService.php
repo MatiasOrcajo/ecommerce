@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use App\Traits\CartTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -132,14 +133,9 @@ class OrderService
 
             //por cada orden, mapeo todos los productos asociados
             foreach ($order->products as $orderProduct) {
-                $product = $orderProduct->product;
-
-                $productSizeRecordToUpdateStock = \App\Models\ProductVariant::where('product_id', $product->id)
-                    ->where('size', $orderProduct->size)
-                    ->first();
-
-                $productSizeRecordToUpdateStock->stock += $orderProduct->quantity;
-                $productSizeRecordToUpdateStock->save();
+                $productVariant = ProductVariant::find($orderProduct->product_variants_id);
+                $productVariant->stock += $orderProduct->quantity;
+                $productVariant->save();
 
             }
 

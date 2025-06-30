@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\MercadoPagoService;
 use App\Traits\CartTrait;
@@ -19,7 +20,9 @@ class CheckoutController extends Controller
 
     use CartTrait;
 
-    public function __construct(private readonly MercadoPagoService $mpService, private readonly CheckoutService $checkoutService)
+    public function __construct(private readonly MercadoPagoService $mpService,
+                                private readonly CheckoutService $checkoutService,
+                                private readonly CartService $cartService)
     {
 
     }
@@ -74,6 +77,8 @@ class CheckoutController extends Controller
         $order->save();
 
         Session::put("email_validated_$order->code", true);
+
+        $this->cartService->clearCart();
 
         return redirect()->route('order-success', $order->code);
 

@@ -71,15 +71,8 @@ class CartController extends Controller
     public function calculateCartTotalItems()
     {
         $cart = $this->getCart();
-        $count = 0;
 
-        foreach ($cart[array_key_first($cart)]["products"] as $key => $value) {
-            foreach ($value["sizes"] as $size) {
-                $count += $size["quantity"];
-            }
-        }
-
-        return $count;
+        return count($cart["products"]);
     }
 
 
