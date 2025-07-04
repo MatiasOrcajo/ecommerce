@@ -157,8 +157,9 @@
         .video-wrapper {
             position: relative;
             width: 100%;
-            height: 60vh;        /* Altura del vídeo: ajustá según necesites */
+            height: 80vh;        /* Altura del vídeo: ajustá según necesites */
             overflow: hidden;    /* Oculta las partes que sobresalgan */
+            margin-top: 10rem;
         }
         .video-wrapper video {
             position: absolute;
@@ -170,11 +171,16 @@
             object-fit: cover;   /* Rellena el contenedor recortando si hace falta */
         }
 
+
+
         /* Opcional: diferente altura en móviles */
         @media (max-width: 576px) {
             .video-wrapper {
                 height: 70vh;
+                margin-top: 3rem;
             }
+
+
         }
     </style>
 
@@ -250,7 +256,7 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                fetch('/test-array-featured-products')
+                fetch('/featured-products')
                     .then(res => res.json())
                     .then(data => renderProducts(data))
                     .catch(err => console.error(err));
@@ -261,6 +267,8 @@
 
                     Object.values(data).forEach(item => {
                         const {product, colors} = item;
+
+                        console.log(item)
 
                         const colorNames = colors.names;
 

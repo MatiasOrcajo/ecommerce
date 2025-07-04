@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->references('id')->on('customers');
             $table->dateTime('order_date');
             $table->dateTime('expiration_date');
-            $table->float('total_amount');
+            $table->decimal('total_amount');
             $table->string('status');
             $table->string('payment_method')->nullable();
             $table->string('shipping_method')->nullable();

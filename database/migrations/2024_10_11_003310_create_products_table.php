@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('category_id')->references('id')->on('categories');
-            $table->float('price');
+            $table->decimal('price');
             $table->unsignedInteger('discount')->nullable();
             $table->timestamp('discount_until')->nullable();
             $table->unsignedInteger('sales')->default(0);

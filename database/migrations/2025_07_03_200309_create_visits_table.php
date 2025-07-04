@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('visitors', function (Blueprint $table) {
+        Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->ipAddress('ip_address')->nullable();
+            $table->string('ip_address');
+            $table->text('user_agent');
+            $table->date('visited_at');
             $table->timestamps();
+
+            $table->unique(['ip_address', 'user_agent', 'visited_at']);
         });
     }
 
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('visitors');
+        Schema::dropIfExists('visits');
     }
 };
