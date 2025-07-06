@@ -150,8 +150,9 @@
 
 
 
-    <script type="module" src="{{ mix('public/js/getSalesInfo.js') }}"></script>
-    <script type="module" src="{{ mix('public/js/getVisitorsInfo.js') }}"></script>
-    <script type="module" src="{{ mix('public/js/timeSelectListener.js') }}"></script>
+    @vite('resources/js/getSalesInfo.js')
+    @vite('resources/js/getVisitorsInfo.js')
+    @vite('resources/js/timeSelectListener.js')
+
 @endsection
 
