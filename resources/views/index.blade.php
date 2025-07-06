@@ -148,14 +148,14 @@
          class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center">
     </div>
 
-    <div class="container-fluid px-0">
-        <div class="video-wrapper w-100">
-            <video autoplay muted loop playsinline>
-                <source src="/storage/videos/loop.mp4" type="video/mp4">
-                Tu navegador no soporta la reproducción de vídeo.
-            </video>
-        </div>
-    </div>
+{{--    <div class="container-fluid px-0">--}}
+{{--        <div class="video-wrapper w-100">--}}
+{{--            <video autoplay muted loop playsinline>--}}
+{{--                <source src="/storage/videos/loop.mp4" type="video/mp4">--}}
+{{--                Tu navegador no soporta la reproducción de vídeo.--}}
+{{--            </video>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
     <style>
         .video-wrapper {
