@@ -1,5 +1,9 @@
 @extends('layouts.app-adminkit')
 
+@section('title')
+    <title>Panel - Atica</title>
+@endsection
+
 @section('content')
     <div class="container-fluid p-0">
         <h2 class="my-4">Panel de pedidos</h2>
@@ -45,7 +49,7 @@
             stateSave: true,
             "processing": true,
             "ajax": url,
-            order: [[4, "desc"]],
+            order: [[0, "desc"]],
             columnDefs: [{
                 "defaultContent": "-",
                 "targets": "_all"
@@ -54,7 +58,12 @@
                 {
                     title: "ID",
                     data: 'id',
-                    width: "5%"
+                    width: "1%"
+                },
+                {
+                    title: "CÓDIGO",
+                    data: 'code',
+                    width: "1%"
                 },
                 {
                     title: "CLIENTE",
@@ -62,7 +71,14 @@
                 },
                 {
                     title: "PEDIDO",
-                    data: 'order'
+                    data: 'order',
+                    render: function(data, type, row) {
+                        if (type === 'display') {
+                            let html = $('<textarea/>').html(data).text(); // decodifica el HTML
+                            return html;
+                        }
+                        return data;
+                    }
                 },
                 {
                     title: "TOTAL",
@@ -78,8 +94,26 @@
                     render: function (data, type, full, meta) {
                         if (type === 'display') {
                             let id = full.id;
-                            let statusOptions = ['Pago recibido', 'Pago fallido', 'Pago pendiente de aprobación', 'No pago', "En proceso", "Envío realizado"]; // Personaliza tus opciones
-                            let selectHtml = `<select class="status-select" data-id="${id}">`;
+                            let statusOptions = [
+                                'Pago recibido',
+                                'Pago fallido',
+                                'Pago pendiente de aprobación',
+                                'No pago',
+                                'En proceso',
+                                'Envío realizado'
+                            ];
+
+                            // Estados que deben deshabilitar el select
+                            const disabledStatuses = [
+                                'Pago fallido',
+                                'No pago',
+                                'Pago pendiente de aprobación'
+                            ];
+
+                            // Verificamos si el select debe estar deshabilitado
+                            let disabledAttr = disabledStatuses.includes(data) ? 'disabled' : '';
+
+                            let selectHtml = `<select class="status-select" data-id="${id}" ${disabledAttr}>`;
 
                             statusOptions.forEach(status => {
                                 let selected = data === status ? 'selected' : '';
@@ -90,7 +124,7 @@
                             return selectHtml;
                         }
 
-                        return data; // Para exportación u ordenamiento interno
+                        return data;
                     }
                 },
 

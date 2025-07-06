@@ -20,16 +20,23 @@ class PanelController extends Controller
 
     public function listOrderList()
     {
-        return DataTables::of(Order::all()->map(function ($order){
+        return DataTables::of(Order::orderBy('id', 'DESC')->get()->map(function ($order){
             return [
                 "id" => $order->id,
+                "code" => $order->code,
                 "customer_name" => $order->customer->name." ".$order->customer->surname.", ". $order->customer->phone.", ". $order->customer->email,
                 "total" => "$".$order->total_amount,
                 "status" => $order->status,
                 "created_at" => Carbon::parse($order->created_at)->format('d/m/Y h:i A'),
                 "shipping_address" => $order->shipping_address,
                 "order" => $order->products->map(function ($orderProduct) use ($order){
-                    return "x".$orderProduct->quantity." ".$orderProduct->product->name." ";
+                    return $orderProduct->quantity . "x " .
+                        $orderProduct->productVariant->product->name . '<br/>' .
+                        'Talle '.$orderProduct->productVariant->size . '<br/>' .
+                        $orderProduct->productVariant->color_name .
+                        '<div style="height: 15px; width: 15px; border: 1px solid black; background: ' . $orderProduct->productVariant->color . ';"></div>' .
+                        '<br/>';
+
                 })
             ];
         }))->make(true);

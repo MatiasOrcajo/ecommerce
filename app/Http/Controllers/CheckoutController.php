@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\ProductVariant;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\EmailService;
 use App\Services\MercadoPagoService;
 use App\Traits\CartTrait;
 use Illuminate\Http\JsonResponse;
@@ -22,6 +23,7 @@ class CheckoutController extends Controller
 
     public function __construct(private readonly MercadoPagoService $mpService,
                                 private readonly CheckoutService $checkoutService,
+                                private readonly EmailService $emailService,
                                 private readonly CartService $cartService)
     {
 
@@ -60,6 +62,7 @@ class CheckoutController extends Controller
     public function processOrderSuccess($code)
     {
         $order = Order::where('code', $code)->first();
+        $this->emailService->sendOrderSuccess($order);
 
         return view('checkout.order-success', compact('order'));
     }

@@ -23,7 +23,7 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::get('/products/{product}/list-sizes', [\App\Http\Controllers\Admin\ProductController::class, 'listSizes'])->name('admin.products.listSizes');
 
-    Route::put('/products/{product}/update-size-stock/{productSize}', [\App\Http\Controllers\Admin\ProductController::class, 'updateSizeStock'])->name('admin.products.updateSizeStock');
+    Route::put('/products-variants/{productVariant}/update-stock', [\App\Http\Controllers\Admin\ProductController::class, 'updateSizeStock'])->name('admin.products.updateSizeStock');
 
     Route::bind('product', function ($value) {
         return Product::findOrFail($value);

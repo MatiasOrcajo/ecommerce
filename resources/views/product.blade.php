@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    <title>{{$product->name}} - Atica</title>
+@endsection
+
 @section('content')
 
     <style>

@@ -124,7 +124,7 @@ class ProductController extends Controller
     }
 
 
-    public function updateSizeStock(Product $product, ProductVariant $productVariant, Request $request)
+    public function updateSizeStock(ProductVariant $productVariant, Request $request)
     {
         $productVariant->stock = $request->stock;
         $productVariant->save();

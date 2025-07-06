@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendOrderSuccessEmail;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -63,6 +64,8 @@ class MercadopagoWebhookController extends Controller
 
         if($response["order_status"] == "paid" || $response["order_status"] == "partially_paid" ){
             $order->status = "Pago recibido";
+
+            SendOrderSuccessEmail::dispatch($order);
         }
 
         else if($response["order_status"] == "payment_in_process"){

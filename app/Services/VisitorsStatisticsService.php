@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\Visit;
 use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -54,12 +55,12 @@ class VisitorsStatisticsService
     {
         $dates = collect([Carbon::parse(now())->format('d-m') => 0]);
 
-        $visitors = Visitor::
-            whereBetween('created_at', [Carbon::parse(now())->startOfDay(), Carbon::now()->endOfDay()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+            whereBetween('visited_at', [Carbon::parse(now())->startOfDay(), Carbon::now()->endOfDay()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('d-m');
+                return Carbon::parse($visitor->visited_at)->format('d-m');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -76,12 +77,12 @@ class VisitorsStatisticsService
     {
         $dates = collect([Carbon::parse(now())->format('d-m') => 0]);
 
-        $visitors = Visitor::
-            whereBetween('created_at', [Carbon::parse(now())->subDays(1)->startOfDay(), Carbon::now()->subDays(1)->endOfDay()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+            whereBetween('visited_at', [Carbon::parse(now())->subDays(1)->startOfDay(), Carbon::now()->subDays(1)->endOfDay()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('d-m');
+                return Carbon::parse($visitor->visited_at)->format('d-m');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -111,12 +112,12 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('d-m');
+                return Carbon::parse($visitor->visited_at)->format('d-m');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -137,12 +138,12 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->subDays(14)->startOfDay(), Carbon::parse(now())->subDays(8)->endOfDay()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->subDays(14)->startOfDay(), Carbon::parse(now())->subDays(8)->endOfDay()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('d-m');
+                return Carbon::parse($visitor->visited_at)->format('d-m');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -172,12 +173,12 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->startOfMonth(), Carbon::now()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->startOfMonth(), Carbon::now()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('d-m');
+                return Carbon::parse($visitor->visited_at)->format('d-m');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -198,12 +199,12 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->startOfMonth()->subMonth()->endOfMonth()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->startOfMonth()->subMonth()->endOfMonth()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('d-m');
+                return Carbon::parse($visitor->visited_at)->format('d-m');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -231,12 +232,12 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->startOfYear(), Carbon::now()->endOfDay()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->startOfYear(), Carbon::now()->endOfDay()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('Y F');
+                return Carbon::parse($visitor->visited_at)->format('Y F');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -257,12 +258,12 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->startOfYear()->subYear(1), now()->startOfYear()->subYear(1)->endOfYear()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->startOfYear()->subYear(1), now()->startOfYear()->subYear(1)->endOfYear()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('Y F');
+                return Carbon::parse($visitor->visited_at)->format('Y F');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -290,12 +291,12 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->subMonths(12)->startOfMonth(), Carbon::now()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->subMonths(12)->startOfMonth(), Carbon::now()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('Y F');
+                return Carbon::parse($visitor->visited_at)->format('Y F');
             })
             ->map(function ($visitors) {
                 return $visitors->count();
@@ -316,12 +317,12 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visitor::
-        whereBetween('created_at', [Carbon::parse(now())->startOfMonth()->subYear(2), now()->startOfMonth()->subYear(1)->endOfMonth()])
-            ->orderBy('created_at')
+        $visitors = Visit::
+        whereBetween('visited_at', [Carbon::parse(now())->startOfMonth()->subYear(2), now()->startOfMonth()->subYear(1)->endOfMonth()])
+            ->orderBy('visited_at')
             ->get()
             ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->created_at)->format('Y F');
+                return Carbon::parse($visitor->visited_at)->format('Y F');
             })
             ->map(function ($visitors) {
                 return $visitors->count();

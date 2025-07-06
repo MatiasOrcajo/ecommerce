@@ -55,7 +55,7 @@ readonly class MercadoPagoService
                 ],
                 "items" => array(
                     array(
-                        "id" => "1234",
+                        "id" => $order->id,
                         "title" => "Orden {$order->code} atica.com.ar",
                         "quantity" => 1,
                         "currency_id" => "ARS",
@@ -65,7 +65,7 @@ readonly class MercadoPagoService
                     ),
                 ),
                 "external_reference" => $order->id,
-                "notification_url" => "https://notificationurl.com",
+                "notification_url" => route('mercadopago-notification-endpoint'),
             ]);
 
             $order->preference_id = $preference->id;

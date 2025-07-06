@@ -1,5 +1,9 @@
 @extends('layouts.app-adminkit')
 
+@section('title')
+    <title>{{$product->name}} - Atica</title>
+@endsection
+
 @section('content')
 
     <div class="container-fluid p-0">
@@ -369,10 +373,10 @@
             $('#productSizes tbody').on('change', '.stock-input', function () {
                 const $input = $(this);
                 const newStock = $input.val();
-                const sizeId = $input.data('id');
+                const productVariantId = $input.data('id');
 
                 $.ajax({
-                    url: `/api/products/${productId}/update-size-stock/${sizeId}`,
+                    url: `/api/products-variants/${productVariantId}/update-stock`,
                     type: 'PUT',
                     data: {stock: newStock},
                     headers: {

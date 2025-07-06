@@ -1,5 +1,9 @@
 @extends('layouts.app-adminkit')
 
+@section('title')
+    <title>Categoría {{$category->name}} - Atica</title>
+@endsection
+
 @section('content')
     <div class="container-fluid p-0">
         <h2 class="my-4">Categoría {{$category->name}}</h2>

@@ -1,5 +1,9 @@
 @extends('layouts.app-adminkit')
 
+@section('title')
+    <title>Dashboard - Atica</title>
+@endsection
+
 @section('content')
     <div class="container-fluid p-0">
         <div class="mb-3">

@@ -1,5 +1,9 @@
 @extends('layouts.app-adminkit')
 
+@section('title')
+    <title>Categorías - Atica</title>
+@endsection
+
 @section('content')
     <div class="container-fluid p-0">
         <h2 class="my-4">Dashboard de Categorías</h2>

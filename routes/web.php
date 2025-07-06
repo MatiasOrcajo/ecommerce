@@ -12,9 +12,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);
 
-    Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index');
+    Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index')->middleware('register-unique-visitant');
 
-    Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
+    Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show')->middleware('register-unique-visitant');
 
     Route::get('/products/{product}/get-variants', [\App\Http\Controllers\ProductController::class, 'getVariants'])->name('product.variants.show');
 
@@ -23,8 +23,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/calculate-cart-total-items', [\App\Http\Controllers\CartController::class, 'calculateCartTotalItems']);
 
     Route::get('/clear-cart', [\App\Http\Controllers\CartController::class, 'clearCart']);
-
-    Route::get('/get-ip-address', [\App\Http\Controllers\VisitorController::class, 'getIpAddress']);
 
     Route::get('/cart-info', [\App\Http\Controllers\CheckoutController::class, 'getCartInfo'])->name('cart-info');
 

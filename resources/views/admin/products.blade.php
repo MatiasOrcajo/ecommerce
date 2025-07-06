@@ -1,5 +1,9 @@
 @extends('layouts.app-adminkit')
 
+@section('title')
+    <title>Productos - Atica</title>
+@endsection
+
 @section('content')
     <div class="container-fluid p-0">
         <h2 class="my-4">Dashboard de Productos</h2>
@@ -36,7 +40,7 @@
 
                     <div class="mb-3">
                         <label for="precio" class="form-label">Precio</label>
-                        <input type="number" class="form-control" id="price" name="price" min="0" required>
+                        <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
                     </div>
 
                     <div class="mb-3">
