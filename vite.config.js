@@ -7,6 +7,9 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/js/getSalesInfo.js',
+                'resources/js/getVisitorsInfo.js',
+                'resources/js/timeSelectListener.js',
             ],
             refresh: true,
         }),
