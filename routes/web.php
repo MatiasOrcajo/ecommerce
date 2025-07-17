@@ -8,6 +8,7 @@ use App\Traits\CartTrait;
 
 Route::group(['middleware' => ['web']], function () {
 
+
     Route::get('/featured-products', [\App\Http\Controllers\IndexController::class, 'getFeaturedProducts']);
 
     Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);

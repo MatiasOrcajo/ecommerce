@@ -21,6 +21,7 @@ class CheckoutService
     public function __construct(private OrderService         $orderService,
                                 private MercadoPagoService   $mpService,
                                 private CartService   $cartService,
+                                private EmailService   $emailService,
     )
     {
     }
@@ -65,6 +66,8 @@ class CheckoutService
         if ($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash") {
 
             $this->cartService->clearCart();
+
+            $this->emailService->sendOrderSuccess($order);
 
             return response()->json([
                 "success" => true,

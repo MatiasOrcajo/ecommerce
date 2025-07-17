@@ -31,7 +31,7 @@
 
     <style>
         body{
-            background: #fffdfa;
+            background: #ffffff;
         }
     </style>
 

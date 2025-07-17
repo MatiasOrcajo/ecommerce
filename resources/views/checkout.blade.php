@@ -4,7 +4,7 @@
 
     <style>
         input, option, select{
-            background-color: #fffdfa !important;
+            background-color: #ffffff !important;
         }
     </style>
 
@@ -12,7 +12,7 @@
     <div class="container mt-4" style="max-width: 100%; ">
         <div class="row">
             <!-- Formulario de compra -->
-            <div class="col-md-7 steps-container" style="padding-bottom: 20rem; background: #fffdfa;">
+            <div class="col-md-7 steps-container" style="padding-bottom: 20rem; background: #ffffff;">
                 <div id="stepForm" class="step-form-container">
                     <!-- Step navigation -->
                     <ul class="nav nav-pills mb-4 ul-steps" id="steps">
@@ -132,15 +132,6 @@
 
                                 <div class="row mb-5">
                                     <h5 class="mb-3">Método de envío</h5>
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button type="button" id="correo-argentino-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
-                                                style="font-size: 1rem;"
-                                                data-shipment-method="correo-argentino">
-                                            <i class="mx-0"
-                                               style="margin-right: 5px; font-size: 1.2rem;"></i> Correo Argentino
-                                        </button>
-                                    </div>
                                     <div class="col-md-12 d-flex justify-content-center">
                                         <button type="button" id="andreani-button"
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
@@ -263,11 +254,6 @@
             let selectedPaymentMethod = null;
             const paymentMethodButtons = document.querySelectorAll(".payment_method");
             const shipmentMethodButtons = document.querySelectorAll(".shipping_method");
-
-            document.getElementById("correo-argentino-button").addEventListener("click", () => {
-                selectedShipmentMethod = "correo-argentino";
-
-            })
 
             document.getElementById("take-away-button").addEventListener("click", () => {
                 selectedShipmentMethod = "take-away";

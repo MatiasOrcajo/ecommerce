@@ -29,11 +29,6 @@ class CheckoutController extends Controller
 
     }
 
-//    public function __construct(private readonly CheckoutService $checkoutService)
-//    {
-//
-//    }
-
 
     public function index()
     {
@@ -62,7 +57,6 @@ class CheckoutController extends Controller
     public function processOrderSuccess($code)
     {
         $order = Order::where('code', $code)->first();
-        $this->emailService->sendOrderSuccess($order);
 
         return view('checkout.order-success', compact('order'));
     }

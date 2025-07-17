@@ -83,7 +83,8 @@ class OrderService
      * @param int $length The length of the random part of the order code. Default is 4.
      * @return string The generated unique order code.
      */
-    private function generateOrderCode($length = 4) {
+    private function generateOrderCode($length = 4)
+    {
         $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         $code = '';
 

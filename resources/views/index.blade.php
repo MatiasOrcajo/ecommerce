@@ -342,14 +342,11 @@
                                        <del>$${product.price.toFixed(2)}</del>
                                        $${(product.price * (1 - product.discount / 100)).toFixed(2)}
                                      </p>`
-                                                    : `<p class="text-center mb-1 fw-bold">$${product.price.toFixed(2)}</p>`
+                                                    : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
                                                 }
 
                                 <p class="text-center mb-2 text-muted">
                                   $${(product.price * 0.9).toFixed(2)} con Transferencia bancaria
-                                </p>
-                                <p class="text-center small text-muted mb-0">
-                                  6 cuotas sin interés de $${(product.price / 6).toFixed(2)}
                                 </p>
                                 <a
                                   href="/productos/${product.slug}"

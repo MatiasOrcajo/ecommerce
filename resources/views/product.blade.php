@@ -40,12 +40,14 @@
             overflow: hidden;
             position: relative;
             cursor: zoom-in;
+            height: 80vh;
         }
         .zoom-container img {
             transition: transform 0.3s ease;
             display: block;
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: contain;
             transform-origin: center center;
         }
         .zoom-container:hover img {

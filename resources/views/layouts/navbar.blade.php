@@ -3,16 +3,16 @@
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center py-0">
         <marquee behavior="scroll" direction="left">
-            MÍNIMO DE COMPRA $55.000 – 3 CUOTAS SIN INTERÉS – 15% OFF CON TRANSFERENCIA – ENVÍOS GRATIS A DOMICILIO X CORREO A PARTIR DE $250.000
+            ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA.
         </marquee>
     </div>
 
     {{-- Navbar Blanca (buscador, logo, carrito) --}}
-    <nav class="navbar navbar-expand-lg navbar-light pb-0 px-3" style="background:#fffdfa">
+    <nav class="navbar navbar-expand-lg navbar-light pb-0 px-3" style="background:#ffffff">
         <div class="container-fluid d-flex align-items-center">
             <div class="col-lg-4 d-none d-lg-flex justify-content-start">
                 <form class="d-flex align-items-center w-100" style="max-width: 220px;">
-                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar" style="background-color:#fffdfa">
+                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar" style="background-color:#ffffff">
                     <button class="btn p-0 ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
@@ -37,7 +37,7 @@
     </nav>
 
     {{-- Navbar de Links --}}
-    <nav class="navbar navbar-expand-lg navbar-light shadow-sm p-0" style="background:#fffdfa">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm p-0" style="background:#ffffff">
         <div class="container-fluid">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -75,7 +75,7 @@
 <header class="d-lg-none fixed-top">
 
     <!-- Navbar Principal -->
-    <nav class="navbar navbar-expand-lg navbar-light  shadow-sm" style="background:#fffdfa">
+    <nav class="navbar navbar-expand-lg navbar-light  shadow-sm" style="background:#ffffff">
         <div class="container-fluid">
 
             <!-- Toggler Offcanvas -->

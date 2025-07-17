@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderInProcessEmail;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -47,6 +48,11 @@ class PanelController extends Controller
     {
         $order->status = $request->status;
         $order->save();
+
+        if($order->status == "En proceso"){
+            SendOrderInProcessEmail::dispatch($order->id);
+        }
+
     }
 
 }

@@ -19,8 +19,10 @@ return new class extends Migration
             $table->decimal('total_amount');
             $table->string('status');
             $table->string('payment_method')->nullable();
-            $table->string('shipping_method')->nullable();
             $table->string('shipping_address');
+            $table->string('shipping_company')->nullable();
+            $table->string('shipping_method')->nullable();
+            $table->string('shipping_cost')->nullable();
             $table->string('code');
             $table->string('preference_id')->nullable();
             $table->foreignId('coupon_id')->nullable()->references('id')->on('coupons');
