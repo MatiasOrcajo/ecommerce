@@ -66,7 +66,7 @@
     {{--    Banner desktop--}}
     <div class="container-fluid mt-4 px-0">
         <img
-            src="https://acdn-us.mitiendanube.com/stores/001/235/896/themes/new_linkedman/1-slide-1740770503042-8262247398-a89c8fc06e13e021df5e5a38a142666d1740770505-1920-1920.jpg?247527440"
+            src="{{ asset('30_OFF.png') }}"
             class="img-fluid w-100" alt="Banner principal">
     </div>
 

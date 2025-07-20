@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendOrderInProcessEmail;
+use App\Jobs\SendOrderSentEmail;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,6 +52,10 @@ class PanelController extends Controller
 
         if($order->status == "En proceso"){
             SendOrderInProcessEmail::dispatch($order->id);
+        }
+
+        if($order->status == "Envío realizado"){
+            SendOrderSentEmail::dispatch($order->id);
         }
 
     }

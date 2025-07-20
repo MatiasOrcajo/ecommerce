@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Mail;
 
-class SendOrderSuccessEmail implements ShouldQueue
+class SendOrderSentEmail implements ShouldQueue
 {
     use Queueable;
 
@@ -27,7 +27,7 @@ class SendOrderSuccessEmail implements ShouldQueue
         $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         $code = 'GIFT-';
 
-        for ($i = 5; $i < 7; $i++) {
+        for ($i = 4; $i < 13; $i++) {
             $code .= $chars[random_int(0, strlen($chars) - 1)];
         }
 
@@ -44,29 +44,18 @@ class SendOrderSuccessEmail implements ShouldQueue
         $order = Order::with(['customer', 'products.productVariant.pictures'])->find($this->orderId);
         $code = $this->generateOrderCode();
 
-        $random = random_int(0, 9);
+        $random = random_int(0, 2);
         $coupon = new Coupon();
         $coupon->code = $code;
         $coupon->quantity = 1;
         $coupon->valid_until = Carbon::now()->addDays(30);
-
-        if($random >= 8){
-            $coupon->discount = 20;
-        }
-
-        if($random < 8 && $random >= 5){
-            $coupon->discount = 15;
-        }
-
-        if($random > 5){
-            $coupon->discount = 10;
-        }
-
+        $possibleDiscounts = [10, 15, 20];
+        $coupon->discount = $possibleDiscounts[$random];
         $coupon->save();
 
         Mail::send('emails.order-sent', ['order' => $order, 'coupon' => $coupon], function ($message) use ($order) {
             $message->to($order->customer->email)
-                ->subject('Gracias por tu compra!');
+                ->subject('Enviamos tu pedido!');
         });
     }
 }

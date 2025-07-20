@@ -100,13 +100,14 @@
                                 'Pago pendiente de aprobación',
                                 'No pago',
                                 'En proceso',
-                                'Envío realizado'
+                                'Envío realizado',
+                                'Esperando que el cliente retire',
+                                'Retiro realizado'
                             ];
 
                             // Estados que deben deshabilitar el select
                             const disabledStatuses = [
                                 'Pago fallido',
-                                'No pago',
                                 'Pago pendiente de aprobación'
                             ];
 

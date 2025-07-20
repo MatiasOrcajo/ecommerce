@@ -11,22 +11,26 @@
         <h1 style="margin: 0; font-family: 'Prata'; font-size: 5rem">Atica</h1>
         <p style="margin: 0; font-size: 14px; color: #777;">EST 2025</p>
         <h2 style="margin: 20px 0;">¡Hola {{$order->customer->name}}!</h2>
-        <h3 style="margin: 10px 0;">Tu pedido <strong>{{$order->code}}</strong> ha sido despachado</h3>
+        <h2 style="margin: 10px 0;">✨ Tu pedido <strong>{{$order->code}}</strong> ya está en camino ✨</h2>
     </div>
 
-    <p>Buenas noticias! Tu pedido ha sido enviado y ya está en camino.</p>
+    <p>Nos encanta darte buenas noticias: ya preparamos tu pedido y lo despachamos con mucho cuidado.
+        Ahora está viajando con Andreani rumbo a tu domicilio.</p>
 
-    <p><strong>Medio de envío:</strong> {{$order->shipping_method}}</p>
+    <p>Muy pronto vas a recibir un mail de Andreani con el seguimiento del envío, para que puedas ver por dónde está tu paquete en todo momento.</p>
 
-    <p>Pronto recibirás un correo de Andreani con la información de seguimiento de tu paquete.</p>
+    <h3>Y porque nos encanta mimarte…</h3>
+    <p>Te regalamos un cupón con <b>{{$coupon->discount}}% de descuento</b> para que uses en tu próxima compra 💌</p>
+    <p>Usá el código <h2><b>{{$coupon->code}}</b></h2> dentro de los próximos 30 días y disfrutá ese gustito extra.</p>
+    <p>Gracias por elegir Ática 🤎</p>
 
     <div style="text-align: center; margin: 30px 0;">
-        <a href="{{ route('order-status', $order->code) }}" target="_blank"
+        <a href="{{ route('order-success', $order->code) }}" target="_blank"
            style="background-color: #000; color: #fff; text-decoration: none; padding: 10px 20px; display: inline-block;">VER ESTADO DE MI PEDIDO</a>
     </div>
 
     <div style="text-align: center;">
-        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1200px-Instagram_icon.png" style="width: 30px; margin: 0 5px;" alt="Instagram"></a>
+        <a href="https://www.instagram.com/aticaoficial"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1200px-Instagram_icon.png" style="width: 30px; margin: 0 5px;" alt="Instagram"></a>
     </div>
 </div>
 </body>
