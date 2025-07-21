@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendOrderSuccessEmail;
 use App\Models\Cart;
 use App\Models\Constants;
 use App\Models\Coupon;
@@ -67,7 +68,7 @@ class CheckoutService
 
             $this->cartService->clearCart();
 
-            $this->emailService->sendOrderSuccess($order);
+            SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
 
             return response()->json([
                 "success" => true,
