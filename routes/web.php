@@ -90,6 +90,8 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/panel', [\App\Http\Controllers\Admin\PanelController::class, 'index'])->name('admin.panel');
 
+        Route::get('/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
 
     });
 });
