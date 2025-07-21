@@ -62,7 +62,8 @@
         },
         "laravel": {
             "dont-discover": [
-                "laravel/telescope"
+                "laravel/telescope",
+                "nunomaduro/collision"
             ]
         }
     },
