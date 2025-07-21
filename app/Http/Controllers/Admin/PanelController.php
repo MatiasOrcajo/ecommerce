@@ -51,11 +51,11 @@ class PanelController extends Controller
         $order->save();
 
         if($order->status == "En proceso"){
-            SendOrderInProcessEmail::dispatch($order->id);
+            SendOrderInProcessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
         }
 
         if($order->status == "Envío realizado"){
-            SendOrderSentEmail::dispatch($order->id);
+            SendOrderSentEmail::dispatch($order->id)->delay(now()->addSeconds(5));
         }
 
     }

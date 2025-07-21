@@ -11,7 +11,7 @@ class EmailService
     public function sendOrderSuccess(Order $order)
     {
 
-        SendOrderSuccessEmail::dispatch($order->id);
+        SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
 
     }
 }
