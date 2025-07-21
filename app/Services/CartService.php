@@ -105,13 +105,18 @@ class CartService
     {
 
         $cartInSession = Session::get('cart');
-        $targetProductInCart = collect($cartInSession["products"])->where("product_variant_id", $request->product_variant_id)->first();
+        $productVariantInCartIndex = 0;
 
-        dd($targetProductInCart);
+        foreach (collect($cartInSession["products"]) as $index => $productVariantInCart){
+            if($productVariantInCart["product_variant_id"] == $request->product_variant_id){
+                $productVariantInCartIndex = $index;
+            }
+        }
 
-        unset($targetProductInCart);
+        unset($cartInSession["products"][$productVariantInCartIndex]);
 
         if (empty($cartInSession)) {
+            $cart = Cart::find($cartInSession["cart_id"]);
             $cart->status = Constants::EMPTY_BY_CUSTOMER;
             $cart->save();
         }

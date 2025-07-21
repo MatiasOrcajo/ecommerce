@@ -587,6 +587,10 @@
                     url: '{{route('cart-info')}}',
                     success: function (xhr, status, error) {
 
+                        if(xhr.order_total == 0){
+                            location.reload();
+                        }
+
                         let isCouponApplied = xhr.is_coupon_applied;
 
                         if(isCouponApplied){
@@ -624,7 +628,7 @@
                             html += `
 
                                 <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
-                                    <button class="x-cart-button delete_cart_product" data-size="${key}" id="${product.product_name}">X</button>
+                                    <button class="x-cart-button delete_cart_product" data-variant-id="${product.product_variant_id}">X</button>
                                     <div class="order-summary-thumbnail">
                                         <img src="${product.pic}"
                                              alt="" class="img-fluid">
@@ -658,16 +662,15 @@
                         document.querySelectorAll('.delete_cart_product').forEach(element => {
                             element.addEventListener('click', (event) => {
 
-                                const size = event.target.getAttribute('data-size');
-                                const id = event.target.id;
-                                const route = '/cart/' + id
+                                const product_variant_id = event.target.getAttribute('data-product_variant_id');
+                                const route = '/cart';
 
                                 $.ajax({
                                     type: "DELETE",
                                     url: route,
                                     data: {
                                         _token: $('meta[name="csrf-token"]').attr('content'),
-                                        size: size,
+                                        product_variant_id: product_variant_id,
                                     },
                                     success: function (xhr, status, error) {
 

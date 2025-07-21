@@ -45,7 +45,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/consult-preference/{preferenceId}', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('consult-preference');
 
-    Route::delete('/cart/{product}', [\App\Http\Controllers\CartController::class, 'deleteProduct']);
+    Route::delete('/cart', [\App\Http\Controllers\CartController::class, 'deleteProduct']);
 
     Route::post('/carts/products/{product}', [\App\Http\Controllers\CartController::class, 'addProduct']);
 

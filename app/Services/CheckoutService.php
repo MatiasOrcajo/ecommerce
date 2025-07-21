@@ -120,6 +120,7 @@ class CheckoutService
 
 
             $data["products"][] = [
+                "product_variant_id" => $productVariant->id,
                 "product_name" => $product->name,
                 "quantity" => $productInCart["quantity"],
                 "subtotal" => $subtotal,

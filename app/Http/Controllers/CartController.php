@@ -56,9 +56,9 @@ class CartController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteProduct(Product $product, Request $request)
+    public function deleteProduct(Request $request)
     {
-        return $this->cartService->deleteProduct($product, $request);
+        return $this->cartService->deleteProduct($request);
 
     }
 
