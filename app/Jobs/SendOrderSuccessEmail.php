@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendOrderSuccessEmail implements ShouldQueue
@@ -24,6 +25,7 @@ class SendOrderSuccessEmail implements ShouldQueue
      */
     public function handle(Order $order): void
     {
+        Log::info(config('mail.default'));
 
         $order = Order::with(['customer', 'products.productVariant.pictures'])->find($this->orderId);
 

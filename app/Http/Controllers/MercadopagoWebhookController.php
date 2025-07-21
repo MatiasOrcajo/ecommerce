@@ -64,7 +64,6 @@ class MercadopagoWebhookController extends Controller
 
         if($response["order_status"] == "paid" || $response["order_status"] == "partially_paid" ){
             $order->status = "Pago recibido";
-            Log::info(config('mail.default'));
             SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
         }
 
