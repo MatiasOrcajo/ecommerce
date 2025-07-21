@@ -41,8 +41,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/payment-failure/{encrypted}', [\App\Http\Controllers\CheckoutController::class, 'failure'])->name('payment-failure');
     Route::get('/payment-pending/{encrypted}', [\App\Http\Controllers\CheckoutController::class, 'pending'])->name('payment-pending');
 
-    Route::post('/mercadopago-notification-endpoint', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('mercadopago-notification-endpoint');
-
     Route::get('/consult-preference/{preferenceId}', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('consult-preference');
 
     Route::delete('/cart', [\App\Http\Controllers\CartController::class, 'deleteProduct']);

@@ -25,6 +25,8 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::put('/products-variants/{productVariant}/update-stock', [\App\Http\Controllers\Admin\ProductController::class, 'updateSizeStock'])->name('admin.products.updateSizeStock');
 
+    Route::post('/mercadopago-notification-endpoint', [\App\Http\Controllers\MercadopagoWebhookController::class, 'handle'])->name('mercadopago-notification-endpoint');
+
     Route::bind('product', function ($value) {
         return Product::findOrFail($value);
     });
