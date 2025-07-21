@@ -72,7 +72,7 @@ class CartController extends Controller
     {
         $cart = $this->getCart();
 
-        return count($cart["products"]);
+        return isset($cart) ? count($cart["products"]) : 0;
     }
 
 
