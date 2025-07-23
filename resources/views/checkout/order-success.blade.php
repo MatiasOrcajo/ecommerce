@@ -13,7 +13,7 @@
                     <h5>Código de Orden: <span class="text-primary">{{ $order->code }}</span></h5>
                 </div>
                 <div class="mb-3">
-                    <h5>Datos del Pedido:</h5>
+                    <h5>Datos del Cliente:</h5>
                     <ul class="list-group">
                         <li class="list-group-item"><strong>Costo Total:</strong> ${{ $order->total_amount }}</li>
                         <li class="list-group-item"><strong>Nombre del
@@ -22,6 +22,14 @@
                         <li class="list-group-item"><strong>DNI:</strong> {{ $order->customer->dni }}</li>
                         <li class="list-group-item"><strong>Dirección de envío:</strong> {{ $order->shipping_address }}
                         </li>
+                        <li class="list-group-item"><strong>Medio de pago:</strong> {{ $order->payment_method }}</li>
+
+                        @if($order->payment_method == "Transferencia bancaria" || $order->payment_method == "Efectivo")
+
+                            <li class="list-group-item"><strong>Descuento por medio de pago:</strong> 10%
+                            </li>
+
+                        @endif
                     </ul>
                 </div>
 
@@ -37,7 +45,7 @@
                                 <th>Talle</th>
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
-                                <th>Descuento %</th>
+                                <th>Descuento cupón</th>
                                 <th>Subtotal</th>
                             </tr>
                             </thead>
@@ -45,7 +53,8 @@
                             @foreach ($order->products as $orderProduct)
                                 <tr>
                                     <td>{{ $orderProduct->productVariant->product->name }}</td>
-                                    <td><div
+                                    <td>
+                                        <div
                                             style="
                                                 background-color: {{ $orderProduct->productVariant->color }};
                                                 width: 32px;
@@ -103,8 +112,8 @@
                         @endif
 
                         <li class="list-group-item">
-                            <strong>Número de Seguimiento:</strong>
-                            <span>{{ $trackingNumber ?? 'No disponible' }}</span>
+                            <strong>Método de envío:</strong>
+                            <span>{{ $order->shipping_method }}</span>
                         </li>
 
                     </ul>

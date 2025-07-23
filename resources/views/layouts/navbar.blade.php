@@ -57,9 +57,9 @@
                         Collections
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
-                        <li><a class="dropdown-item" href="#">Collection A</a></li>
-                        <li><a class="dropdown-item" href="#">Collection B</a></li>
-                        <li><a class="dropdown-item" href="#">Collection C</a></li>
+                        @foreach($categories as $category)
+                            <li><a class="dropdown-item" href="#">{{$category->name}}</a></li>
+                        @endforeach
                     </ul>
                 </li>
                 <!-- ↑ Fin dropdown ↑ -->

@@ -11,8 +11,9 @@ class IndexController extends Controller
     public function index()
     {
         $products = Product::where('featured', true)->with('variants.pictures')->get();
+        $categories = \App\Models\Category::all();
 
-        return view('index', compact('products'));
+        return view('index', compact('products', 'categories'));
     }
 
 

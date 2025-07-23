@@ -68,6 +68,9 @@ class CheckoutService
 
             $this->cartService->clearCart();
 
+            $order->total_amount = $order->total_amount * 0.9;
+            $order->save();
+
             SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
 
             return response()->json([

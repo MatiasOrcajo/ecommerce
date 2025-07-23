@@ -146,8 +146,9 @@ class ProductController extends Controller
     public function show($slug)
     {
         $product = Product::where("slug", $slug)->firstOrFail();
+        $categories = \App\Models\Category::all();
 
-        return view('product', compact('product'));
+        return view('product', compact('product', 'categories'));
     }
 
 

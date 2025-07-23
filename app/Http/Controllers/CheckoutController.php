@@ -57,8 +57,9 @@ class CheckoutController extends Controller
     public function processOrderSuccess($code)
     {
         $order = Order::where('code', $code)->first();
+        $categories = \App\Models\Category::all();
 
-        return view('checkout.order-success', compact('order'));
+        return view('checkout.order-success', compact('order', 'categories'));
     }
 
 

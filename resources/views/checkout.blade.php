@@ -6,6 +6,16 @@
         input, option, select{
             background-color: #ffffff !important;
         }
+
+        @media (max-width: 768px) {
+            footer {
+                display: none;
+            }
+
+            .col-md-7.steps-container{
+                padding-bottom: 5rem !important;
+            }
+        }
     </style>
 
 
