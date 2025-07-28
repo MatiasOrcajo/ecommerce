@@ -11,8 +11,8 @@
     <nav class="navbar navbar-expand-lg navbar-light pb-0 px-3" style="background:#ffffff">
         <div class="container-fluid d-flex align-items-center">
             <div class="col-lg-4 d-none d-lg-flex justify-content-start">
-                <form class="d-flex align-items-center w-100" style="max-width: 220px;">
-                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar" style="background-color:#ffffff">
+                <form class="d-flex align-items-center w-100" style="max-width: 220px;" METHOD="GET" ACTION="{{ route('search') }}">
+                    <input class="form-control border-0 border-bottom rounded-0 w-100" type="search" placeholder="Buscar" style="background-color:#ffffff" name="q">
                     <button class="btn p-0 ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
@@ -98,8 +98,8 @@
                 <div class="offcanvas-body">
 
                     <!-- Buscador -->
-                    <form class="d-flex mb-4">
-                        <input class="form-control rounded-0 border-bottom" type="search" placeholder="Buscar"
+                    <form class="d-flex mb-4" METHOD="GET" ACTION="{{ route('search') }}">
+                        <input class="form-control rounded-0 border-bottom" type="search" placeholder="Buscar" name="q"
                                aria-label="Buscar">
                         <button class="btn ms-2" type="submit">
                             <i class="bi bi-search"></i>
@@ -136,8 +136,8 @@
             <!-- Íconos en pantallas lg+ -->
             <div class="d-none d-lg-flex align-items-center ms-auto">
                 <!-- Buscador inline -->
-                <form class="d-flex align-items-center me-4" style="max-width:200px;">
-                    <input class="form-control rounded-0 border-bottom" type="search" placeholder="Buscar">
+                <form class="d-flex align-items-center me-4" style="max-width:200px;" METHOD="GET" ACTION="{{ route('search') }}">
+                    <input class="form-control rounded-0 border-bottom" type="search" placeholder="Buscar" name="q">
                     <button class="btn ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
                 <!-- Carrito -->
