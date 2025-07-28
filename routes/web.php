@@ -8,6 +8,9 @@ use App\Traits\CartTrait;
 
 Route::group(['middleware' => ['web']], function () {
 
+    Route::get('/search', [\App\Http\Controllers\IndexController::class, 'searchProducts'])->name('search');
+
+    Route::get('/search-products', [\App\Http\Controllers\IndexController::class, 'searchProductsAjax'])->name('search-products');
 
     Route::get('/featured-products', [\App\Http\Controllers\IndexController::class, 'getFeaturedProducts']);
 
