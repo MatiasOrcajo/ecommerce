@@ -368,7 +368,6 @@
 
                 function printAvailableColors() {
                     const container = document.getElementById('colors-container');
-                    console.log(availableColors);
                     container.innerHTML = availableColors.map((c, i) => `
                         <div class="btn btn-outline-secondary color-box" data-color="${c.color}" title="${c.color_name}" style="background:${c.color}; width:32px; height:32px; margin-right:0.5rem;"></div>
                     `).join('');

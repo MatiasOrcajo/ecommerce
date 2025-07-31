@@ -272,8 +272,6 @@
                     Object.values(data).forEach(item => {
                         const {product, colors} = item;
 
-                        console.log(item)
-
                         const colorNames = colors.names;
 
                         // Construyo variantes [{ colorCode, pics }]

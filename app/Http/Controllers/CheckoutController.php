@@ -32,7 +32,9 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        return view('checkout');
+        $categories = \App\Models\Category::all();
+
+        return view('checkout', compact('categories'));
     }
 
 
