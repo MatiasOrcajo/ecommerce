@@ -9,6 +9,7 @@ use App\Traits\CartTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -143,6 +144,9 @@ class OrderService
             $order->status = 'Expirado';
             $order->save();
         }
+
+        Log::info('Stock liberado de ordenes expiradas');
+
     }
 
 
