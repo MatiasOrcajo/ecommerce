@@ -28,7 +28,5 @@ class LiberateStockFromExpiredOrdersJob implements ShouldQueue
     public function handle(): void
     {
         OrderService::liberateStockFromExpiredOrders();
-
-        Log::info('Stock liberado de pedidos expirados');
     }
 }

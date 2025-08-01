@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schedule;
 
 
 Schedule::job(new LiberateStockFromExpiredOrdersJob())
-    ->everyMinute()
+    ->dailyAt('05:00')
     ->withoutOverlapping()
     ->onOneServer();
 
