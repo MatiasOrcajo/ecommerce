@@ -15,6 +15,7 @@ class NewVisitor
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+
     public string $ipAddress;
 
     public function __construct(string $ipAddress)
