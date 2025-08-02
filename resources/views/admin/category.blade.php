@@ -30,20 +30,16 @@
                         <label for="category" class="form-label">Categoría</label>
                         <select class="form-select" id="category" name="category_id" required>
                             <option value="" selected disabled>Seleccionar categoría</option>
-                            <option value="1">Electrónica</option>
-                            <option value="2">Ropa</option>
-                            <option value="3">Hogar</option>
+                            @foreach ($categories as $category)
+                                <option
+                                    value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="precio" class="form-label">Precio</label>
                         <input type="number" class="form-control" id="price" name="price" min="0" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Descripcion</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
 
                     <div class="mb-3">

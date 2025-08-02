@@ -20,6 +20,11 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show')->middleware('register-unique-visitant');
 
+    Route::get('/categorias/{slug}', [\App\Http\Controllers\Admin\CategoryController::class, 'showCategory'])->name('category.show')->middleware('register-unique-visitant');
+
+    Route::get('/categories/{slug}/search-products', [\App\Http\Controllers\Admin\CategoryController::class, 'searchProductsByCategory']);
+
+
     Route::get('/products/{product}/get-variants', [\App\Http\Controllers\ProductController::class, 'getVariants'])->name('product.variants.show');
 
     Route::get('/cart', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('cart')->middleware('cart-empty');

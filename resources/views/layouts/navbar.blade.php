@@ -58,7 +58,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
                         @foreach($categories as $category)
-                            <li><a class="dropdown-item" href="#">{{$category->name}}</a></li>
+                            <li><a class="dropdown-item" href="{{route('category.show', $category->slug)}}">{{$category->name}}</a></li>
                         @endforeach
                     </ul>
                 </li>
@@ -115,9 +115,9 @@
                                 Collections
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="productDropdown">
-                                <li><a class="dropdown-item" href="#">Collection A</a></li>
-                                <li><a class="dropdown-item" href="#">Collection A</a></li>
-                                <li><a class="dropdown-item" href="#">Collection A</a></li>
+                                @foreach($categories as $category)
+                                    <li><a class="dropdown-item" href="{{route('category.show', $category->slug)}}">{{$category->name}}</a></li>
+                                @endforeach
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>

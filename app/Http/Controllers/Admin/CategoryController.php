@@ -6,33 +6,64 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\CategoryService;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 
 class CategoryController extends Controller
 {
 
-
-    public function __construct(private readonly CategoryService $categoryService)
+    public function __construct(private readonly CategoryService $categoryService,
+                                private readonly ProductService $productService)
     {
     }
 
     public function index()
     {
+
         return view('admin.categories');
     }
 
 
     public function store(Request $request)
     {
-        Category::create($request->toArray());
+
+        Category::create([
+            "name" => $request->name,
+            "slug" => Str::slug($request->name)
+        ]);
 
         return back()->with('success', 'Categoria creada correctamente');
     }
 
+    public function showCategory(Request $request)
+    {
+        $category = Category::where("slug", $request->slug)->with('products')->first();
+        $categories = \App\Models\Category::all();
+
+        return view('search-category', compact('category', 'categories'));
+    }
+
+
+    /**
+     *
+     */
+    public function searchProductsByCategory(Request $request)
+    {
+        $category = Category::where("slug", $request->slug)->with('products')->first();
+
+        return $this->productService->productsData($category->products);
+
+    }
+
+
+
     public function show(Category $category)
     {
-        return view('admin.category', compact('category'));
+        $categories = \App\Models\Category::all();
+
+        return view('admin.category', compact('category', 'categories'));
     }
 
 

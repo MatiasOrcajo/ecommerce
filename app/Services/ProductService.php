@@ -56,4 +56,35 @@ class ProductService {
         ];
     }
 
+
+
+    /**
+     * @param $products
+     * @return false|string
+     */
+    public function productsData($products): string|false
+    {
+        $data = [];
+
+        foreach ($products as $product) {
+            $data[$product->id] = [];
+            $data[$product->id]["product"] = [
+                "name" => $product->name,
+                "price" => $product->price,
+                "discount" => $product->discount,
+                "discount_until" => $product->discount_until,
+                "slug" => $product->slug
+            ];
+
+            $variants = $product->variants()->whereHas('pictures')->with('pictures')->get();
+
+            foreach ($variants as $variant) {
+                $data[$product->id]["colors"]["names"][] = $variant->color_name;
+                $data[$product->id]["colors"][] = [$variant->color => [$variant->pictures()->orderBy('order')->pluck("path")->take(2)->toArray()]];
+            }
+        }
+
+        return json_encode($data);
+    }
+
 }
