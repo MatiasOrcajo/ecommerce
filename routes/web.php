@@ -53,6 +53,8 @@ Route::group(['middleware' => ['web']], function () {
     //search product pictures by color
     Route::get('/products/{product}/search-pictures-by-color', [\App\Http\Controllers\ProductController::class, 'searchProductImagesByColor']);
 
+    Route::post('/mailing-list-contact', [\App\Http\Controllers\MailingListController::class, 'store'])->name('mailing-list-contact');
+
 });
 
 

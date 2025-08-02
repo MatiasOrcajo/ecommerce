@@ -52,9 +52,11 @@
                 <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 <h5 class="mt-2">Atención 📩 Llevate 10% OFF de regalo</h5>
                 <p>Unite para recibirlo</p>
-                <input type="email" class="form-control" placeholder="Email">
-                <input type="text" class="form-control" placeholder="Cómo te gusta que te llamen">
-                <button id="subscribe_button" class="btn btn-dark w-100">Suscribirme</button>
+                <form id="popup_mailing_list_form">
+                    <input name="email" type="email" class="form-control" placeholder="Email">
+                    <input name="name" type="text" class="form-control" placeholder="Cómo te gusta que te llamen">
+                    <button id="subscribe_button" class="btn btn-dark w-100">Suscribirme</button>
+                </form>
                 <small class="d-block text-muted mt-2">Recibirás un correo para validar tu email.</small>
             </div>
         </div>
@@ -69,6 +71,48 @@
 <!-- Mostrar popup automáticamente -->
 <script>
     $(document).ready(function () {
+
+
+        // Capturar el formulario
+        const popupMailingListForm = document.getElementById('popup_mailing_list_form');
+
+        // Escuchar el evento de envío del formulario
+        popupMailingListForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evitar el comportamiento por defecto del formulario
+
+            // Crear el objeto FormData
+            const formData = new FormData(popupMailingListForm);
+
+            try {
+                // Realizar la petición POST a la ruta /mailing-list-contact
+                const response = await fetch('/mailing-list-contact', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    }
+                });
+
+                // Verificar si la respuesta es exitosa
+                if (response.ok) {
+                    // Cambiar el HTML para mostrar un mensaje de agradecimiento
+                    popupMailingListForm.parentElement.innerHTML = `
+                                <div class="text-center p-4">
+                                    <h5 class="text-success">¡Gracias por suscribirte!</h5>
+                                    <p class="text-muted">Pronto recibirás noticias y beneficios exclusivos.</p>
+                                </div>
+                            `;
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error al enviar el formulario:', errorData);
+                    alert('Hubo un error al procesar el formulario. Por favor, inténtalo de nuevo.');
+                }
+            } catch (error) {
+                console.error('Error en la conexión:', error);
+                alert('Ocurrió un error inesperado. Por favor, revisa tu conexión e inténtalo otra vez.');
+            }
+        });
 
 
         setTimeout(function () {
