@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendNewSaleEmail;
 use App\Jobs\SendOrderSuccessEmail;
 use App\Models\Cart;
 use App\Models\Constants;
@@ -72,6 +73,7 @@ class CheckoutService
             $order->save();
 
             SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
+            SendNewSaleEmail::dispatch($order->id)->delay(now()->addSeconds(5));
 
             return response()->json([
                 "success" => true,
