@@ -19,9 +19,11 @@
 
             <div class="col-12 col-lg-4">
                 <div class="d-flex justify-content-center">
-                    <a class="navbar-brand fw-bold m-0 text-center" href="{{ route('index') }}"
+                    <a class="navbar-brand d-flex justify-content-center align-items-center" href="{{ route('index') }}"
                        style="font-size: 2.5rem; letter-spacing: 0.1rem;">
-                        Ática
+                        <img
+                            src="{{ asset('LOGO_PNG.png') }}"
+                            class="img-fluid w-25" alt="Logo Ática">
                     </a>
                 </div>
             </div>
@@ -85,8 +87,11 @@
             </button>
 
             <!-- Logo Centrado (siempre) -->
-            <a class="navbar-brand mx-auto mx-lg-0 fw-bold" href="#" style="font-size:2rem; letter-spacing:0.1rem;">
-                Ática
+            <a class="navbar-brand d-flex justify-content-center align-items-center" href="{{ route('index') }}"
+               style="font-size: 2.5rem; letter-spacing: 0.1rem;">
+                <img
+                    src="{{ asset('LOGO_PNG.png') }}"
+                    class="img-fluid w-25" alt="Logo Ática">
             </a>
 
             <!-- Offcanvas: Buscador + Carrito + Enlaces -->
