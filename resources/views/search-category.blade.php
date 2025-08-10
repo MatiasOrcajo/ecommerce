@@ -87,20 +87,20 @@
         .video-wrapper {
             position: relative;
             width: 100%;
-            height: 80vh;        /* Altura del vídeo: ajustá según necesites */
-            overflow: hidden;    /* Oculta las partes que sobresalgan */
+            height: 80vh; /* Altura del vídeo: ajustá según necesites */
+            overflow: hidden; /* Oculta las partes que sobresalgan */
             margin-top: 10rem;
         }
+
         .video-wrapper video {
             position: absolute;
             top: 50%;
             left: 50%;
-            min-width: 100%;     /* Siempre al menos 100% ancho */
-            min-height: 70%;    /* Aumenta la altura para “estirar” */
+            min-width: 100%; /* Siempre al menos 100% ancho */
+            min-height: 70%; /* Aumenta la altura para “estirar” */
             transform: translate(-50%, -50%);
-            object-fit: cover;   /* Rellena el contenedor recortando si hace falta */
+            object-fit: cover; /* Rellena el contenedor recortando si hace falta */
         }
-
 
 
         /* Opcional: diferente altura en móviles */
@@ -156,7 +156,7 @@
                     }
 
                     Object.values(data).forEach(item => {
-                        const { product, colors } = item;
+                        const {product, colors} = item;
                         const colorNames = colors.names;
 
                         // Construir variantes [{ colorCode, pics }]
@@ -164,7 +164,7 @@
                             const entry = colors[idx];
                             const code = Object.keys(entry)[0];
                             const pics = entry[code][0];
-                            return { colorCode: code, pics };
+                            return {colorCode: code, pics};
                         });
 
                         // Primeras dos imágenes
@@ -188,6 +188,9 @@
                   ></div>
                 `;
                         });
+
+                        const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
+                        const priceWithTransfer = (productPrice * 0.9).toFixed(2);
 
                         // **Generación de la card**
                         html += `
@@ -221,14 +224,14 @@
                     <h5 class="card-title text-center mb-2">${product.name}</h5>
                     ${product.discount
                             ? `<p class="text-center mb-1 fw-bold">
-                               <del>$${product.price.toFixed(2)}</del>
+                               <del>$${product.price}</del>
                                $${(product.price * (1 - product.discount / 100)).toFixed(2)}
                              </p>`
                             : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
                         }
                     <p class="text-center mb-2 text-muted">
-                      $${(product.price * 0.9).toFixed(2)} con Transferencia bancaria
-                    </p>
+                                  $${priceWithTransfer} con Transferencia bancaria
+                                </p>
                     <a
                       href="/productos/${product.slug}"
                       class="btn btn-white border-black w-25 mx-auto mt-auto d-block"

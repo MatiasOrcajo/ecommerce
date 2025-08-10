@@ -148,33 +148,33 @@
          class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center">
     </div>
 
-{{--    <div class="container-fluid px-0">--}}
-{{--        <div class="video-wrapper w-100">--}}
-{{--            <video autoplay muted loop playsinline>--}}
-{{--                <source src="/storage/videos/loop.mp4" type="video/mp4">--}}
-{{--                Tu navegador no soporta la reproducción de vídeo.--}}
-{{--            </video>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--    <div class="container-fluid px-0">--}}
+    {{--        <div class="video-wrapper w-100">--}}
+    {{--            <video autoplay muted loop playsinline>--}}
+    {{--                <source src="/storage/videos/loop.mp4" type="video/mp4">--}}
+    {{--                Tu navegador no soporta la reproducción de vídeo.--}}
+    {{--            </video>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 
     <style>
         .video-wrapper {
             position: relative;
             width: 100%;
-            height: 80vh;        /* Altura del vídeo: ajustá según necesites */
-            overflow: hidden;    /* Oculta las partes que sobresalgan */
+            height: 80vh; /* Altura del vídeo: ajustá según necesites */
+            overflow: hidden; /* Oculta las partes que sobresalgan */
             margin-top: 10rem;
         }
+
         .video-wrapper video {
             position: absolute;
             top: 50%;
             left: 50%;
-            min-width: 100%;     /* Siempre al menos 100% ancho */
-            min-height: 70%;    /* Aumenta la altura para “estirar” */
+            min-width: 100%; /* Siempre al menos 100% ancho */
+            min-height: 70%; /* Aumenta la altura para “estirar” */
             transform: translate(-50%, -50%);
-            object-fit: cover;   /* Rellena el contenedor recortando si hace falta */
+            object-fit: cover; /* Rellena el contenedor recortando si hace falta */
         }
-
 
 
         /* Opcional: diferente altura en móviles */
@@ -218,16 +218,20 @@
 
                     <!-- Campos de texto -->
                     <div class="mb-3">
-                        <input name="email" type="email" class="form-control form-control-lg" placeholder="Email" required>
+                        <input name="email" type="email" class="form-control form-control-lg" placeholder="Email"
+                               required>
                     </div>
                     <div class="mb-3">
-                        <input name="name" type="text" class="form-control form-control-lg" placeholder="Nombre" required>
+                        <input name="name" type="text" class="form-control form-control-lg" placeholder="Nombre"
+                               required>
                     </div>
                     <div class="mb-3">
-                        <input name="surname" type="text" class="form-control form-control-lg" placeholder="Apellido" required>
+                        <input name="surname" type="text" class="form-control form-control-lg" placeholder="Apellido"
+                               required>
                     </div>
                     <div class="mb-4">
-                        <input name="birthdate" type="text" class="form-control form-control-lg" placeholder="cumpleaños (dd/mm)"
+                        <input name="birthdate" type="text" class="form-control form-control-lg"
+                               placeholder="cumpleaños (dd/mm)"
                                pattern="\d{2}/\d{2}">
                     </div>
 
@@ -348,6 +352,9 @@
                         `;
                         });
 
+                        const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
+                        const priceWithTransfer = (productPrice * 0.9).toFixed(2);
+
                         // **Generación de la card**
                         html += `
                           <div class="col">
@@ -380,15 +387,15 @@
                                 <h5 class="card-title text-center mb-2">${product.name}</h5>
 
                                 ${product.discount
-                                                    ? `<p class="text-center mb-1 fw-bold">
+                            ? `<p class="text-center mb-1 fw-bold">
                                        <del>$${product.price}</del>
                                        $${(product.price * (1 - product.discount / 100)).toFixed(2)}
                                      </p>`
-                                                    : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
-                                                }
+                            : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
+                        }
 
                                 <p class="text-center mb-2 text-muted">
-                                  $${(product.price * 0.9).toFixed(2)} con Transferencia bancaria
+                                  $${priceWithTransfer} con Transferencia bancaria
                                 </p>
                                 <a
                                   href="/productos/${product.slug}"

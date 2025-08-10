@@ -209,19 +209,15 @@
                     <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{ $product->name }}</h2>
                     @php
                         $productPrice = $product->discount ? $product->price * (1 - $product->discount/100) : $product->price;
-                        $threeInstallments = round($productPrice / 3, 2);
                         $transferPrice = round($productPrice * 0.9, 2);
                     @endphp
                     @if($product->discount)
                         <p class="h4 text-dark"><small><del>${{ $product->price }}</del> %{{ $product->discount }} off</small></p>
-                        <p class="h3 text-dark">${{ $productPrice }}</p>
+                        <p class="h3 text-dark">${{ number_format($productPrice, 2, '.', '') }}</p>
                     @else
-                        <p class="h3 text-dark">${{ $productPrice }}</p>
+                        <p class="h3 text-dark">${{ number_format($productPrice, 2, '.', '') }}</p>
                     @endif
                     <p class="text-secondary">${{ $transferPrice }} con Transferencia</p>
-                    <div class="border p-2 d-inline-block my-3">
-                        3 CUOTAS SIN INTERÉS DE <strong>${{ $threeInstallments }}</strong>
-                    </div>
 
                     <div class="my-3">
                         <span class="me-2"><strong>Medios de pago:</strong></span>
