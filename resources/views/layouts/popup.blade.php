@@ -9,7 +9,7 @@
 
     .popup-image {
         width: 50%;
-        background: url('https://files.myperfit.net/tiendanapoli/75a6a2ce/form_1pguix.png') center center / cover no-repeat;
+        background: url({{ asset('popup.jpg') }}) center center / cover no-repeat;
         min-height: 100%;
     }
 

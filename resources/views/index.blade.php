@@ -381,7 +381,7 @@
 
                                 ${product.discount
                                                     ? `<p class="text-center mb-1 fw-bold">
-                                       <del>$${product.price.toFixed(2)}</del>
+                                       <del>$${product.price}</del>
                                        $${(product.price * (1 - product.discount / 100)).toFixed(2)}
                                      </p>`
                                                     : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
