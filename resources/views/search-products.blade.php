@@ -180,7 +180,7 @@
                     data-variant-index="${i}"
                     style="
                       width:24px; height:24px;
-                      background-color:${v.colorCode};
+                      background:${v.colorCode};
                       border:1px solid #ccc;
                       cursor:pointer;
                     "

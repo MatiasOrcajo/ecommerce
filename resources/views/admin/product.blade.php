@@ -147,7 +147,7 @@
                                         <p class="me-2 mb-0">Color:</p>
                                         <div
                                             style="
-                                                background-color: {{ $productVariant->color }};
+                                                background: {{ $productVariant->color }};
                                                 width: 32px;
                                                 height: 32px;
                                                 border: 1px solid #ccc;
@@ -329,7 +329,7 @@
           <div class="d-flex gap-2">
 
 <div style="
-            background-color: ${data};
+            background: ${data};
             width: 32px;
             height: 32px;
             border: 1px solid #ccc;

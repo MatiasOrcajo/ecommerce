@@ -56,7 +56,7 @@
                                     <td>
                                         <div
                                             style="
-                                                background-color: {{ $orderProduct->productVariant->color }};
+                                                background: {{ $orderProduct->productVariant->color }};
                                                 width: 32px;
                                                 height: 32px;
                                                 border: 1px solid #ccc;

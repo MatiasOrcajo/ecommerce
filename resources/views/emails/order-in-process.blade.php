@@ -33,7 +33,7 @@
                 <div style="flex: 1;">
                     <p style="margin: 0;">{{$orderProduct->quantity}}× {{$orderProduct->productVariant->product->name}}</p>
                     <p style="margin: 0; font-size: 13px; color: #555; display: flex; align-items: center;">
-                        Color: {{$orderProduct->productVariant->color_name}} <span style="display: inline-block; width: 10px; height: 10px; background-color: {{$orderProduct->productVariant->color}}; margin-left: 5px;"></span>
+                        Color: {{$orderProduct->productVariant->color_name}} <span style="display: inline-block; width: 10px; height: 10px; background: {{$orderProduct->productVariant->color}}; margin-left: 5px;"></span>
                         &nbsp;|&nbsp;Talle: {{$orderProduct->productVariant->size}}
                     </p>
                 </div>
