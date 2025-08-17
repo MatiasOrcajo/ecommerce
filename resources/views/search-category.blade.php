@@ -219,7 +219,7 @@
                                 >
 
                                 <a>
-                                    <button class="btn btn-success position-absolute top-0 end-0 m-2" >ENVÍO GRATIS</button>
+                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #bc8d8a; color: white;" >ENVÍO GRATIS</button>
 
                                 </a>
 

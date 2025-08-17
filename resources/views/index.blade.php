@@ -63,12 +63,22 @@
     </style>
 
 
-    {{--    Banner desktop--}}
-    <div class="container-fluid mt-4 px-0">
+    {{-- Banner desktop --}}
+    <div class="container-fluid mt-4 px-0 d-none d-lg-block">
         <img
             src="{{ asset('30_OFF.png') }}"
-            class="img-fluid w-100" alt="Banner principal">
+            class="img-fluid w-100"
+            alt="Banner principal">
     </div>
+
+    {{-- Banner mobile --}}
+    <div class="container-fluid mt-4 px-0 d-block d-lg-none">
+        <img
+            src="{{ asset('30_OFF_mobile.png') }}"
+            class="img-fluid w-100"
+            alt="Banner principal móvil">
+    </div>
+
 
 
     {{--    info desktop--}}
@@ -381,7 +391,7 @@
                                   alt="${product.name} - Hover"
                                 >
                                 <a>
-                                    <button class="btn btn-success position-absolute top-0 end-0 m-2" >ENVÍO GRATIS</button>
+                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #bc8d8a; color: white;">ENVÍO GRATIS</button>
 
                                 </a>
                                 <a href="/productos/${product.slug}">

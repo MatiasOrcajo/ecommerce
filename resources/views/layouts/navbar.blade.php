@@ -76,6 +76,12 @@
 
 <header class="d-lg-none fixed-top">
 
+    <div class="bg-dark text-white text-center py-0">
+        <marquee behavior="scroll" direction="left">
+            ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA.
+        </marquee>
+    </div>
+
     <!-- Navbar Principal -->
     <nav class="navbar navbar-expand-lg navbar-light  shadow-sm" style="background:#ffffff">
         <div class="container-fluid">
