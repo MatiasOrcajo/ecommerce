@@ -217,6 +217,12 @@
                                   class="card-img-top img-second"
                                   alt="${product.name} - Hover"
                                 >
+
+                                <a>
+                                    <button class="btn btn-success position-absolute top-0 end-0 m-2" >ENVÍO GRATIS</button>
+
+                                </a>
+
                                 <a href="/productos/${product.slug}">
                                   <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
                                     <i class="fas fa-shopping-bag"></i>
