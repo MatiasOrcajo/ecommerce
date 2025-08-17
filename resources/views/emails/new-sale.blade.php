@@ -8,7 +8,9 @@
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9;">
 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="text-align: center;">
-        <h1 style="margin: 0; font-family: 'Prata'; font-size: 3rem;">Atica</h1>
+        <img
+            src="https://atica.com.ar/LOGO_PNG.png"
+            class="img-fluid w-25" alt="Logo Ática">
         <p style="margin: 0; font-size: 14px; color: #777;">Notificación de nueva venta</p>
         <h2 style="margin: 20px 0;">Orden #{{$order->code}}</h2>
     </div>

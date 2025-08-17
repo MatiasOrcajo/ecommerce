@@ -123,10 +123,14 @@
                 <div class="mb-3">
                     <h5>Datos para Abonar por Transferencia Bancaria:</h5>
                     <div>
-                        <p><strong>Banco:</strong> {{ $bankName ?? 'Banco Ejemplo' }}</p>
-                        <p><strong>CBU:</strong> {{ $bankCbu ?? '1234567890123456789012' }}</p>
-                        <p><strong>Alias:</strong> {{ $bankAlias ?? 'ORDEN.PAGO.EJEMPLO' }}</p>
-                        <p><strong>Titular:</strong> {{ $accountHolder ?? 'Juan Perez' }}</p>
+                        <p style="margin: 0;">Banco Santander</p>
+                        <p style="margin: 0;">Tipo y número de cuenta: Cuentas en Pesos  000-199196/7</p>
+                        <p style="margin: 0;">Número de CBU: 0720000788000019919672</p>
+                        <p style="margin: 0;">Alias de CBU: DEBATE.OFERTA.PETALO</p>
+                        <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
+                        <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
+
+                        <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="https://wa.link/3v3e29" target="_blank">11 7118 1308</a>.</p></b>
                     </div>
                 </div>
             </div>

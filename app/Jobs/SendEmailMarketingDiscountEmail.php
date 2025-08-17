@@ -11,12 +11,12 @@ class SendEmailMarketingDiscountEmail implements ShouldQueue
 {
     use Queueable;
 
+
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(public $customer, public $coupon)
     {
-        //
     }
 
     /**
@@ -25,9 +25,10 @@ class SendEmailMarketingDiscountEmail implements ShouldQueue
     public function handle(): void
     {
 
-//        Mail::send('emails.email-mkt-first', ['customer' => $customer, 'coupon' => $coupon], function ($message) use ($order) {
-//            $message->to(["sofia@atica.com.ar", "matias@atica.com.ar"])
-//                ->subject('Nueva venta!');
-//        });
+
+        Mail::send('emails.email-mkt-first', ['customer' => $this->customer, 'coupon' => $this->coupon], function ($message)  {
+            $message->to($this->customer->email)
+                ->subject('Gracias por suscribirte!');
+        });
     }
 }

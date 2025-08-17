@@ -8,8 +8,9 @@
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ffffff;">
 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="text-align: center;">
-        <h1 style="margin: 0; font-family: 'Prata'; font-size: 5rem">Atica</h1>
-        <p style="margin: 0; font-size: 14px; color: #777;">EST 2025</p>
+        <img
+            src="https://atica.com.ar/LOGO_PNG.png"
+            class="img-fluid w-25" alt="Logo Ática">
         <h2 style="margin: 20px 0;">¡Hola {{$order->customer->name}}, gracias por tu compra!</h2>
         <h3 style="margin: 10px 0;">Orden {{$order->code}}</h3>
     </div>
@@ -19,11 +20,15 @@
 
     @if($order->payment_method == "Transferencia bancaria")
         <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
-            <p style="margin: 0;">MATÍAS ORCAJO</p>
-            <p style="margin: 0;">BANCO SANTANDER</p>
-            <p style="margin: 0;">CBU. 0170149040000002441124</p>
-            <p style="margin: 0;">ALIAS. <a href="#">atica.com.ar</a></p>
-            <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="wa.link/ptdjo9" target="_blank">11 2390 4481</a>.</p></b>
+
+            <p style="margin: 0;">Banco Santander</p>
+            <p style="margin: 0;">Tipo y número de cuenta: Cuentas en Pesos  000-199196/7</p>
+            <p style="margin: 0;">Número de CBU: 0720000788000019919672</p>
+            <p style="margin: 0;">Alias de CBU: DEBATE.OFERTA.PETALO</p>
+            <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
+            <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
+
+            <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="https://wa.link/3v3e29" target="_blank">11 7118 1308</a>.</p></b>
         </div>
 
     @endif

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailMarketingDiscountEmail;
 use App\Models\Coupon;
 use App\Models\MailingList;
 use App\Models\Order;
@@ -28,6 +29,7 @@ class MailingListController extends Controller
         $coupon->valid_until = Carbon::now()->addDays(365);
         $coupon->save();
 
+        SendEmailMarketingDiscountEmail::dispatch($customer, $coupon)->delay(now()->addSeconds(5));
 
 
 
@@ -47,6 +49,8 @@ class MailingListController extends Controller
         if(Order::where("code", $code)->first()){
             $this->generateCode();
         }
+
+        return $code;
     }
 
 

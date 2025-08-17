@@ -9,8 +9,9 @@
 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
     <!-- Header -->
     <div style="text-align: center;">
-        <h1 style="margin: 0; font-family: 'Prata'; font-size: 5rem;">Ática</h1>
-        <p style="margin: 0; font-size: 14px; color: #777;">EST 2025</p>
+        <img
+            src="https://atica.com.ar/LOGO_PNG.png"
+            class="img-fluid w-25" alt="Logo Ática">
     </div>
 
     <!-- Greeting -->
@@ -40,7 +41,7 @@
 
     <!-- Call to Action -->
     <div style="text-align: center; margin: 30px 0;">
-        <a href="{{ route('shop') }}" target="_blank"
+        <a href="{{ route('index') }}" target="_blank"
            style="background-color: #000; color: #fff; text-decoration: none; padding: 12px 24px; display: inline-block; border-radius: 4px; font-size: 16px;">
             EMPEZAR A COMPRAR
         </a>
@@ -48,12 +49,12 @@
 
     <!-- Footer -->
     <div style="text-align: center; font-size: 14px; color: #777; line-height: 1.5;">
-        <p style="margin: 0 0 10px;">Síguenos en redes sociales:</p>
+        <p style="margin: 0 0 10px;">Seguinos en redes sociales:</p>
         <a href="https://www.instagram.com/aticaoficial" style="margin: 0 5px; text-decoration: none;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1200px-Instagram_icon.png"
                  alt="Instagram" style="width: 30px; vertical-align: middle;">
         </a>
-        <a href="https://www.facebook.com/aticaoficial" style="margin: 0 5px; text-decoration: none;">
+        <a href="https://www.facebook.com/aticaargentina" style="margin: 0 5px; text-decoration: none;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
                  alt="Facebook" style="width: 30px; vertical-align: middle;">
         </a>
