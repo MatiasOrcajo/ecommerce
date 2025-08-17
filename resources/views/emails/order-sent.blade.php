@@ -10,7 +10,7 @@
     <div style="text-align: center;">
         <img
             src="https://atica.com.ar/LOGO_PNG.png"
-            class="img-fluid w-25" alt="Logo Ática">
+            class="img-fluid" alt="Logo Ática" style="width: 250px; margin: 0 0 20px;">
         <h2 style="margin: 20px 0;">¡Hola {{$order->customer->name}}!</h2>
         <h2 style="margin: 10px 0;">✨ Tu pedido <strong>{{$order->code}}</strong> ya está en camino ✨</h2>
     </div>

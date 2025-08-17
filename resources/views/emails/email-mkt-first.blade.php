@@ -11,7 +11,7 @@
     <div style="text-align: center;">
         <img
             src="https://atica.com.ar/LOGO_PNG.png"
-            class="img-fluid w-25" alt="Logo Ática">
+            class="img-fluid" alt="Logo Ática" style="width: 250px; margin: 0 0 20px;">
     </div>
 
     <!-- Greeting -->
