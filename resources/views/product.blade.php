@@ -208,16 +208,30 @@
                 <div class="col-md-6">
                     <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{ $product->name }}</h2>
                     @php
-                        $productPrice = $product->discount ? $product->price * (1 - $product->discount/100) : $product->price;
-                        $transferPrice = round($productPrice * 0.9, 2);
+                        // Precios base
+                        $productPrice  = $product->discount
+                            ? $product->price * (1 - $product->discount/100)
+                            : $product->price;
+
+                        $transferPrice = $productPrice * 0.90; // 10% off por transferencia
+
+                        // Helper local para formatear moneda AR
+                        $money = fn ($v) => '$' . number_format((float)$v, 2, ',', '.');
                     @endphp
-                    @if($product->discount)
-                        <p class="h4 text-dark"><small><del>${{ $product->price }}</del> %{{ $product->discount }} off</small></p>
-                        <p class="h3 text-dark">${{ number_format($productPrice, 2, '.', '') }}</p>
+
+                    @if ($product->discount)
+                        <p class="h4 text-dark">
+                            <small>
+                                <del>{{ $money($product->price) }}</del>
+                                {{ $product->discount }}% off
+                            </small>
+                        </p>
+                        <p class="h3 text-dark">{{ $money($productPrice) }}</p>
                     @else
-                        <p class="h3 text-dark">${{ number_format($productPrice, 2, '.', '') }}</p>
+                        <p class="h3 text-dark">{{ $money($productPrice) }}</p>
                     @endif
-                    <p class="text-secondary">${{ $transferPrice }} con Transferencia</p>
+
+                    <p class="text-secondary">{{ $money($transferPrice) }} con Transferencia</p>
 
                     <div class="my-3">
                         <span class="me-2"><strong>Medios de pago:</strong></span>

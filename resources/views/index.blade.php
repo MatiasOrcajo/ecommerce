@@ -98,8 +98,8 @@
                 <i style="font-size: 2rem" class="fa-solid fa-credit-card"></i>
             </div>
             <div>
-                <h3>3 CUOTAS SIN INTERÉS</h3>
-                <p>Con todas las tarjetas</p>
+                <h3>10% OFF</h3>
+                <p>Pagando con transferencia o efectivo</p>
             </div>
         </div>
     </div>
@@ -130,8 +130,8 @@
                 <i style="font-size: 2rem" class="fa-solid fa-credit-card"></i>
             </div>
             <div>
-                <h3>3 CUOTAS SIN INTERÉS</h3>
-                <p>Con todas las tarjetas</p>
+                <h3>10% OFF</h3>
+                <p>Pagando con transferencia o efectivo</p>
             </div>
         </div>
     </div>
@@ -355,6 +355,14 @@
                         const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
                         const priceWithTransfer = (productPrice * 0.9).toFixed(2);
 
+                        const moneyAR = (v) => {
+                            const nf = new Intl.NumberFormat('es-AR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            });
+                            return `$${nf.format(Number(v))}`;
+                        };
+
                         // **Generación de la card**
                         html += `
                           <div class="col">
@@ -388,14 +396,14 @@
 
                                 ${product.discount
                             ? `<p class="text-center mb-1 fw-bold">
-                                       <del>$${product.price}</del>
-                                       $${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                                       <del>$${moneyAR(product.price)}</del>
+                                       ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
                                      </p>`
-                            : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
+                            : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
                         }
 
                                 <p class="text-center mb-2 text-muted">
-                                  $${priceWithTransfer} con Transferencia bancaria
+                                  ${moneyAR(priceWithTransfer)} con Transferencia bancaria
                                 </p>
                                 <a
                                   href="/productos/${product.slug}"

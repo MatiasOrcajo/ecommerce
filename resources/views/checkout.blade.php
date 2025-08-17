@@ -619,18 +619,26 @@
 
                         let cartCounter = 0;
 
+                        const moneyAR = (v) => {
+                            const nf = new Intl.NumberFormat('es-AR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            });
+                            return `${nf.format(Number(v))}`;
+                        };
+
                         Object.entries(products).forEach(([key, product]) => {
 
                             let priceHtml = ``;
                             cartCounter++;
 
                             if (product.subtotal > product.total) {
-                                priceHtml = `<del><h4>$${product.subtotal} </h4> </del>
-                                             <h4 class="text-success">$${product.total
+                                priceHtml = `<del><h4>${moneyAR(product.subtotal)} </h4> </del>
+                                             <h4 class="text-success ms-2">${moneyAR(product.total)
                                 }</h4>
                                             `
                             } else {
-                                priceHtml = `<h4 class="text-success">$${product.total
+                                priceHtml = `<h4 class="text-success">${moneyAR(product.total)
                                 }</h4> `
 
                             }
@@ -657,11 +665,11 @@
 
                         })
 
-                        $('#order_total').html(`<h1>$${xhr.order_total}</h1>`);
+                        $('#order_total').html(`<h1>${moneyAR(xhr.order_total)}</h1>`);
                         $('#items-summary-container').empty().append(html);
 
                         if(isCouponApplied){
-                            $('#order_total').html(`<del><h1>$${xhr.order_total}</h1></del> <h1>$${xhr.order_total_after_coupon_applied}</h1>`);
+                            $('#order_total').html(`<del><h1>${moneyAR(xhr.order_total)}</h1></del> <h1>${moneyAR(xhr.order_total_after_coupon_applied)}</h1>`);
 
                             $('#coupon-validated-success').html("Cupón validado");
                             $('#coupon-validated-failed').html("");

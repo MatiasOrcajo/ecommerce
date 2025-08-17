@@ -192,56 +192,67 @@
                         const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
                         const priceWithTransfer = (productPrice * 0.9).toFixed(2);
 
+                        const moneyAR = (v) => {
+                            const nf = new Intl.NumberFormat('es-AR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            });
+                            return `$${nf.format(Number(v))}`;
+                        };
+
                         // **Generación de la card**
                         html += `
-              <div class="col">
-                <div class="card border-0 p-0 h-100">
-                  <div class="ratio image-container"
-                       style="--bs-aspect-ratio:120%;"
-                       data-variants='${JSON.stringify(variants)}'>
-                    <img
-                      src="${firstImg}"
-                      class="card-img-top img-first"
-                      alt="${product.name}"
-                    >
-                    <img
-                      src="${secondImg}"
-                      class="card-img-top img-second"
-                      alt="${product.name} - Hover"
-                    >
-                    <a href="/productos/${product.slug}">
-                      <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
-                        <i class="fas fa-shopping-bag"></i>
-                      </button>
-                    </a>
-                  </div>
-                  <div class="card-body d-flex flex-column position-relative">
-                    <div class="d-flex justify-content-center mb-3">
-                      <div class="color-box-parent d-flex justify-content-center align-items-center">
-                        ${swatches}
-                      </div>
-                    </div>
-                    <h5 class="card-title text-center mb-2">${product.name}</h5>
-                    ${product.discount
+                          <div class="col">
+                            <div class="card border-0 p-0 h-100">
+                              <div class="ratio image-container"
+                                   style="--bs-aspect-ratio:120%;"
+                                   data-variants='${JSON.stringify(variants)}'>
+                                <img
+                                  src="${firstImg}"
+                                  class="card-img-top img-first"
+                                  alt="${product.name}"
+                                >
+                                <img
+                                  src="${secondImg}"
+                                  class="card-img-top img-second"
+                                  alt="${product.name} - Hover"
+                                >
+                                <a href="/productos/${product.slug}">
+                                  <button class="btn btn-light position-absolute bottom-0 end-0 m-2">
+                                    <i class="fas fa-shopping-bag"></i>
+                                  </button>
+                                </a>
+                              </div>
+                              <div class="card-body d-flex flex-column position-relative">
+                                <div class="d-flex justify-content-center mb-3">
+                                  <div class="color-box-parent d-flex justify-content-center align-items-center">
+                                    ${swatches}
+                                  </div>
+                                </div>
+                                <h5 class="card-title text-center mb-2">${product.name}</h5>
+
+                                ${product.discount
                             ? `<p class="text-center mb-1 fw-bold">
-                               <del>$${product.price}</del>
-                               $${(product.price * (1 - product.discount / 100)).toFixed(2)}
-                             </p>`
-                            : `<p class="text-center mb-1 fw-bold">$${product.price}</p>`
+                                       <del>$${moneyAR(product.price)}</del>
+                                       ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
+                                     </p>`
+                            : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
                         }
-                    <p class="text-center mb-2 text-muted">
-                                  $${priceWithTransfer} con Transferencia bancaria
+
+                                <p class="text-center mb-2 text-muted">
+                                  ${moneyAR(priceWithTransfer)} con Transferencia bancaria
                                 </p>
-                    <a
-                      href="/productos/${product.slug}"
-                      class="btn btn-white border-black w-25 mx-auto mt-auto d-block"
-                    >
-                      Shop
-                    </a>
-                  </div>
-                </div>
-              </div>
-            `;
+                                <a
+                                  href="/productos/${product.slug}"
+                                  class="btn btn-white border-black w-25 mx-auto mt-auto d-block"
+                                >
+                                  Shop
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        `;
+
                     });
 
                     container.innerHTML = html;
