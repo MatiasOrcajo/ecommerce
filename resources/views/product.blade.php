@@ -145,7 +145,7 @@
     <div class="product-page-container">
         <div class="container my-5">
             <div class="row gx-5">
-                <div class="col-12 d-block d-md-none my-3">
+                <div class="col-12 d-block d-md-none mt-lg-3 mb-lg-3 mb-0 mt-5">
                     <h2 style="font-size: 24px">{{ $product->name }}</h2>
                 </div>
                 <!-- Imágenes -->
