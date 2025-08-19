@@ -135,7 +135,7 @@
                     </ul>
 
                     <!-- Carrito -->
-                    <a href="#" class="d-flex align-items-center text-dark">
+                    <a href="{{ route('cart') }}" class="d-flex align-items-center text-dark">
                         <i class="fa-solid fa-cart-shopping fs-4"></i>
                         <span class="badge bg-dark text-white ms-2" id="cart_counter_responsive">0</span>
                         <span class="ms-2">Carrito</span>
@@ -152,7 +152,7 @@
                     <button class="btn ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
                 <!-- Carrito -->
-                <a href="#" class="position-relative text-dark fs-5">
+                <a href="{{ route('cart') }}" class="position-relative text-dark fs-5">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">0</span>
                 </a>
