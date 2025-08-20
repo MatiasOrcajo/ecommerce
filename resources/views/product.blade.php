@@ -187,88 +187,10 @@
                         <button class="arrow-btn arrow-right" id="thumbNext">›</button>
                     </div>
 
-
-
-
-                    <!-- Información del producto -->
-                    <div class="d-block d-md-none">
-                        <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{ $product->name }}</h2>
-                        @php
-                            // Precios base
-                            $productPrice  = $product->discount
-                                ? $product->price * (1 - $product->discount/100)
-                                : $product->price;
-
-                            $transferPrice = $productPrice * 0.90; // 10% off por transferencia
-
-                            // Helper local para formatear moneda AR
-                            $money = fn ($v) => '$' . number_format((float)$v, 2, ',', '.');
-                        @endphp
-
-                        @if ($product->discount)
-                            <p class="h4 text-dark">
-                                <small>
-                                    <del>{{ $money($product->price) }}</del>
-                                    {{ $product->discount }}% off
-                                </small>
-                            </p>
-                            <p class="h3 text-dark">{{ $money($productPrice) }}</p>
-                        @else
-                            <p class="h3 text-dark">{{ $money($productPrice) }}</p>
-                        @endif
-
-                        <p class="text-secondary">{{ $money($transferPrice) }} con Transferencia</p>
-
-                        <!-- Descripciones -->
-                        <div class="my-3 d-block d-md-none">
-                            <div class="mb-4">
-                                <div class="bg-light border rounded p-2"><em>Descripción</em></div>
-                                <div class="mt-2">{!! $product->description !!}</div>
-                            </div>
-                            <div class="mb-4">
-                                <div class="bg-light border rounded p-2"><em>Medidas</em></div>
-                                <div class="mt-2">{!! $product->sizes_description !!}</div>
-                            </div>
-                            <div class="mb-4">
-                                <div class="bg-light border rounded p-2"><em>Referencia Modelo</em></div>
-                                <div class="mt-2">{!! $product->model_reference !!}</div>
-                            </div>
-                        </div>
-
-                        <div class="my-3">
-                            <span class="me-2"><strong>Medios de pago:</strong></span>
-                            <div class="d-flex gap-2">
-                                <img src="https://logowik.com/content/uploads/images/mercado-pago3162.logowik.com.webp" alt="MP" width="30" height="25">
-                                <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/visa@2x.png" alt="Visa" width="30" height="25">
-                                <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/mastercard@2x.png" alt="MC" width="30" height="25">
-                                <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/amex@2x.png" alt="Amex" width="30" height="25">
-                                <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/payment/new_logos_payment/ar/tarjeta-naranja@2x.png" alt="Tarjeta Naranja" width="30" height="25">
-                            </div>
-                        </div>
-                        <p><strong>10% de descuento</strong> pagando con transferencia</p>
-
-                        <div class="my-3">
-                            <label class="d-block mb-1"><strong>Color:</strong></label>
-                            <div class="d-flex gap-2" id="colors-container"></div>
-                        </div>
-
-                        <div class="my-4">
-                            <label id="sizeSelector" class="d-block mb-1"><strong>Talle:</strong></label>
-                            <div class="d-flex gap-2" id="sizes-container"></div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label"><strong>Cantidad</strong></label>
-                            <input id="quantity" type="number" class="form-control" value="1" min="1" style="max-width:100px;">
-                        </div>
-
-                        <button id="add-product-to-cart" class="btn btn-dark btn-lg w-100">AGREGAR AL CARRITO</button>
-                    </div>
-
                 </div>
 
                 <!-- Información del producto -->
-                <div class="col-md-6 d-none d-md-block">
+                <div class="col-md-6">
                     <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{ $product->name }}</h2>
                     @php
                         // Precios base
@@ -323,22 +245,45 @@
                         <input id="quantity" type="number" class="form-control" value="1" min="1" style="max-width:100px;">
                     </div>
 
+
+
+                    <!-- Descripciones -->
+                    <div class="col-md-6">
+                        <div class="my-3 d-block d-md-none">
+                            <div class="mb-4">
+                                <div class="bg-light border rounded p-2"><em>Descripción</em></div>
+                                <div class="mt-2">{!! $product->description !!}</div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="bg-light border rounded p-2"><em>Medidas</em></div>
+                                <div class="mt-2">{!! $product->sizes_description !!}</div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="bg-light border rounded p-2"><em>Referencia Modelo</em></div>
+                                <div class="mt-2">{!! $product->model_reference !!}</div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <button id="add-product-to-cart" class="btn btn-dark btn-lg w-100">AGREGAR AL CARRITO</button>
                 </div>
 
                 <!-- Descripciones -->
-                <div class="my-3 d-none d-md-block">
-                    <div class="mb-4">
-                        <div class="bg-light border rounded p-2"><em>Descripción</em></div>
-                        <div class="mt-2">{!! $product->description !!}</div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="bg-light border rounded p-2"><em>Medidas</em></div>
-                        <div class="mt-2">{!! $product->sizes_description !!}</div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="bg-light border rounded p-2"><em>Referencia Modelo</em></div>
-                        <div class="mt-2">{!! $product->model_reference !!}</div>
+                <div class="col-md-6">
+                    <div class="my-3 d-none d-md-block">
+                        <div class="mb-4">
+                            <div class="bg-light border rounded p-2"><em>Descripción</em></div>
+                            <div class="mt-2">{!! $product->description !!}</div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="bg-light border rounded p-2"><em>Medidas</em></div>
+                            <div class="mt-2">{!! $product->sizes_description !!}</div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="bg-light border rounded p-2"><em>Referencia Modelo</em></div>
+                            <div class="mt-2">{!! $product->model_reference !!}</div>
+                        </div>
                     </div>
                 </div>
 
@@ -483,7 +428,9 @@
                     const arr = variants.map(v => ({ size: v.size, stock: v.stock }));
                     const isLetter = arr.every(s => isNaN(s.size));
                     const order = ['XXS','XS','S','M','L','XL','XXL','XXXL'];
+
                     arr.sort((a,b) => isLetter ? order.indexOf(a.size) - order.indexOf(b.size) : a.size - b.size);
+
                     container.innerHTML = arr.map(s => `
                         <div class="btn btn-outline-secondary size-box sizes ${s.stock == 0 ? 'no-stock' : ''}" data-size="${s.size}" data-stock="${s.stock}" style="margin-right:0.5rem; cursor:pointer;">${s.size}</div>
                     `).join('');

@@ -16,7 +16,7 @@
 
     <div class="container mt-5 translate-y-mobile">
         <div class="card">
-            <div class="card-header text-center bg-success text-white">
+            <div class="card-header text-center text-white" style="background-color: #bc8d8a;">
                 <h3 class="card-title">¡Orden Realizada con Éxito!</h3>
             </div>
             <div class="card-body">
