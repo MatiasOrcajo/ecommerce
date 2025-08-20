@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class ProductVariant extends Model
 {
@@ -22,15 +23,26 @@ class ProductVariant extends Model
         return $this->hasMany(Picture::class);
     }
 
-    public function findFirstSimilarVariantWithPicture()
+    public function findFirstSimilarVariantWithPicture(): ?string
     {
-        return ProductVariant::where('product_id', $this->product_id)
-                        ->where('color', $this->color)
-                        ->whereHas('pictures')
-                        ->first()
-                        ->pictures()
-                        ->first()
-                        ->path;
+        // 1) Prioriza foto del propio variant
+        $ownPath = $this->pictures()->select('path')->first()?->path;
+        if ($ownPath) {
+            return Storage::url($ownPath);
+        }
+
+        // 2) Busca un variant similar que tenga fotos, cargándolas con eager loading
+        $variant = self::query()
+            ->where('product_id', $this->product_id)
+            ->where('color', $this->color)
+            ->whereHas('pictures')
+            ->with(['pictures' => fn ($q) => $q->select('id', 'product_variant_id', 'path')->orderBy('id')])
+            ->first();
+
+        $path = $variant?->pictures->first()?->path;
+
+        return $path ? Storage::url($path) : null;
     }
+
 
 }

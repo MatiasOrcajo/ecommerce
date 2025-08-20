@@ -31,7 +31,19 @@
     <div style="border: 1px solid #ddd; padding: 10px;">
         @foreach($order->products as $orderProduct)
             <div style="display: flex; margin-bottom: 10px;">
-                <img src="{{$orderProduct->productVariant->findFirstSimilarVariantWithPicture()}}" style="width: 60px; margin-right: 10px;">
+                @php
+                    $imgUrl = $orderProduct->productVariant?->findFirstSimilarVariantWithPicture();
+                @endphp
+
+                <img
+                    src="{{ $imgUrl ?? asset('images/placeholder.png') }}"
+                    alt="{{ $orderProduct->productVariant?->name ?? 'Imagen no disponible' }}"
+                    width="60"
+                    height="60"
+                    loading="lazy"
+                    class="mr-2 inline-block"
+                />
+
                 <div style="flex: 1;">
                     <p style="margin: 0;">{{$orderProduct->quantity}}x {{$orderProduct->productVariant->product->name}}</p>
                     <p style="margin: 0; font-size: 13px; color: #555;">
