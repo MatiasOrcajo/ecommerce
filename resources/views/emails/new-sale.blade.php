@@ -31,7 +31,7 @@
     <div style="border: 1px solid #ddd; padding: 10px;">
         @foreach($order->products as $orderProduct)
             <div style="display: flex; margin-bottom: 10px;">
-                @php
+                {{--@php
                     $imgUrl = $orderProduct->productVariant?->findFirstSimilarVariantWithPicture();
                 @endphp
 
@@ -42,7 +42,7 @@
                     height="60"
                     loading="lazy"
                     class="mr-2 inline-block"
-                />
+                />--}}
 
                 <div style="flex: 1;">
                     <p style="margin: 0;">{{$orderProduct->quantity}}x {{$orderProduct->productVariant->product->name}}</p>
