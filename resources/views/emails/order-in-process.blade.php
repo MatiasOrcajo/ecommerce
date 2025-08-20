@@ -30,7 +30,7 @@
     <div style="border: 1px solid #ddd; padding: 10px;">
         @foreach($order->products as $orderProduct)
             <div style="display: flex; margin-bottom: 10px;">
-                <img src="{{$orderProduct->productVariant->pictures->first()->path}}" style="width: 60px; margin-right: 10px;" alt="Imagen producto">
+                <img src="{{$orderProduct->productVariant->findFirstSimilarVariantWithPicture()}}" style="width: 60px; margin-right: 10px;" alt="Imagen producto">
                 <div style="flex: 1;">
                     <p style="margin: 0;">{{$orderProduct->quantity}}× {{$orderProduct->productVariant->product->name}}</p>
                     <p style="margin: 0; font-size: 13px; color: #555; display: flex; align-items: center;">

@@ -22,4 +22,15 @@ class ProductVariant extends Model
         return $this->hasMany(Picture::class);
     }
 
+    public function findFirstSimilarVariantWithPicture()
+    {
+        return ProductVariant::where('product_id', $this->product_id)
+                        ->where('color', $this->color)
+                        ->whereHas('pictures')
+                        ->first()
+                        ->pictures()
+                        ->first()
+                        ->path;
+    }
+
 }
