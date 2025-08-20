@@ -18,7 +18,9 @@ class CustomerService
      */
     public function create(Object $customerData)
     {
-        $customer = Customer::where('dni', $customerData->dni)->first();
+        $customer = Customer::where('dni', $customerData->dni)
+            ->orWhere('email', $customerData->email)
+            ->first();
 
         if ($customer == null) {
 
