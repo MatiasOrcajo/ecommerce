@@ -680,7 +680,7 @@
                         document.querySelectorAll('.delete_cart_product').forEach(element => {
                             element.addEventListener('click', (event) => {
 
-                                const product_variant_id = event.target.getAttribute('data-product_variant_id');
+                                const product_variant_id = event.target.getAttribute('data-variant-id');
                                 const route = '/cart';
 
                                 $.ajax({
