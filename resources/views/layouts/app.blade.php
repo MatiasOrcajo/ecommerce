@@ -60,7 +60,7 @@
         @yield('content')
     </main>
 
-    @include('layouts.footer')
+    @yield('footer')
 </div>
 
 <!-- jQuery (si lo necesitas para tus propios scripts) -->

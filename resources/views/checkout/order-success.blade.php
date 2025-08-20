@@ -1,8 +1,20 @@
 @extends('layouts.app')
 
+@section('title')
+    <title>Órden {{$order->code}} - Ática</title>
+@endsection
+
 @section('content')
 
-    <div class="container mt-5">
+    <style>
+        @media (max-width: 768px) {
+            .translate-y-mobile{
+                transform: translateY(40px);
+            }
+        }
+    </style>
+
+    <div class="container mt-5 translate-y-mobile">
         <div class="card">
             <div class="card-header text-center bg-success text-white">
                 <h3 class="card-title">¡Orden Realizada con Éxito!</h3>

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    <title>Carrito - Ática</title>
+@endsection
+
 @section('content')
 
     <style>
@@ -15,11 +19,18 @@
             .col-md-7.steps-container{
                 padding-bottom: 5rem !important;
             }
+
+            .translate-y-mobile{
+                transform: translateY(30px);
+            }
         }
+
+
+
     </style>
 
 
-    <div class="container mt-4" style="max-width: 100%; ">
+    <div class="container mt-5 mt-md-4 translate-y-mobile" style="max-width: 100%; ">
         <div class="row">
             <!-- Formulario de compra -->
             <div class="col-md-7 steps-container" style="padding-bottom: 20rem; background: #ffffff;">

@@ -370,7 +370,7 @@
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             });
-                            return `$${nf.format(Number(v))}`;
+                            return `${nf.format(Number(v))}`;
                         };
 
                         // **Generación de la card**
@@ -410,7 +410,7 @@
 
                                 ${product.discount
                             ? `<p class="text-center mb-1 fw-bold">
-                                       <del>$${moneyAR(product.price)}</del>
+                                       <del>${moneyAR(product.price)}</del>
                                        ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
                                      </p>`
                             : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
@@ -457,5 +457,10 @@
             updateCartCounter();
         </script>
     @endpush
+
+@endsection
+
+@section('footer')
+    @include('layouts.footer')
 
 @endsection
