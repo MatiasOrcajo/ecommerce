@@ -41,7 +41,7 @@
                         <li class="nav-item li-step li-steps-form d-flex align-items-center grey-background"
                             id="step-client">
                             <div class="li-step-icon">
-                                <i class="fa-solid fa-user"></i>
+                                <i class="fa-solid fa-user" style="color: #bc8d8a"></i>
                             </div>
                             <div>
                                 <div class="li-step-title">Cliente</div>
@@ -51,7 +51,7 @@
                         <!-- Segundo paso: Pago -->
                         <li class="nav-item li-step li-step-second d-flex align-items-center" id="step-payment">
                             <div class="li-step-icon">
-                                <i class="fa-regular fa-credit-card" style="color: blue"></i>
+                                <i class="fa-regular fa-credit-card" style="color: #bc8d8a"></i>
                             </div>
                             <div>
                                 <div class="li-step-title">Pago</div>
@@ -150,6 +150,20 @@
                         <!-- Step 2: Datos de facturación -->
                         <div class="tab-pane fade" id="step2">
                             <form id="billingForm">
+
+                                <style>
+                                    .btn-outline-success {
+                                        color: #bc8d8a;
+                                        border-color: #bc8d8a;
+                                    }
+
+                                    .btn:hover
+                                    {
+                                        color: var(--bs-btn-hover-color);
+                                        background-color: #bc8d8a;
+                                        border-color: #bc8d8a;
+                                    }
+                                </style>
 
                                 <div class="row mb-5">
                                     <h5 class="mb-3">Método de envío</h5>
@@ -298,8 +312,8 @@
 
                     // Aplicar clases al botón seleccionado
                     event.target.style.color = "var(--bs-btn-hover-color)";
-                    event.target.style.backgroundColor = "var(--bs-btn-hover-bg)";
-                    event.target.style.borderColor = "var(--bs-btn-hover-border-color)";
+                    event.target.style.backgroundColor = "#bc8d8a";
+                    event.target.style.borderColor = "#bc8d8a";
 
                 });
             });
@@ -316,8 +330,8 @@
 
                     // Aplicar clases al botón seleccionado
                     event.target.style.color = "var(--bs-btn-hover-color)";
-                    event.target.style.backgroundColor = "var(--bs-btn-hover-bg)";
-                    event.target.style.borderColor = "var(--bs-btn-hover-border-color)";
+                    event.target.style.backgroundColor = "#bc8d8a";
+                    event.target.style.borderColor = "#bc8d8a";
 
                 });
             });
@@ -656,7 +670,7 @@
 
                             html += `
 
-                                <div class="p-3 my-3 d-flex align-items-center border rounded w-75" style="position: relative">
+                                <div class="p-3 my-3 d-flex align-items-center border rounded w-100 w-md-75" style="position: relative">
                                     <button class="x-cart-button delete_cart_product" data-variant-id="${product.product_variant_id}">X</button>
                                     <div class="order-summary-thumbnail">
                                         <img src="${product.pic}"
