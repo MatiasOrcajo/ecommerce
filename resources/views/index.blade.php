@@ -85,63 +85,75 @@
     <div class="d-none d-lg-flex row justify-content-center align-items-center mx-5 my-5 py-5">
         <div class="col-lg-4 d-flex justify-content-center align-items-center border-end">
             <div class="me-3">
-                <i style="font-size: 2rem" class="fa-solid fa-truck"></i>
+                <i style="font-size: 2rem; color: #bc8d8a;" class="fa-solid fa-truck"></i>
             </div>
             <div>
-                <h3>ENVÍOS GRATIS</h3>
-                <p>En todas tus compras</p>
+                <b>
+                    <h3>ENVÍOS GRATIS</h3>
+                    <p>En todas tus compras</p>
+                </b>
             </div>
         </div>
 
         <div class="col-lg-4 d-flex justify-content-center align-items-center border-end">
             <div class="me-3">
-                <i style="font-size: 2rem" class="fa-solid fa-location-dot"></i>
+                <i style="font-size: 2rem; color: #bc8d8a;" class="fa-solid fa-location-dot"></i>
             </div>
             <div>
-                <h3>ENVÍOS A TODO EL PAÍS</h3>
-                <p>Comprá desde cualquier lugar</p>
+                <b>
+                    <h3>ENVÍOS A TODO EL PAÍS</h3>
+                    <p>Comprá desde cualquier lugar</p>
+                </b>
             </div>
         </div>
 
         <div class="col-lg-4 d-flex justify-content-center align-items-center">
             <div class="me-3">
-                <i style="font-size: 2rem" class="fa-solid fa-credit-card"></i>
+                <i style="font-size: 2rem; color: #bc8d8a;" class="fa-solid fa-credit-card"></i>
             </div>
             <div>
-                <h3>10% OFF</h3>
-                <p>Pagando con transferencia o efectivo</p>
+                <b>
+                    <h3>10% OFF</h3>
+                    <p>Pagando con transferencia o efectivo</p>
+                </b>
             </div>
         </div>
     </div>
 
     <div class="d-block d-lg-none mt-5">
-        <div class="col-12 my-4 d-flex justify-content-center align-items-center">
+        <div class="col-12 my-4 d-flex justify-content-center align-items-center flex-column text-center">
             <div class="me-3">
-                <i style="font-size: 2rem" class="fa-solid fa-truck"></i>
+                <i style="font-size: 2rem; color: #bc8d8a;" class="mb-2 mt-3 fa-solid fa-truck"></i>
             </div>
             <div>
-                <h3>ENVÍOS GRATIS</h3>
-                <p>En todas tus compras</p>
+                <b>
+                    <h3>ENVÍOS GRATIS</h3>
+                    <p>En todas tus compras</p>
+                </b>
             </div>
         </div>
 
-        <div class="col-12 my-4 d-flex justify-content-center align-items-center">
+        <div class="col-12 my-4 d-flex justify-content-center align-items-center flex-column text-center">
             <div class="me-3">
-                <i style="font-size: 2rem" class="fa-solid fa-location-dot"></i>
+                <i style="font-size: 2rem; color: #bc8d8a;" class="mb-2 mt-3 fa-solid fa-location-dot"></i>
             </div>
             <div>
-                <h3>ENVÍOS A TODO EL PAÍS</h3>
-                <p>Comprá desde cualquier lugar</p>
+                <b>
+                    <h3>ENVÍOS A TODO EL PAÍS</h3>
+                    <p>Comprá desde cualquier lugar</p>
+                </b>
             </div>
         </div>
 
-        <div class="col-12 my-4 d-flex justify-content-center align-items-center">
+        <div class="col-12 my-4 d-flex justify-content-center align-items-center flex-column text-center">
             <div class="me-3">
-                <i style="font-size: 2rem" class="fa-solid fa-credit-card"></i>
+                <i style="font-size: 2rem; color: #bc8d8a;" class="mb-2 mt-3 fa-solid fa-credit-card"></i>
             </div>
             <div>
-                <h3>10% OFF</h3>
-                <p>Pagando con transferencia o efectivo</p>
+                <b>
+                    <h3>10% OFF</h3>
+                    <p>Pagando con transferencia o efectivo</p>
+                </b>
             </div>
         </div>
     </div>
@@ -199,14 +211,16 @@
     </style>
 
     <div class="my-5 py-5">
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="me-4">
-                <i class="fa-brands fa-instagram" style="font-size: 4rem"></i>
-            </div>
-            <div style="transform: translateY(-20%)">
-                <p class="d-block mt-5 text-center" style="font-size: 1.5rem;">SEGUINOS EN INSTAGRAM</p>
-                <h3 style="font-size: 2.5rem">@atica.arg</h3>
-            </div>
+        <div class="d-flex justify-content-center align-items-center flex-md-row flex-column text-center">
+            <a href="https://www.instagram.com/aticaoficial/" target="_blank">
+                <div class="me-md-4">
+                    <i class="fa-brands fa-instagram" style="font-size: 4rem; color: #bc8d8a;"></i>
+                </div>
+                <div style="transform: translateY(-20%)">
+                    <p class="d-block mt-5 text-center" style="font-size: 1.5rem;">SEGUINOS EN INSTAGRAM</p>
+                    <h3 style="font-size: 2.5rem">@atica.arg</h3>
+                </div>
+            </a>
         </div>
     </div>
 
