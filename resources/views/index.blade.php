@@ -210,8 +210,23 @@
         }
     </style>
 
-    <div class="my-5 py-5">
-        <div class="d-flex justify-content-center align-items-center flex-md-row flex-column text-center">
+    <div class="my-5 py-5 d-none d-md-block">
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="me-md-4">
+                <i class="fa-brands fa-instagram" style="font-size: 4rem; color: #bc8d8a;"></i>
+            </div>
+            <a href="https://www.instagram.com/aticaoficial/" target="_blank">
+
+                <div style="transform: translateY(-20%)">
+                    <p class="d-block mt-5 text-center" style="font-size: 1.5rem;">SEGUINOS EN INSTAGRAM</p>
+                    <h3 style="font-size: 2.5rem">@atica.arg</h3>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="my-5 py-5 d-block d-md-none">
+        <div class="d-flex justify-content-center align-items-center flex-column text-center">
             <a href="https://www.instagram.com/aticaoficial/" target="_blank">
                 <div class="me-md-4">
                     <i class="fa-brands fa-instagram" style="font-size: 4rem; color: #bc8d8a;"></i>
