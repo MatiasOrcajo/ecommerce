@@ -374,8 +374,9 @@
 
                 axios.get("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre")
                     .then(response => {
-                        let province = response.data.provincias;
+                        let province = response.data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
                         let html = "";
+
                         province.forEach(province => {
                             html += `<option value="${province.nombre}">${province.nombre}</option>`
                         });
@@ -387,8 +388,9 @@
                 document.getElementById('province').addEventListener('change', (event) => {
                     axios.get(`https://apis.datos.gob.ar/georef/api/municipios?provincia=${event.target.value}&campos=id,nombre&max=500`)
                         .then(response => {
-                            let locality = response.data.municipios;
+                            let locality = response.data.municipios.sort((a, b) => a.nombre.localeCompare(b.nombre));
                             let html = "";
+
                             locality.forEach(locality => {
                                 if(locality.nombre.includes("Comuna")){
                                     return;
