@@ -22,16 +22,13 @@
             font-size: 0.65rem;
             color: #999;
         }
+
         main { overflow-x: hidden; }
-        .product-page-container {
-            min-height: auto;
-            padding-bottom: 30rem;
-        }
+
+        .product-page-container { padding-bottom: 0; }
+
         @media (max-width: 991.98px) {
-            .product-page-container {
-                min-height: auto;
-                padding-bottom: 50rem;
-            }
+            .product-page-container { padding-bottom: 0; }
         }
 
         /* Contenedor y zoom */
@@ -52,6 +49,30 @@
         .zoom-container:hover img {
             transform: scale(1.8);
             cursor: zoom-out;
+        }
+
+        @media (max-width: 991.98px) {
+            /* el culpable principal: que NO tenga 80vh en mobile */
+            .zoom-container { height: auto; }
+
+            /* limitá la imagen, no el contenedor */
+            .product-image  {
+                height: auto;
+                max-height: 60dvh;   /* 55–65dvh suele ir bien */
+                width: 100% !important;
+            }
+
+            /* el hover-zoom no aplica en touch (evita “saltos”) */
+            .zoom-container:hover img { transform: none; cursor: auto; }
+        }
+
+        /* que el carousel no cree su propio “scroll container” */
+        #productCarousel,
+        #productCarousel .carousel-inner,
+        #productCarousel .carousel-item {
+            overflow: visible;
+            height: auto;
+            max-height: none;
         }
 
         /* Thumbnails scrollables */
