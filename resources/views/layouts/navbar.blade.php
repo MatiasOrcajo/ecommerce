@@ -190,7 +190,8 @@
 
     @media (max-width: 991.98px) {
         body {
-            padding-top: 3rem;
+            padding-top: 0;
+
         }
     }
 

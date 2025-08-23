@@ -25,10 +25,18 @@
 
         main { overflow-x: hidden; }
 
-        .product-page-container { padding-bottom: 0; }
+        .product-page-container {
+            min-height: auto;
+            padding-bottom: 30rem;
+        }
 
         @media (max-width: 991.98px) {
-            .product-page-container { padding-bottom: 0; }
+            .product-page-container {
+                padding-bottom: 0;
+                margin-top: 0;
+                transform: translateY(100px);
+            }
+
         }
 
         /* Contenedor y zoom */
@@ -64,15 +72,6 @@
 
             /* el hover-zoom no aplica en touch (evita “saltos”) */
             .zoom-container:hover img { transform: none; cursor: auto; }
-        }
-
-        /* que el carousel no cree su propio “scroll container” */
-        #productCarousel,
-        #productCarousel .carousel-inner,
-        #productCarousel .carousel-item {
-            overflow: visible;
-            height: auto;
-            max-height: none;
         }
 
         /* Thumbnails scrollables */
@@ -163,7 +162,7 @@
     </style>
 
     <div class="product-page-container">
-        <div class="container my-5">
+        <div class="container my-md-5">
             <div class="row gx-5">
                 <div class="col-12 d-block d-md-none mt-lg-3 mb-lg-3 mb-0 mt-5">
                     <h2 style="font-size: 24px">{{ $product->name }}</h2>
