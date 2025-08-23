@@ -23,17 +23,14 @@
             color: #999;
         }
         main { overflow-x: hidden; }
-
         .product-page-container {
-            min-height: 100dvh;
+            min-height: auto;
+            padding-bottom: 30rem;
         }
-
         @media (max-width: 991.98px) {
-
-            main { padding-bottom: 50rem; }
-
             .product-page-container {
                 min-height: auto;
+                padding-bottom: 50rem;
             }
         }
 
