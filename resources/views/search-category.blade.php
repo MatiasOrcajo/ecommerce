@@ -252,7 +252,7 @@
                                   href="/productos/${product.slug}"
                                   class="btn btn-white border-black w-25 mx-auto mt-auto d-block"
                                 >
-                                  Shop
+                                  Ver
                                 </a>
                               </div>
                             </div>

@@ -23,15 +23,17 @@
             color: #999;
         }
         main { overflow-x: hidden; }
+
         .product-page-container {
-            min-height: calc(100vh - 30rem);
-            padding-bottom: 30rem;
+            min-height: 100dvh;
         }
+
         @media (max-width: 991.98px) {
-            main { padding-bottom: 8rem; }
+
+            main { padding-bottom: 50rem; }
+
             .product-page-container {
-                min-height: calc(100vh - 50rem);
-                padding-bottom: 50rem;
+                min-height: auto;
             }
         }
 
@@ -246,6 +248,7 @@
                     </div>
 
 
+                    <button id="add-product-to-cart" class="btn btn-lg w-100" style="background-color: #bc8d8a; color: white; font-weight: bold">AGREGAR AL CARRITO</button>
 
                     <!-- Descripciones -->
                     <div class="col-md-6">
@@ -264,9 +267,6 @@
                             </div>
                         </div>
                     </div>
-
-
-                    <button id="add-product-to-cart" class="btn btn-dark btn-lg w-100">AGREGAR AL CARRITO</button>
                 </div>
 
                 <!-- Descripciones -->
