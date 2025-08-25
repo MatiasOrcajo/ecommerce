@@ -36,6 +36,38 @@
         body{
             background: #ffffff;
         }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            visibility: visible;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            color: white;
+        }
+
+        .whatsapp-float.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
     </style>
 
 
@@ -57,6 +89,9 @@
     @endisset
 
     <main class="flex-grow-1">
+
+
+
         @yield('content')
     </main>
 
@@ -69,5 +104,22 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Tus scripts específicos -->
 @stack('scripts')
+<a href="https://wa.link/3v3e29" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+<script>
+    window.addEventListener('scroll', function () {
+        const whatsappFloat = document.querySelector('.whatsapp-float');
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.scrollY;
+        const clientHeight = document.documentElement.clientHeight;
+
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+            whatsappFloat.classList.add('hidden');
+        } else {
+            whatsappFloat.classList.remove('hidden');
+        }
+    });
+</script>
 </body>
 </html>

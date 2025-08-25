@@ -7,6 +7,14 @@
 @section('content')
 
     <style>
+
+        @media (max-width: 991.98px) {
+            body {
+                padding-top: 6rem;
+
+            }
+        }
+
         /* Contenedor de imágenes */
         .image-container {
             position: relative;
@@ -399,7 +407,7 @@
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             });
-                            return `${nf.format(Number(v))}`;
+                            return `$${nf.format(Number(v))}`;
                         };
 
                         // **Generación de la card**

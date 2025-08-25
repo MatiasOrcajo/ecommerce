@@ -198,7 +198,7 @@
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             });
-                            return `${nf.format(Number(v))}`;
+                            return `$${nf.format(Number(v))}`;
                         };
 
                         // **Generación de la card**

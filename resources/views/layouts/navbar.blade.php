@@ -134,14 +134,15 @@
                         <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
                     </ul>
 
-                    <!-- Carrito -->
-                    <a href="{{ route('cart') }}" class="d-flex align-items-center text-dark">
-                        <i class="fa-solid fa-cart-shopping fs-4"></i>
-                        <span class="badge bg-dark text-white ms-2" id="cart_counter_responsive">0</span>
-                        <span class="ms-2">Carrito</span>
-                    </a>
-
                 </div>
+            </div>
+
+            <div class="d-block d-md-none" style="position: absolute; top: 20px; right: 12px;">
+                <!-- Carrito -->
+                <a href="{{ route('cart') }}" class="d-flex align-items-center text-dark">
+                    <i class="fa-solid fa-cart-shopping fs-4"></i>
+                    <span class="badge bg-dark text-white ms-2" id="cart_counter_responsive">0</span>
+                </a>
             </div>
 
             <!-- Íconos en pantallas lg+ -->

@@ -7,11 +7,12 @@
 @section('content')
 
     <style>
+
         input, option, select{
             background-color: #ffffff !important;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 991.98px) {
             footer {
                 display: none;
             }
@@ -22,6 +23,10 @@
 
             .translate-y-mobile{
                 transform: translateY(30px);
+            }
+
+            body {
+                padding-top: 3rem;
             }
         }
 
@@ -651,7 +656,7 @@
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             });
-                            return `${nf.format(Number(v))}`;
+                            return `$${nf.format(Number(v))}`;
                         };
 
                         Object.entries(products).forEach(([key, product]) => {

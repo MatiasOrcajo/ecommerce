@@ -164,11 +164,9 @@
     <div class="product-page-container">
         <div class="container my-md-5">
             <div class="row gx-5">
-                <div class="col-12 d-block d-md-none mt-lg-3 mb-lg-3 mb-0 mt-5">
-                    <h2 style="font-size: 24px">{{ $product->name }}</h2>
-                </div>
+
                 <!-- Imágenes -->
-                <div class="col-md-6">
+                <div class="col-md-6" style="margin-top: 3rem">
                     <!-- Carousel principal -->
                     <div id="productCarousel" class="carousel slide" data-bs-ride="false">
                         <div class="carousel-inner">
@@ -210,7 +208,7 @@
 
                 <!-- Información del producto -->
                 <div class="col-md-6">
-                    <h2 class="d-none d-md-block text-uppercase" style="font-size: 32px">{{ $product->name }}</h2>
+                    <h2 class="text-uppercase my-2" style="font-size: 32px">{{ $product->name }}</h2>
                     @php
                         // Precios base
                         $productPrice  = $product->discount

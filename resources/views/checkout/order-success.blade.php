@@ -133,17 +133,26 @@
 
                 <!-- Datos para Abonar por Transferencia Bancaria -->
                 <div class="mb-3">
-                    <h5>Datos para Abonar por Transferencia Bancaria:</h5>
-                    <div>
-                        <p style="margin: 0;">Banco Santander</p>
-                        <p style="margin: 0;">Tipo y número de cuenta: Cuentas en Pesos  000-199196/7</p>
-                        <p style="margin: 0;">Número de CBU: 0720000788000019919672</p>
-                        <p style="margin: 0;">Alias de CBU: DEBATE.OFERTA.PETALO</p>
-                        <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
-                        <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
 
-                        <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="https://wa.link/3v3e29" target="_blank">11 7118 1308</a>.</p></b>
-                    </div>
+                    <h5 class="font-bold mt-5" style="font-size: 18px">Importante: si no recibís ningún email con el detalle de tu compra, revisá la bandeja de correo no deseado, o bien envianos un mensaje por WhatsApp indicando tu código de orden.</h5>
+
+                    @if($order->payment_method == "Transferencia bancaria")
+
+                        <div class="mt-5">
+                            <h5>Datos para Abonar por Transferencia Bancaria:</h5>
+                            <div>
+                                <p style="margin: 0;">Banco Santander</p>
+                                <p style="margin: 0;">Tipo y número de cuenta: Cuentas en Pesos  000-199196/7</p>
+                                <p style="margin: 0;">Número de CBU: 0720000788000019919672</p>
+                                <p style="margin: 0;">Alias de CBU: DEBATE.OFERTA.PETALO</p>
+                                <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
+                                <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
+
+                                <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="https://wa.link/3v3e29" target="_blank">11 7118 1308</a>.</p></b>
+                            </div>
+                        </div>
+
+                    @endif
                 </div>
             </div>
             <div class="card-footer text-center">
