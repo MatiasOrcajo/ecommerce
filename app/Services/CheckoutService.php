@@ -67,9 +67,15 @@ class CheckoutService
 
         if ($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash") {
 
+            $discountByPayment = 0.9;
+
+            if ($selectedPaymentMethod == "cash"){
+                $discountByPayment = 0.8;
+
+            }
             $this->cartService->clearCart();
 
-            $order->total_amount = $order->total_amount * 0.9;
+            $order->total_amount = $order->total_amount * $discountByPayment;
             $order->save();
 
             SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));

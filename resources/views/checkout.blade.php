@@ -99,9 +99,7 @@
                                     <div class="mb-3 col-md-4">
                                         <label for="documentType" class="form-label">Tipo de documento</label>
                                         <select class="form-select" id="documentType" required>
-                                            <option value="">Selecciona un tipo</option>
-                                            <option value="DNI">DNI</option>
-                                            <option value="CUIT">CUIT</option>
+                                            <option value="DNI" selected>DNI</option>
                                         </select>
                                     </div>
                                     <div class="mb-3 col-md-8">
@@ -199,8 +197,10 @@
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
                                                 style="font-size: 1rem;"
                                                 data-payment-method="mercado-pago">
-                                            <i class="mx-0"
-                                               style="margin-right: 5px; font-size: 1.2rem;"></i> Mercado Pago
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}" style="width: 60px;" alt="">
+                                                <span>Mercado Pago</span>
+                                            </div>
                                         </button>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center">
@@ -209,6 +209,8 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="bank-transfer">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            <i class="fa-solid fa-building-columns"
+                                            ></i>
                                             Transferencia Bancaria |
                                             10% off
                                         </button>
@@ -218,6 +220,7 @@
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
                                                 style="font-size: 1rem;"
                                                 data-payment-method="cash">
+                                            <i class="fa-solid fa-wallet"></i>
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
                                             Efectivo |
                                             20% off
