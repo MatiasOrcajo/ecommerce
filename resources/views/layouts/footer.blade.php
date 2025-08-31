@@ -10,7 +10,8 @@
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-white text-decoration-none">Inicio</a></li>
                     <li><a href="/#destacados" class="text-white text-decoration-none">Destacados</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Políticas &amp; FAQ</a></li>
+                    <li><a href="{{route('politics')}}" class="text-white text-decoration-none">Políticas</a></li>
+                    <li><a href="{{route('faqs')}}" class="text-white text-decoration-none">FAQs</a></li>
                 </ul>
             </div>
 
@@ -75,11 +76,6 @@
             <div class="col-md footer-payments-shipping-logos mb-3 mb-md-0">
                 <span class="d-block d-md-inline-block align-middle mb-3 mb-md-1 mr-md-2">Medios de envío</span>
                 <span class="d-flex align-middle">
-
-
-                    <img src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/shipping/api/2682@2x.png"
-                         data-src="//d26lpennugtm8s.cloudfront.net/assets/common/img/logos/shipping/api/2682@2x.png"
-                         class="me-1 mt-1" alt="api_2682" width="45" height="25">
 
                     <img src="https://iot.org.ar/wp-content/uploads/2020/11/logo-andreani.jpg"
                          data-src="https://iot.org.ar/wp-content/uploads/2020/11/logo-andreani.jpg"
