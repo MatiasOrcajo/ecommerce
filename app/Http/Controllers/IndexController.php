@@ -16,6 +16,22 @@ class IndexController extends Controller
     }
 
 
+    public function politics()
+    {
+        $categories = \App\Models\Category::all();
+
+        return view('politics', compact('categories'));
+    }
+
+
+    public function faqs()
+    {
+        $categories = \App\Models\Category::all();
+
+        return view('faqs', compact('categories'));
+    }
+
+
     public function index()
     {
         $products = Product::where('featured', true)->with('variants.pictures')->get();
