@@ -6,6 +6,15 @@
 
 @section('content')
 
+    <style>
+        @media (max-width: 991.98px) {
+
+            body {
+                padding-top: 8rem;
+            }
+        }
+    </style>
+
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-9">

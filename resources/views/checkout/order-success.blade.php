@@ -7,11 +7,19 @@
 @section('content')
 
     <style>
-        @media (max-width: 768px) {
+
+        @media (max-width: 991.98px) {
+
+            body {
+                padding-top: 8rem;
+            }
+
             .translate-y-mobile{
                 transform: translateY(40px);
             }
+
         }
+
     </style>
 
     <div class="container mt-5 translate-y-mobile">
