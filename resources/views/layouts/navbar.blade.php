@@ -1,4 +1,14 @@
 
+<style>
+    /* Ancho del offcanvas móvil al 80% */
+    @media (max-width: 991.98px) {
+        #mainOffcanvas {
+            --bs-offcanvas-width: 80vw; /* 80% del viewport */
+        }
+    }
+</style>
+
+
 <header class="d-none d-lg-block fixed-top">
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center py-0">
@@ -67,7 +77,7 @@
                 <!-- ↑ Fin dropdown ↑ -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contacto</a>
+                    <a class="nav-link" href="{{ route('index') }}#footer">Contacto</a>
                 </li>
             </ul>
         </div>
@@ -131,7 +141,9 @@
                                 @endforeach
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('index') }}#footer">Contacto</a>
+                        </li>
                     </ul>
 
                 </div>
