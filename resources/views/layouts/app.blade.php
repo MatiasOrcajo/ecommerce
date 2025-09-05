@@ -71,13 +71,6 @@
     </style>
 
 
-    <!-- No olvides incluir el JS de Bootstrap (con Popper) justo antes del cierre de body -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-
     <!-- Meta Pixel Code -->
     <script>
         !function(f,b,e,v,n,t,s)
@@ -91,12 +84,15 @@
         fbq('init', '1503691540658440');
         fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-                   src="https://www.facebook.com/tr?id=1503691540658440&ev=PageView&noscript=1"
-        /></noscript>
     <!-- End Meta Pixel Code -->
 </head>
 <body class="font-sans antialiased">
+
+<noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=1503691540658440&ev=PageView&noscript=1"/>
+</noscript>
+
 <div class="d-flex flex-column min-vh-100 ">
     @include('layouts.navbar')
     @include('layouts.popup')
@@ -126,6 +122,11 @@
 <a href="https://wa.link/3v3e29" class="whatsapp-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
 </a>
+
+<!-- Scripts -->
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     window.addEventListener('scroll', function () {
         const whatsappFloat = document.querySelector('.whatsapp-float');
