@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\FacebookPurchaseEventJob;
 use App\Jobs\SendNewSaleEmail;
 use App\Jobs\SendOrderSuccessEmail;
 use App\Models\Cart;
@@ -55,7 +56,7 @@ class CheckoutService
             "take-away" => "Retiro en CABA"
         ];
 
-
+        $http = $request;
         $request = json_decode($request->data);
         $selectedPaymentMethod = $request->payment_method;
 
@@ -64,6 +65,19 @@ class CheckoutService
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];
         $order->save();
         Session::put("email_validated_$order->code", true);
+
+        $ctx = [
+            'ip'         => $http->ip(),
+            'user_agent' => $http->userAgent(),
+            'url'        => $http->fullUrl(),
+            'fbc'        => $http->cookie('_fbc'),
+            'fbp'        => $http->cookie('_fbp'),
+            'external_id'=> optional($http->user())->id ?? $http->session()->getId(),
+            'email'      => optional($http->user())->email,
+            'phone'      => optional($http->user())->phone,
+        ];
+
+        FacebookPurchaseEventJob::dispatch($order, $ctx);
 
         if ($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash") {
 
