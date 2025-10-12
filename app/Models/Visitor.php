@@ -10,5 +10,5 @@ class Visitor extends Model
     use hasFactory;
 
     protected $table = 'visitors';
-    protected $fillable = ['ip_address'];
+    protected $fillable = ['ip_address', 'user_agent', 'visited_at'];
 }
