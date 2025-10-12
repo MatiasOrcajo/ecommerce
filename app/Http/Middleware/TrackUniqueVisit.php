@@ -136,20 +136,31 @@ class TrackUniqueVisit
     }
 
     /** Detección de bots: Cloudflare + CrawlerDetect + heurística propia */
-    private function isBot(Request $request, string $uaRaw, string $ip): bool
+    public function isBot(?\Illuminate\Http\Request $request, string $uaRaw, string $ip): bool
     {
-        $ua = mb_strtolower(trim($uaRaw));
+        $uaRaw = $uaRaw ?? '';
+        $ua    = mb_strtolower(trim($uaRaw));
+        $ip    = $ip ?? '';
 
         // (A) Cloudflare Bot Management (si existe el header)
         // 0–29: likely automated; 30–59: ambiguous; 60–99: likely human.
-        $cfScore = $request->headers->get('CF-Bot-Score');
-        if ($cfScore !== null && is_numeric($cfScore) && (int)$cfScore <= 29) {
-            return true;
+        $cfScore = null;
+        if ($request) {
+            // Symfony trata los headers de forma case-insensitive
+            $cfScoreHdr = $request->headers->get('cf-bot-score');
+            if ($cfScoreHdr !== null && is_numeric($cfScoreHdr)) {
+                $cfScore = (int) $cfScoreHdr;
+                if ($cfScore <= 29) {
+                    return true; // bot directo
+                }
+            }
         }
 
-        // (B) CrawlerDetect (listas conocidas)
-        $cd = new CrawlerDetect;
-        if ($cd->isCrawler($uaRaw)) return true;
+        // (B) Listas conocidas
+        $cd = new \Jaybizzle\CrawlerDetect\CrawlerDetect;
+        if ($cd->isCrawler($uaRaw)) {
+            return true;
+        }
 
         // (C) Firmas explícitas
         $explicit = [
@@ -169,7 +180,9 @@ class TrackUniqueVisit
             'crawler','spider','scraper','scanner','fetcher',
         ];
         foreach ($explicit as $s) {
-            if ($s !== '' && str_contains($ua, $s)) return true;
+            if ($s !== '' && str_contains($ua, $s)) {
+                return true;
+            }
         }
 
         // (D) Heurística por puntaje
@@ -179,21 +192,12 @@ class TrackUniqueVisit
         if ($ua === '' || $ua === 'mozilla/5.0') $score += 3;
         if (mb_strlen($uaRaw) > 0 && mb_strlen($uaRaw) <= 15) $score += 2;
 
-        // Typos típicos de UA falsos
+        // Typos típicos
         foreach (['mozlila','bulid','moblie','live gecko','winndows','safri'] as $t) {
             if (str_contains($ua, $t)) $score += 2;
         }
 
-        // Repetimos firmas fuertes por si se escapó (defensa en profundidad)
-        foreach ([
-                     'curl/','python-requests','wget/','go-http-client','okhttp','java/','node-fetch',
-                     'libwww-perl','httpclient','aiohttp','headlesschrome','puppeteer','playwright',
-                     'phantomjs','selenium','lighthouse','pagespeed','rendertron'
-                 ] as $h) {
-            if (str_contains($ua, $h)) $score += 3;
-        }
-
-        // Android con modelo 1–3 letras (muchos scrapers): suma leve
+        // Android con modelo 1–3 letras (scrapers): leve
         if (preg_match('~android [0-9]+;\s*[a-z0-9_-]{1,3}\)?~i', $uaRaw)) $score += 1;
 
         // Pistas humanas (restan levemente)
@@ -201,6 +205,27 @@ class TrackUniqueVisit
             if (str_contains($ua, $hint)) $score -= 1;
         }
 
+        // Client Hints/Fetch headers (navegadores reales hoy)
+        if ($request) {
+            if ($request->headers->has('sec-ch-ua'))         $score -= 1;
+            if ($request->headers->has('sec-fetch-site'))    $score -= 1;
+            if ($request->headers->has('sec-fetch-mode'))    $score -= 1;
+        }
+
+        // Allowlist leve: referers de IG/FB (no restamos mucho; sólo evitamos sumar)
+        if ($request) {
+            $ref = strtolower($request->headers->get('referer',''));
+            if ($ref && (str_contains($ref, 'l.instagram.com') || str_contains($ref, 'm.facebook.com'))) {
+                $score = max($score - 1, $score); // como mucho restar 1
+            }
+        }
+
+        // Si Cloudflare dijo "likely human" y nuestro score está dudoso, confía en CF
+        if ($cfScore !== null && $cfScore >= 60 && $score >= 3) {
+            $score = 2; // baja a zona gris para no bloquear falsos positivos
+        }
+
         return $score >= 3;
     }
+
 }
