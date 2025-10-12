@@ -40,80 +40,92 @@ class TrackUniqueVisit
         return $next($request);
     }
 
-    private function isBot(string $uaRaw, string $ip, Request $request): bool
+    private function isBot(string $userAgent = null, string $ip = null): bool
     {
+        $uaRaw = $userAgent ?? '';
         $ua = mb_strtolower(trim($uaRaw));
+        $ip = $ip ?? '';
 
-        // 0) Librería de terceros
-        $cd = new CrawlerDetect;
-        if ($cd->isCrawler($uaRaw)) {
+        // 0) CrawlerDetect (cobertura de crawlers conocidos)
+        $crawlerDetect = new \Jaybizzle\CrawlerDetect\CrawlerDetect;
+        if ($crawlerDetect->isCrawler($uaRaw)) {
             return true;
         }
 
-        // 1) Patrones explícitos (de lo que viste en tus logs + genéricos)
-        $needles = [
-            // escáneres / medición
-            'hello from palo alto networks', 'paloaltonetworks', 'cortex-xpanse',
-            'internetmeasurement/1.0', 'xfox-scan', 'l9tcpid', 'odin; https://docs.getodin.com',
-            'od in; https://docs.getodin.com', 'libredtail-http',
-
-            // headless / automatización / auditorías
-            'headlesschrome', 'puppeteer', 'playwright', 'phantomjs', 'selenium', 'lighthouse', 'pagespeed', 'rendertron',
-
-            // librerías http / scrapers
-            'curl/', 'python-requests', 'wget/', 'go-http-client', 'okhttp', 'java/', 'node-fetch',
-            'libwww-perl', 'httpclient', 'aiohttp',
-
-            // social preview / uptime
-            'facebookexternalhit', 'slackbot', 'telegrambot', 'discordbot',
-            'whatsapp', 'linkedinbot', 'twitterbot', 'bitlybot', 'uptimerobot', 'uptime-kuma',
-
-            // catch-all
-            'crawler', 'spider', 'scraper', 'scanner', 'fetcher', 'preview'
+        // 1) Bots explícitos (nombres propios o mensajes)
+        $explicitBots = [
+            'libredtail-http','hello from palo alto networks','paloaltonetworks',
+            'cortex-xpanse','scanning-activity','l9tcpid','internetmeasurement','xfox-scan',
+            'odin; https://docs.getodin.com','compatible; odin','konqueror/','ucbrowser/'
         ];
-        foreach ($needles as $n) {
-            if ($n !== '' && str_contains($ua, $n)) {
+        foreach ($explicitBots as $needle) {
+            if ($needle !== '' && str_contains($ua, $needle)) {
                 return true;
             }
         }
 
-        // 2) UA vacío o genérico
-        if ($ua === '' || $ua === 'mozilla/5.0') {
+        // 2) Heurística por puntaje (no marcar por una sola señal débil)
+        $score = 0;
+
+        // 2.1 Señales fuertes (sumas grandes)
+        $strongSignals = [
+            'curl/', 'python-requests', 'wget/', 'go-http-client', 'okhttp',
+            'java/', 'node-fetch', 'libwww-perl', 'httpclient', 'aiohttp',
+            'headlesschrome', 'puppeteer', 'playwright', 'phantomjs', 'selenium',
+            'lighthouse', 'pagespeed', 'rendertron',
+            'crawler', 'spider', 'scraper', 'scanner', 'fetcher'
+        ];
+        foreach ($strongSignals as $needle) {
+            if (str_contains($ua, $needle)) { $score += 3; }
+        }
+
+        // 2.2 Typos / UA mal formados
+        $typos = ['mozlila','bulid','moblie','live gecko','winndows','safri'];
+        foreach ($typos as $needle) {
+            if (str_contains($ua, $needle)) { $score += 2; }
+        }
+
+        // 2.3 UA vacío o demasiado corto
+        if ($ua === '' || $ua === 'mozilla/5.0') { $score += 3; }
+        if (mb_strlen($uaRaw) > 0 && mb_strlen($uaRaw) <= 15) { $score += 2; }
+
+        // 2.4 IPs sospechosas (si tenés una función/lista propia)
+        if (method_exists($this, 'ipStartsWithAny') && method_exists($this, 'suspiciousIpPrefixes')) {
+            if ($this->ipStartsWithAny($ip, $this->suspiciousIpPrefixes())) { $score += 3; }
+        }
+
+        // 2.5 Señales débiles (sumas chicas)
+        //   - Chrome con ceros NO suma (para evitar falsos positivos como los tuyos)
+        //   - Modelos Android raros suman poco, pero no determinan
+        if (preg_match('~android [0-9]+;\s*[a-z0-9_-]{1,3}\)?~i', $uaRaw)) { $score += 1; }
+
+        // 2.6 Navegadores MUY viejos para el SO (suma leve)
+        $isWin10 = str_contains($ua, 'windows nt 10.0');
+        if ($isWin10 && preg_match('~firefox/(?:[0-6][0-9]|7[0-2])\.~', $ua)) { // ≤72 aprox.
+            $score += 1;
+        }
+
+        // 2.7 Señales de “humano” (restan)
+        $humanHints = [
+            'safari/537.36',            // típico Chrome-based moderno
+            'mobile safari/537.36',     // típico Android/iOS webview
+            'version/13.0.3 mobile/15e148 safari/604.1', // típico iOS 13.x
+            'gecko/20100101',           // típico Firefox
+        ];
+        foreach ($humanHints as $hint) {
+            if (str_contains($ua, $hint)) { $score -= 1; }
+        }
+
+        // 2.8 NO penalizar “chrome/x.0.0.0” (lo dejamos neutro)
+        // if (preg_match('~chrome/\d+\.0\.0\.0\b~i', $uaRaw)) { /* score += 0; */ }
+
+        // 3) Umbral
+        // >=3: bot. 1–2: gris (decidí según IP/ratio de requests); <=0: humano.
+        if ($score >= 3) {
             return true;
-        }
-
-        // 3) Typos/malformed comunes en bots (ejemplos reales de tu lista)
-        $typos = ['mozlila', 'bulid', 'moblie', 'live gecko', 'winndows', 'safri'];
-        foreach ($typos as $t) {
-            if (str_contains($ua, $t)) {
-                return true;
-            }
-        }
-
-        // 4) UA sospechosamente corto
-        if (mb_strlen($uaRaw) <= 15) {
-            return true;
-        }
-
-        // 5) Heurística por ráfagas (rate limiting simple por IP+UA)
-        //    Si en 60s el mismo par IP+UA hace > 30 hits, lo tratamos como bot.
-        $burstKey = 'visit:burst:' . sha1($ip.'|'.$ua);
-        $hits = Cache::increment($burstKey);
-        Cache::add($burstKey.':ttl', true, now()->addSeconds(60)); // asegura un TTL mínimo
-        Cache::put($burstKey, $hits, 60);
-        if ($hits > 30) {
-            return true;
-        }
-
-        // 6) Señales de headers: muchos bots no mandan Accept-Language
-        $al = $request->headers->get('accept-language');
-        if ($al === null || $al === '') {
-            // No bloqueamos siempre; solo si además el UA es "sospechoso" por patrón genérico de Chrome muy viejo o imposible
-            if (preg_match('~msie\s[0-9]|trident/|chrome/([0-4][0-9]\.|[1-9]\.)~i', $uaRaw)) {
-                return true;
-            }
         }
 
         return false;
     }
+
 }
