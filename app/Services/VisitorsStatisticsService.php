@@ -45,6 +45,116 @@ class VisitorsStatisticsService
         return response()->json(['error' => 'Invalid filter'], 400); // Handle invalid filter case
     }
 
+    private function isBot(string $userAgent, string $ip): bool
+    {
+        // Normalización
+        $uaRaw = $userAgent ?? '';
+        $ua = mb_strtolower(trim($uaRaw));
+
+        // 0) CrawlerDetect (cobertura amplia de crawlers conocidos)
+        $crawlerDetect = new \Jaybizzle\CrawlerDetect\CrawlerDetect;
+        if ($crawlerDetect->isCrawler($uaRaw)) {
+            return true;
+        }
+
+        // 1) Patrones explícitos (de tu lista + ajustes)
+        //    Incluye librerías HTTP, headless, crawlers SEO, previewers sociales, uptime y escáneres.
+        $explicitBots = [
+            // Seguridad / escáneres (visto en tus datos)
+            'libredtail-http','hello from palo alto networks','paloaltonetworks',
+            'cortex-xpanse','scanning-activity','l9tcpid',
+
+            // Librerías / clientes de scraping
+            'curl/','python-requests','wget/','go-http-client','okhttp',
+            'java/','node-fetch','libwww-perl','httpclient','aiohttp',
+
+            // Social preview / uptime
+            'facebookexternalhit','slackbot','telegrambot','discordbot',
+            'whatsapp','linkedinbot','twitterbot','bitlybot','uptime-kuma','uptimerobot',
+
+            // Crawlers SEO
+            'googlebot','bingbot','yandexbot','duckduckbot','ahrefsbot','semrush','mj12bot','linkdexbot',
+
+            // Headless / automatización / auditorías
+            'headlesschrome','puppeteer','playwright','phantomjs',
+            'selenium','lighthouse','pagespeed','rendertron',
+
+            // Catch-all genéricos
+            'crawler','spider','scraper','scanner','fetcher','preview',
+        ];
+        foreach ($explicitBots as $needle) {
+            if ($needle !== '' && str_contains($ua, $needle)) {
+                return true;
+            }
+        }
+
+        // 2) User-Agents genéricos o vacíos (muy comunes en scrapers)
+        if ($ua === '' || $ua === 'mozilla/5.0') {
+            // Si además coincide con prefijos /24 sospechosos detectados en tus datos, marcamos sin dudar.
+            if (self::ipStartsWithAny($ip, self::suspiciousIpPrefixes())) {
+                return true;
+            }
+            // En general, UA vacío/genérico lo consideramos bot:
+            return true;
+        }
+
+        // 3) Typos / combinaciones defectuosas típicas de bots mal formados
+        $typos = ['mozlila','bulid','moblie','live gecko','winndows','safri'];
+        foreach ($typos as $needle) {
+            if (str_contains($ua, $needle)) {
+                return true;
+            }
+        }
+
+        // 4) Prefijos IP sospechosos (NO incluye Cloudflare)
+        //    Estos /24 salieron de TU CSV con ≥90% de UA “bot-like” y >=5 hits.
+        if (self::ipStartsWithAny($ip, self::suspiciousIpPrefixes())) {
+            return true;
+        }
+
+        // 5) UAs extremadamente cortos suelen ser bots
+        if (mb_strlen($uaRaw) <= 15) {
+            return true;
+        }
+
+        // Si no disparó ninguna regla, lo tratamos como humano
+        return false;
+    }
+
+    /**
+     * Prefijos /24 sospechosos encontrados en tu CSV (excluyendo Cloudflare):
+     *  - 205.210.31.  (Palo Alto / Cortex Xpanse)
+     *  - 198.235.24.  (Palo Alto / Cortex Xpanse)
+     *  - 147.185.132. (sospechoso por ratio bot-like)
+     *  - 44.220.185.  (AWS, alto ratio bot-like)
+     *  - 44.220.188.  (AWS, alto ratio bot-like)
+     *
+     * Si detectás nuevos /24 con alto ratio bot-like, agregalos acá.
+     */
+    private static function suspiciousIpPrefixes(): array
+    {
+        return [
+            '205.210.31.',
+            '198.235.24.',
+            '147.185.132.',
+            '44.220.185.',
+            '44.220.188.',
+        ];
+    }
+
+    private static function ipStartsWithAny(string $ip, array $prefixes): bool
+    {
+        foreach ($prefixes as $p) {
+            if ($p !== '' && str_starts_with($ip, $p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
 
 
     /**
@@ -55,21 +165,32 @@ class VisitorsStatisticsService
     {
         $dates = collect([Carbon::parse(now())->format('d-m') => 0]);
 
-        $visitors = Visit::
-            whereBetween('visited_at', [Carbon::parse(now())->startOfDay(), Carbon::now()->endOfDay()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfDay(), Carbon::now()->endOfDay()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('d-m');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Separar bots de usuarios reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $bots = $allVisits->filter(function ($visit) {
+            return $this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('d-m');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsYesterdayPreviousPeriod();
 
-        return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
+        return json_encode([
+            'primary' => $primaryInfo,
+            'secondary' => $secondaryInfo,
+        ]);
     }
 
 
@@ -77,16 +198,20 @@ class VisitorsStatisticsService
     {
         $dates = collect([Carbon::parse(now())->format('d-m') => 0]);
 
-        $visitors = Visit::
-            whereBetween('visited_at', [Carbon::parse(now())->subDays(1)->startOfDay(), Carbon::now()->subDays(1)->endOfDay()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->subDays(1)->startOfDay(), Carbon::now()->subDays(1)->endOfDay()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('d-m');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('d-m');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         return $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
     }
@@ -112,16 +237,20 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->subDays(7)->startOfDay(), Carbon::now()->endOfDay()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('d-m');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('d-m');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousSevenDays();
@@ -138,16 +267,20 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->subDays(14)->startOfDay(), Carbon::parse(now())->subDays(8)->endOfDay()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->subDays(14)->startOfDay(), Carbon::parse(now())->subDays(8)->endOfDay()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('d-m');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('d-m');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         return $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
     }
@@ -173,16 +306,20 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->startOfMonth(), Carbon::now()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfMonth(), Carbon::now()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('d-m');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('d-m');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousMonth();
@@ -199,16 +336,20 @@ class VisitorsStatisticsService
             return [Carbon::parse($date->toDateString())->format('d-m') => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->startOfMonth()->subMonth()->endOfMonth()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->startOfMonth()->subMonth()->endOfMonth()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('d-m');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('d-m');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         return $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
     }
@@ -232,16 +373,20 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->startOfYear(), Carbon::now()->endOfDay()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfYear(), Carbon::now()->endOfDay()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('Y F');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('Y F');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         $primaryInfo = $months->map(fn($value, $month) => $visitors[$month] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousYear();
@@ -258,16 +403,20 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->startOfYear()->subYear(1), now()->startOfYear()->subYear(1)->endOfYear()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfYear()->subYear(1), now()->startOfYear()->subYear(1)->endOfYear()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('Y F');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('Y F');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         return $months->map(fn($value, $month) => $visitors[$month] ?? 0)->toJson();
     }
@@ -291,16 +440,20 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->subMonths(12)->startOfMonth(), Carbon::now()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->subMonths(12)->startOfMonth(), Carbon::now()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('Y F');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('Y F');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         $primaryInfo = $months->map(fn($value, $month) => $visitors[$month] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousYearOnYearPeriod();
@@ -317,16 +470,20 @@ class VisitorsStatisticsService
             return [$date->year . ' ' . $date->monthName => 0];
         });
 
-        $visitors = Visit::
-        whereBetween('visited_at', [Carbon::parse(now())->startOfMonth()->subYear(2), now()->startOfMonth()->subYear(1)->endOfMonth()])
+        $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfMonth()->subYear(2), now()->startOfMonth()->subYear(1)->endOfMonth()])
             ->orderBy('visited_at')
-            ->get()
-            ->groupBy(function ($visitor) {
-                return Carbon::parse($visitor->visited_at)->format('Y F');
-            })
-            ->map(function ($visitors) {
-                return $visitors->count();
-            });
+            ->get();
+
+        // Filtrar solo visitas reales
+        $realVisitors = $allVisits->filter(function ($visit) {
+            return !$this->isBot($visit->user_agent, $visit->ip_address);
+        });
+
+        $visitors = $realVisitors->groupBy(function ($visitor) {
+            return Carbon::parse($visitor->visited_at)->format('Y F');
+        })->map(function ($visitors) {
+            return $visitors->count();
+        });
 
         return $months->map(fn($value, $month) => $visitors[$month] ?? 0)->toJson();
     }
