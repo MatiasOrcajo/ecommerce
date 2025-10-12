@@ -144,27 +144,64 @@
 
 
 <script>
-    (function(){
+    (function () {
         try {
-            const m = document.cookie.match(/(?:^|;\s*)vst=([^;]+)/);
-            if(!m) return; // sin cookie => no beacon
+            // 1) Sólo si existe tu cookie "vst"
+            const vstM = document.cookie.match(/(?:^|;\s*)vst=([^;]+)/i);
+            if (!vstM) return;
 
-            const token = decodeURIComponent(m[1]);
+            // 2) Levantamos CSRF: meta o cookie XSRF-TOKEN
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            const fromMeta = meta && meta.content ? meta.content : null;
+
+            const xsrfM = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/i);
+            const fromCookie = xsrfM ? decodeURIComponent(xsrfM[1]) : null;
+
+            const csrf = fromMeta || fromCookie;
+            if (!csrf) {
+                // sin CSRF => no intentamos postear (evitás 419)
+                return;
+            }
+
+            // 3) Payload
             const payload = {
-                token,
+                token: decodeURIComponent(vstM[1]),
                 tz: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
-                sw: window.screen && screen.width || null,
-                sh: window.screen && screen.height || null,
-                pn: performance && performance.now ? Math.round(performance.now()) : null,
+                sw: (window.screen && screen.width) || null,
+                sh: (window.screen && screen.height) || null,
+                pn: (performance && performance.now) ? Math.round(performance.now()) : null,
+
+                // Laravel acepta el token en el input "_token"
+                _token: csrf
             };
 
-            // fire-and-forget
-            navigator.sendBeacon
-                ? navigator.sendBeacon('/v-beacon', new Blob([JSON.stringify(payload)], {type:'application/json'}))
-                : fetch('/v-beacon', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
-        } catch(e){}
+            const body = JSON.stringify(payload);
+
+            // 4) Envío: preferimos sendBeacon (no bloquea), y si no, fetch con CSRF + cookies
+            if (navigator.sendBeacon) {
+                // sendBeacon incluye cookies same-origin, pero NO headers;
+                // al ir _token en el body, VerifyCsrfToken lo valida igual.
+                const ok = navigator.sendBeacon('/v-beacon', new Blob([body], { type: 'application/json' }));
+                if (ok) return;
+                // si el beacon falla, probamos con fetch keepalive
+            }
+
+            // Fallback con fetch: headers + cookies (para la sesión)
+            fetch('/v-beacon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin', // imprescindible para que viaje la cookie de sesión
+                keepalive: true,
+                body
+            }).catch(() => {});
+        } catch (e) { /* silencioso */ }
     })();
 </script>
+
 
 
 </body>
