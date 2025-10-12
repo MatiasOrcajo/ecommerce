@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             "capture-visitor" => "App\Http\Middleware\CaptureVisitor",
             "cart-empty" => "App\Http\Middleware\CartEmptyMiddleware",
             "order-success" => "App\Http\Middleware\OrderSuccessMiddleware",
+            "set-cookie-unique-visitant" => "App\Http\Middleware\VisitCookie",
             "register-unique-visitant" => "App\Http\Middleware\TrackUniqueVisit",
 
         ]);

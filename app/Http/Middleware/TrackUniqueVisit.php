@@ -8,55 +8,52 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class TrackUniqueVisit
 {
+    /** Nombre de la cookie visible para JS */
+    private const COOKIE_NAME = 'vst';
+
     public function handle(Request $request, Closure $next): Response
     {
-        // 1) IP real detrás de Cloudflare
-        $ip    = $request->headers->get('CF-Connecting-IP') ?? $request->ip() ?? '';
-        $uaRaw = $request->userAgent() ?? '';
+        // --- 0) Determinar IP real detrás de Cloudflare ---
+        $ip = $this->realIp($request);
+
+        // --- 1) Sólo contar pageviews “reales” (HTML GET no-prefetch, no-assets) ---
+        if (! $this->isLikelyHtmlView($request)) {
+            return $next($request);
+        }
+
+        $uaRaw  = $request->userAgent() ?? '';
         $uaNorm = mb_strtolower(trim($uaRaw));
-        $today = now()->toDateString();
+        $today  = now()->toDateString();
 
-        // 2) Sólo contar pageviews "reales":
-        //    - Método GET
-        //    - Acepta HTML
-        //    - No es prefetch/prerender
-        //    - No es asset estático (js/css/img/svg/ico/etc.)
-        if ($request->method() !== 'GET') {
+        // --- 2) Filtro de bots: Cloudflare + CrawlerDetect + heurística ---
+        if ($this->isBot($request, $uaRaw, $ip)) {
             return $next($request);
         }
 
-        $accept = strtolower($request->headers->get('Accept', ''));
-        if ($accept !== '' && !str_contains($accept, 'text/html')) {
+        // --- 3) Cookie + Beacon: sólo contamos si vimos el beacon válido hoy ---
+        $token = $request->cookie(self::COOKIE_NAME);
+        $isHuman = $token && Cache::get('human:'.$this->tokenId($token)) === true;
+
+        // Si aún no vimos el beacon, no contamos (evita sumar bots que sólo traen HTML)
+        if (! $isHuman) {
+            // Aseguramos que el navegador tenga la cookie firmada para el próximo beacon
+            if (! $token) {
+                $this->queueVisitCookie();
+            }
             return $next($request);
         }
 
-        $purpose = strtolower($request->headers->get('Purpose', ''));
-        $secPurpose = strtolower($request->headers->get('Sec-Purpose', ''));
-        if (str_contains($purpose, 'prefetch') || str_contains($secPurpose, 'prefetch') || str_contains($secPurpose, 'prerender')) {
-            return $next($request);
-        }
-
-        // Omitir assets estáticos (si los sirves por la misma app)
-        $path = strtolower($request->path());
-        if (preg_match('~\.(?:js|css|png|jpg|jpeg|gif|svg|ico|webp|avif|mp4|mp3|json|xml|txt|map|woff2?|ttf|eot)$~i', $path)) {
-            return $next($request);
-        }
-
-        // 3) Filtro de bots (CrawlerDetect + heurística propia)
-        if ($this->isBot($uaRaw, $ip)) {
-            return $next($request);
-        }
-
-        // 4) Deduplicación diaria por (IP + UA normalizado) con cache (evita query)
-        $cacheKey = "uv:{$today}:" . md5($ip . '|' . $uaNorm);
+        // --- 4) Deduplicación diaria por (IP + UA normalizado) con cache ---
+        $cacheKey = "uv:{$today}:".md5($ip.'|'.$uaNorm);
         if (Cache::get($cacheKey)) {
             return $next($request);
         }
 
-        // 5) Si no está en cache, chequeo en DB y registro
+        // --- 5) Persistencia (única por día) ---
         $exists = Visit::where('ip_address', $ip)
             ->where('user_agent', $uaNorm)
             ->whereDate('visited_at', $today)
@@ -71,83 +68,138 @@ class TrackUniqueVisit
         }
 
         // TTL hasta fin de día para no recontar
-        $ttl = now()->endOfDay()->diffInSeconds(now()) ?: 60*60;
+        $ttl = now()->endOfDay()->diffInSeconds(now()) ?: 3600;
         Cache::put($cacheKey, 1, $ttl);
+
+        // Reforzamos que el cliente tenga cookie para siguientes vistas
+        if (! $token) {
+            $this->queueVisitCookie();
+        }
 
         return $next($request);
     }
 
-    private function isBot(?string $userAgent, ?string $ip): bool
+    /** IP real considerando Cloudflare */
+    private function realIp(Request $request): string
     {
-        $uaRaw = $userAgent ?? '';
-        $ua = mb_strtolower(trim($uaRaw));
-        $ip = $ip ?? '';
+        return $request->headers->get('CF-Connecting-IP')
+            ?: $request->getClientIp()
+                ?: $request->ip()
+                    ?: '';
+    }
 
-        // 0) CrawlerDetect (cobertura de crawlers conocidos)
-        $crawlerDetect = new CrawlerDetect;
-        if ($crawlerDetect->isCrawler($uaRaw)) {
+    /** ¿Es muy probable que sea una vista HTML real? */
+    private function isLikelyHtmlView(Request $request): bool
+    {
+        if ($request->method() !== 'GET') return false;
+
+        // Evitar assets estáticos (si salen por la misma app)
+        $path = strtolower($request->path());
+        if (preg_match('~\.(?:js|css|png|jpe?g|gif|svg|ico|webp|avif|mp4|mp3|json|xml|txt|map|woff2?|ttf|eot)$~i', $path)) {
+            return false;
+        }
+
+        // Debe aceptar HTML (algunos scrapers piden */* o JSON)
+        $accept = strtolower($request->headers->get('Accept', ''));
+        if ($accept !== '' && !str_contains($accept, 'text/html')) return false;
+
+        // Evitar prefetch/prerender
+        $purpose    = strtolower($request->headers->get('Purpose', ''));
+        $secPurpose = strtolower($request->headers->get('Sec-Purpose', ''));
+        if (str_contains($purpose, 'prefetch')
+            || str_contains($secPurpose, 'prefetch')
+            || str_contains($secPurpose, 'prerender')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /** Coloca en cola una cookie firmada legible por JS (para que el beacon la devuelva) */
+    private function queueVisitCookie(): void
+    {
+        $raw   = Str::uuid()->toString().'|'.time();
+        $sig   = hash_hmac('sha256', $raw, config('app.key'));
+        $token = base64_encode($raw.'|'.$sig);
+
+        // Cookie legible por JS (NO HttpOnly), segura y con SameSite=Lax
+        cookie()->queue(
+            cookie(self::COOKIE_NAME, $token, 24 * 60, '/', null, true, false, false, 'Lax')
+        );
+    }
+
+    /** ID corto y estable para usar en cache keys */
+    private function tokenId(string $token): string
+    {
+        return substr(hash('sha1', $token), 0, 20);
+        // Nota: la validación de HMAC se hace en el endpoint del beacon (/v-beacon)
+    }
+
+    /** Detección de bots: Cloudflare + CrawlerDetect + heurística propia */
+    private function isBot(Request $request, string $uaRaw, string $ip): bool
+    {
+        $ua = mb_strtolower(trim($uaRaw));
+
+        // (A) Cloudflare Bot Management (si existe el header)
+        // 0–29: likely automated; 30–59: ambiguous; 60–99: likely human.
+        $cfScore = $request->headers->get('CF-Bot-Score');
+        if ($cfScore !== null && is_numeric($cfScore) && (int)$cfScore <= 29) {
             return true;
         }
 
-        // 1) Bots/escáneres explícitos (incluye varios que suelen colarse)
-        $explicitBots = [
-            // Mensajes y escáneres
+        // (B) CrawlerDetect (listas conocidas)
+        $cd = new CrawlerDetect;
+        if ($cd->isCrawler($uaRaw)) return true;
+
+        // (C) Firmas explícitas
+        $explicit = [
+            // Mensajes/escáneres
             'hello from palo alto networks','paloaltonetworks','cortex-xpanse','scanning-activity',
             'internetmeasurement','l9tcpid','xfox-scan','compatible; odin','odin; https://docs.getodin.com',
 
-            // Librerías/HTTP clients/headless
+            // Librerías/headless
             'libredtail-http','curl/','python-requests','wget/','go-http-client','okhttp',
             'java/','node-fetch','libwww-perl','httpclient','aiohttp',
             'headlesschrome','puppeteer','playwright','phantomjs','selenium','lighthouse','pagespeed','rendertron',
 
-            // Navegadores “raros”/ancianos que casi siempre son scripts en 2025
+            // Navegadores “raros” hoy
             'konqueror/','ucbrowser/',
 
-            // Catch-all
+            // Genéricos
             'crawler','spider','scraper','scanner','fetcher',
         ];
-        foreach ($explicitBots as $needle) {
-            if ($needle !== '' && str_contains($ua, $needle)) {
-                return true;
-            }
+        foreach ($explicit as $s) {
+            if ($s !== '' && str_contains($ua, $s)) return true;
         }
 
-        // 2) Heurística por puntaje
+        // (D) Heurística por puntaje
         $score = 0;
 
-        // UA vacío o genérico
+        // UA vacío o muy corto
         if ($ua === '' || $ua === 'mozilla/5.0') $score += 3;
         if (mb_strlen($uaRaw) > 0 && mb_strlen($uaRaw) <= 15) $score += 2;
 
-        // Typos típicos
+        // Typos típicos de UA falsos
         foreach (['mozlila','bulid','moblie','live gecko','winndows','safri'] as $t) {
             if (str_contains($ua, $t)) $score += 2;
         }
 
-        // Señales fuertes de librerías/headless (por si se escapó arriba)
+        // Repetimos firmas fuertes por si se escapó (defensa en profundidad)
         foreach ([
                      'curl/','python-requests','wget/','go-http-client','okhttp','java/','node-fetch',
                      'libwww-perl','httpclient','aiohttp','headlesschrome','puppeteer','playwright',
                      'phantomjs','selenium','lighthouse','pagespeed','rendertron'
-                 ] as $s) {
-            if (str_contains($ua, $s)) $score += 3;
+                 ] as $h) {
+            if (str_contains($ua, $h)) $score += 3;
         }
 
-        // UA Android con modelo 1-3 letras (muchos scrapers): suma leve
+        // Android con modelo 1–3 letras (muchos scrapers): suma leve
         if (preg_match('~android [0-9]+;\s*[a-z0-9_-]{1,3}\)?~i', $uaRaw)) $score += 1;
 
-        // IPs locales sospechosas (si tenés listas propias; nunca incluyas rangos de Cloudflare)
-        if (method_exists($this, 'ipStartsWithAny') && method_exists($this, 'suspiciousIpPrefixes')) {
-            if ($this->ipStartsWithAny($ip, $this->suspiciousIpPrefixes())) $score += 3;
+        // Pistas humanas (restan levemente)
+        foreach (['safari/537.36','mobile safari/537.36','gecko/20100101'] as $hint) {
+            if (str_contains($ua, $hint)) $score -= 1;
         }
-
-        // Pistas humanas (restan un poco)
-        foreach (['safari/537.36','mobile safari/537.36','gecko/20100101'] as $h) {
-            if (str_contains($ua, $h)) $score -= 1;
-        }
-
-        // No penalizar “chrome/x.0.0.0” (UA-Reduction común hoy)
-        // if (preg_match('~chrome/\d+\.0\.0\.0\b~i', $uaRaw)) { /* neutro */ }
 
         return $score >= 3;
     }

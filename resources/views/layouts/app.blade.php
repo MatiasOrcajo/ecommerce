@@ -141,5 +141,31 @@
         }
     });
 </script>
+
+
+<script>
+    (function(){
+        try {
+            const m = document.cookie.match(/(?:^|;\s*)vst=([^;]+)/);
+            if(!m) return; // sin cookie => no beacon
+
+            const token = decodeURIComponent(m[1]);
+            const payload = {
+                token,
+                tz: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+                sw: window.screen && screen.width || null,
+                sh: window.screen && screen.height || null,
+                pn: performance && performance.now ? Math.round(performance.now()) : null,
+            };
+
+            // fire-and-forget
+            navigator.sendBeacon
+                ? navigator.sendBeacon('/v-beacon', new Blob([JSON.stringify(payload)], {type:'application/json'}))
+                : fetch('/v-beacon', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        } catch(e){}
+    })();
+</script>
+
+
 </body>
 </html>
