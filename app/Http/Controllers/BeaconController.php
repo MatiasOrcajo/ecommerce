@@ -1,65 +1,71 @@
 <?php
 
+// app/Http/Controllers/BeaconController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Models\Visit;
-use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Visit;
 
 class BeaconController extends Controller
 {
     public function __invoke(Request $request)
     {
-        // 1) Validar payload
+        // 0) Sólo JSON válido
         $data = $request->validate([
-            'token' => 'required|string',      // viene de la cookie 'vst'
-            'tz'    => 'nullable|string',
-            'sw'    => 'nullable|integer',
-            'sh'    => 'nullable|integer',
-            'pn'    => 'nullable|integer',
+            'token'  => ['nullable','string'], // el token “vst” del cliente
+            '_token' => ['required','string'], // CSRF (ya validado por middleware)
+            'tz'     => ['nullable','string'],
+            'sw'     => ['nullable','integer'],
+            'sh'     => ['nullable','integer'],
+            'pn'     => ['nullable','integer'],
         ]);
 
-        // 2) Verificar que cookie 'vst' exista y matchee
-        $cookie = $request->cookie('vst');
-        if (!$cookie || $cookie !== $data['token']) {
-            return response()->noContent(Response::HTTP_ACCEPTED);
-        }
-
-        // 3) IP real detrás de Cloudflare
-        $ip = $request->headers->get('CF-Connecting-IP') ?? $request->ip() ?? '';
+        // 1) Tomar IP real detrás de Cloudflare
+        $ip    = $request->headers->get('CF-Connecting-IP') ?? $request->ip() ?? '';
         $uaRaw = $request->userAgent() ?? '';
-        $uaNorm = mb_strtolower(trim($uaRaw));
-        $today = now()->toDateString();
+        $ua    = mb_strtolower(trim($uaRaw));
 
-        // 4) Filtrar bots (CrawlerDetect)
-        $crawler = new CrawlerDetect();
-        if ($crawler->isCrawler($uaRaw)) {
-            return response()->noContent(Response::HTTP_ACCEPTED);
+        // 2) Debe existir cookie vst (o token en body) -> indica que hubo pageview real
+        $vstCookie = $request->cookie('vst') ?: ($data['token'] ?? null);
+        if (!$vstCookie) {
+            return response()->noContent(); // nada que registrar
         }
 
-        // 5) Deduplicar 1 vez por día (cache → DB)
-        $cacheKey = "uv:{$today}:" . md5($ip.'|'.$uaNorm);
-        if (!Cache::has($cacheKey)) {
-            $exists = Visit::where('ip_address', $ip)
-                ->where('user_agent', $uaNorm)
-                ->whereDate('visited_at', $today)
-                ->exists();
-
-            if (!$exists) {
-                Visit::create([
-                    'ip_address' => $ip,
-                    'user_agent' => $uaNorm,
-                    'visited_at' => $today, // o ->now() si es datetime
-                ]);
-            }
-
-            $ttl = now()->endOfDay()->diffInSeconds(now()) ?: 3600;
-            Cache::put($cacheKey, 1, $ttl);
+        // 3) Bot quick-filter: si querés, reutilizá tu función isBot(...)
+        if (method_exists($this, 'isBot') && $this->isBot($uaRaw, $ip)) {
+            return response()->noContent();
         }
 
-        // 6) Responder rápido (no bloquear navegación)
-        return response()->noContent(Response::HTTP_ACCEPTED);
+        // 4) Deduplicar por día (ip + ua normalizado)
+        $today    = now()->toDateString();
+        $cacheKey = "uv:{$today}:" . md5($ip.'|'.$ua);
+        if (Cache::get($cacheKey)) {
+            return response()->noContent();
+        }
+
+        // 5) Consultar DB por si ya existe
+        $exists = Visit::where('ip_address', $ip)
+            ->where('user_agent', $ua)
+            ->whereDate('visited_at', $today)
+            ->exists();
+
+        if (!$exists) {
+            Visit::create([
+                'ip_address' => $ip,
+                'user_agent' => $ua,
+                'visited_at' => $today,   // si tu columna es date/datetime funciona
+            ]);
+        }
+
+        // 6) Grabar en cache hasta fin del día
+        $ttl = now()->endOfDay()->diffInSeconds(now()) ?: 3600;
+        Cache::put($cacheKey, 1, $ttl);
+
+        return response()->noContent(200);
     }
+
+    /** Opcional: pega aquí tu isBot($ua, $ip) si la tenías en un trait/ctrl. */
 }
+
