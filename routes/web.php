@@ -8,7 +8,7 @@ use App\Traits\CartTrait;
 
 Route::group(['middleware' => ['web']], function () {
 
-    Route::post('/v-beacon', [\App\Http\Controllers\BeaconController::class, 'store'])->name('v.beacon');
+    Route::post('/v-beacon', BeaconController::class)->middleware('web')->name('v-beacon');
 
     Route::get('/politicas-devolucion', [\App\Http\Controllers\IndexController::class, 'politics'])->name('politics');
 
@@ -22,11 +22,11 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);
 
-    Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index')->middleware(['set-cookie-unique-visitant', 'register-unique-visitant']);
+    Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index')->middleware(['set-cookie-unique-visitant']);
 
-    Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show')->middleware(['set-cookie-unique-visitant', 'register-unique-visitant']);
+    Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show')->middleware(['set-cookie-unique-visitant']);
 
-    Route::get('/categorias/{slug}', [\App\Http\Controllers\Admin\CategoryController::class, 'showCategory'])->name('category.show')->middleware(['set-cookie-unique-visitant', 'register-unique-visitant']);
+    Route::get('/categorias/{slug}', [\App\Http\Controllers\Admin\CategoryController::class, 'showCategory'])->name('category.show')->middleware(['set-cookie-unique-visitant']);
 
     Route::get('/categories/{slug}/search-products', [\App\Http\Controllers\Admin\CategoryController::class, 'searchProductsByCategory']);
 
