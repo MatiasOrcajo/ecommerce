@@ -19,7 +19,7 @@
             <div class="col-12 col-md-4 mb-4">
                 <h5 class="fw-bold">Contactanos</h5>
                 <ul class="list-unstyled">
-                    <li class="mt-1"><a href="https://wa.link/y0c4mg" target="_blank">11 7118 1308</a></li>
+                    <li class="mt-1"><a href="https://wa.link/y0c4mg" target="_blank">11 5008-1382</a></li>
                     <li class="mt-1"><a href="mailto:info@paccaindumentaria.com.ar"
                                         class="text-white text-decoration-none">info@atica.com.ar</a></li>
                     <li class="mt-1">Bernardo de Irigoyen 630 (para retirar)</li>
