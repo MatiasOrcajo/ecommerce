@@ -156,7 +156,7 @@
                                 <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
                                 <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
 
-                                <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="https://wa.link/3v3e29" target="_blank">11 7118 1308</a>.</p></b>
+                                <b><p>Realizá la transferencia y mandanos el comprobante con código de orden por WhatsApp al <a href="https://wa.link/y0c4mg" target="_blank">11 7118 1308</a>.</p></b>
                             </div>
                         </div>
 

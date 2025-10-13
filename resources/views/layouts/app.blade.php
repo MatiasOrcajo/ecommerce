@@ -123,7 +123,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Tus scripts específicos -->
 @stack('scripts')
-<a href="https://wa.link/3v3e29" class="whatsapp-float" target="_blank">
+<a href="https://wa.link/y0c4mg" class="whatsapp-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
 </a>
 
