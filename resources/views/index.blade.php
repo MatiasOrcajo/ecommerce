@@ -170,7 +170,7 @@
     {{--    products--}}
 
     <!-- Contenedor principal -->
-    <div class="mt-5 py-2" id="destacados">
+    <div class="mt-5 py-5" id="destacados">
         <h2 class="d-block mt-5 text-center" style="font-size: 4rem">best sellers.</h2>
 
     </div>

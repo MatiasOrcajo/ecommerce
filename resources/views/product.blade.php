@@ -216,6 +216,7 @@
                             : $product->price;
 
                         $transferPrice = $productPrice * 0.90; // 10% off por transferencia
+                        $cashPrice = $productPrice * 0.80; // 20% off en efectivo
 
                         // Helper local para formatear moneda AR
                         $money = fn ($v) => '$' . number_format((float)$v, 2, ',', '.');
@@ -225,15 +226,16 @@
                         <p class="h4 text-dark">
                             <small>
                                 <del>{{ $money($product->price) }}</del>
-                                {{ $product->discount }}% off
+                                {{ $product->discount }}% OFF
                             </small>
                         </p>
-                        <p class="h3 text-dark">{{ $money($productPrice) }}</p>
+                        <p class="text-dark" style="font-size: 3rem;">{{ $money($productPrice) }}</p>
                     @else
-                        <p class="h3 text-dark">{{ $money($productPrice) }}</p>
+                        <p class="text-dark" style="font-size: 3rem;">{{ $money($productPrice) }}</p>
                     @endif
 
-                    <p class="text-secondary">{{ $money($transferPrice) }} con Transferencia</p>
+                    <p class="text-secondary" style="font-size: 1.5rem; color: #785c64 !important">{{ $money($transferPrice) }} con Transferencia</p>
+                    <p class="text-secondary" style="font-size: 1.5rem; color: #785c64 !important">{{ $money($cashPrice) }} en efectivo</p>
 
                     <div class="my-3">
                         <span class="me-2"><strong>Medios de pago:</strong></span>
@@ -246,6 +248,7 @@
                         </div>
                     </div>
                     <p><strong>10% de descuento</strong> pagando con transferencia</p>
+                    <p><strong>20% de descuento</strong> pagando en efectivo</p>
 
                     <div class="my-3">
                         <label class="d-block mb-1"><strong>Color:</strong></label>

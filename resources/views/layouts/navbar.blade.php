@@ -13,7 +13,7 @@
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center py-0">
         <marquee behavior="scroll" direction="left">
-            ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA.
+            ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
         </marquee>
     </div>
 
@@ -88,7 +88,7 @@
 
     <div class="bg-dark text-white text-center py-0">
         <marquee behavior="scroll" direction="left">
-            ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA.
+            ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
         </marquee>
     </div>
 
