@@ -206,7 +206,7 @@
                             <!-- Categoría 3 -->
                             <div class="col-3 position-relative category-square m-2">
                                 <div class="category-overlay"></div>
-                                <img src="{{ asset('Fajas.jpg') }}" alt="Categoría 3" class="category-img">
+                                <img src="{{ asset('fajas.jpg') }}" alt="Categoría 3" class="category-img">
                                 <div class="category-content">
                                     <h3 class="category-title">Fajas</h3>
 {{--                                    <p class="category-subtitle">&nbsp;</p>--}}
@@ -251,7 +251,7 @@
                     <!-- Categoría 3 -->
                     <div class="col-12 position-relative category-square">
                         <div class="category-overlay"></div>
-                        <img src="{{ asset('Fajas.jpg') }}" alt="Categoría 3" class="category-img">
+                        <img src="{{ asset('fajas.jpg') }}" alt="Categoría 3" class="category-img">
                         <div class="category-content">
                             <h3 class="category-title">Fajas</h3>
                             {{--                                    <p class="category-subtitle">&nbsp;</p>--}}
