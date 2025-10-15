@@ -14,7 +14,7 @@
     <link rel="icon" href="{{ asset('PERFIL-05.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('PERFIL-05.png') }}" type="image/x-icon">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ "Atica" }}</title>
 
     <link type="text/css" rel="stylesheet" href="{{asset('css/styles.css')}}">
 
