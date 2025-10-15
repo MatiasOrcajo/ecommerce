@@ -61,26 +61,26 @@ class VisitorsStatisticsService
         //    Incluye librerías HTTP, headless, crawlers SEO, previewers sociales, uptime y escáneres.
         $explicitBots = [
             // Seguridad / escáneres (visto en tus datos)
-            'libredtail-http','hello from palo alto networks','paloaltonetworks',
-            'cortex-xpanse','scanning-activity','l9tcpid',
+            'libredtail-http', 'hello from palo alto networks', 'paloaltonetworks',
+            'cortex-xpanse', 'scanning-activity', 'l9tcpid',
 
             // Librerías / clientes de scraping
-            'curl/','python-requests','wget/','go-http-client','okhttp',
-            'java/','node-fetch','libwww-perl','httpclient','aiohttp',
+            'curl/', 'python-requests', 'wget/', 'go-http-client', 'okhttp',
+            'java/', 'node-fetch', 'libwww-perl', 'httpclient', 'aiohttp',
 
             // Social preview / uptime
-            'facebookexternalhit','slackbot','telegrambot','discordbot',
-            'whatsapp','linkedinbot','twitterbot','bitlybot','uptime-kuma','uptimerobot',
+            'facebookexternalhit', 'slackbot', 'telegrambot', 'discordbot',
+            'whatsapp', 'linkedinbot', 'twitterbot', 'bitlybot', 'uptime-kuma', 'uptimerobot',
 
             // Crawlers SEO
-            'googlebot','bingbot','yandexbot','duckduckbot','ahrefsbot','semrush','mj12bot','linkdexbot',
+            'googlebot', 'bingbot', 'yandexbot', 'duckduckbot', 'ahrefsbot', 'semrush', 'mj12bot', 'linkdexbot',
 
             // Headless / automatización / auditorías
-            'headlesschrome','puppeteer','playwright','phantomjs',
-            'selenium','lighthouse','pagespeed','rendertron',
+            'headlesschrome', 'puppeteer', 'playwright', 'phantomjs',
+            'selenium', 'lighthouse', 'pagespeed', 'rendertron',
 
             // Catch-all genéricos
-            'crawler','spider','scraper','scanner','fetcher','preview',
+            'crawler', 'spider', 'scraper', 'scanner', 'fetcher', 'preview',
         ];
         foreach ($explicitBots as $needle) {
             if ($needle !== '' && str_contains($ua, $needle)) {
@@ -99,7 +99,7 @@ class VisitorsStatisticsService
         }
 
         // 3) Typos / combinaciones defectuosas típicas de bots mal formados
-        $typos = ['mozlila','bulid','moblie','live gecko','winndows','safri'];
+        $typos = ['mozlila', 'bulid', 'moblie', 'live gecko', 'winndows', 'safri'];
         foreach ($typos as $needle) {
             if (str_contains($ua, $needle)) {
                 return true;
@@ -153,7 +153,44 @@ class VisitorsStatisticsService
     }
 
 
+    /**
+     * @param string $ip
+     * @return bool
+     */
+    private function isMetaIp(string $ip): bool
+    {
 
+        return str_starts_with(strtolower($ip), '2a03:2880:');
+    }
+
+    private function isUs(string $ip): bool
+    {
+        $ip = trim($ip);
+
+        if ($ip === '190.17.19.232') {
+            return true;
+        }
+
+        // Prefijo "visual" IPv6 (limitado por representaciones alternativas)
+        return str_starts_with(strtolower($ip), '2800:2130:5240:');
+    }
+
+
+
+    private function filterRealVisits($allVisits)
+    {
+
+        return $allVisits
+            ->reject(function ($v) {
+                return $this->isBot((string) $v->user_agent, (string) $v->ip_address);
+            })
+            ->reject(function ($v) {
+                return $this->isMetaIp((string) $v->ip_address);
+            })
+            ->reject(function ($v) {
+                return $this->isUs((string) $v->ip_address);
+            });
+    }
 
 
 
@@ -169,22 +206,20 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Separar bots de usuarios reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
-        $bots = $allVisits->filter(function ($visit) {
-            return $this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $visitors = $realVisitors
+            ->groupBy(function ($v) {
+                $date = $v->visited_at instanceof \Carbon\Carbon
+                    ? $v->visited_at
+                    : \Carbon\Carbon::parse((string) $v->visited_at);
 
-        $visitors = $realVisitors->groupBy(function ($visitor) {
-            return Carbon::parse($visitor->visited_at)->format('d-m');
-        })->map(function ($visitors) {
-            return $visitors->count();
-        });
+                return $date->format('d-m');
+            })
+            ->map
+            ->count();
 
-        $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? null)->toJson();
+        $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
         $secondaryInfo = $this->filterVisitorsYesterdayPreviousPeriod();
 
         return json_encode([
@@ -202,10 +237,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('d-m');
@@ -241,10 +273,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('d-m');
@@ -271,10 +300,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('d-m');
@@ -310,10 +336,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('d-m');
@@ -340,10 +363,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('d-m');
@@ -377,10 +397,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('Y F');
@@ -407,10 +424,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('Y F');
@@ -444,10 +458,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('Y F');
@@ -474,10 +485,7 @@ class VisitorsStatisticsService
             ->orderBy('visited_at')
             ->get();
 
-        // Filtrar solo visitas reales
-        $realVisitors = $allVisits->filter(function ($visit) {
-            return !$this->isBot($visit->user_agent, $visit->ip_address);
-        });
+        $realVisitors = $this->filterRealVisits($allVisits);
 
         $visitors = $realVisitors->groupBy(function ($visitor) {
             return Carbon::parse($visitor->visited_at)->format('Y F');
@@ -487,7 +495,6 @@ class VisitorsStatisticsService
 
         return $months->map(fn($value, $month) => $visitors[$month] ?? 0)->toJson();
     }
-
 
 
 }

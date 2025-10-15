@@ -67,6 +67,8 @@ class IndexController extends Controller
     {
 
         $products = Product::where('name', 'like', '%' . $request->q . '%')->get();
+        if($request->q == "Todos los productos") $products = Product::all();
+
         return $this->productService->productsData($products);
 
     }

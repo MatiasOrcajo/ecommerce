@@ -167,16 +167,221 @@
     </div>
 
 
+    {{-- categorias --}}
+    <section>
+        <!-- Sección de Categorías -->
+        <div class="container-fluid my-5 py-5 px-0">
+            <h2 class="text-center mb-5" style="font-size: 4rem">Categorías</h2>
+
+            <!-- Contenedor principal con ancho limitado en desktop -->
+            <div class="categories-container">
+                <!-- Grid para escritorio (2x2) -->
+                <div class="row g-0 d-none d-lg-flex justify-content-center">
+                    <div class="col-auto">
+                        <div class="row g-0">
+                            <!-- Categoría 1 -->
+                            <div class="col-3 position-relative category-square m-2">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('bodys.jpg') }}" alt="Categoría 1" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Bodys</h3>
+{{--                                    <p class="category-subtitle">Shapewear</p>--}}
+                                </div>
+                            </div>
+
+                            <!-- Categoría 2 -->
+                            <div class="col-3 position-relative category-square m-2">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('camisetas.jpg') }}" alt="Categoría 2" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Camisetas</h3>
+{{--                                    <p class="category-subtitle">Sknrit</p>--}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-auto">
+                        <div class="row g-0">
+                            <!-- Categoría 3 -->
+                            <div class="col-3 position-relative category-square m-2">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('Fajas.jpg') }}" alt="Categoría 3" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Fajas</h3>
+{{--                                    <p class="category-subtitle">&nbsp;</p>--}}
+                                </div>
+                            </div>
+
+                            <!-- Categoría 4 -->
+                            <div class="col-3 position-relative category-square m-2">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('ver-todos.jpg') }}" alt="Categoría 4" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Ver todos</h3>
+{{--                                    <p class="category-subtitle">Intima</p>--}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid para móvil (una columna) -->
+                <div class="row g-0 d-flex d-lg-none">
+                    <!-- Categoría 1 -->
+                    <div class="col-12 position-relative category-square">
+                        <div class="category-overlay"></div>
+                        <img src="{{ asset('bodys.jpg') }}" alt="Categoría 1" class="category-img">
+                        <div class="category-content">
+                            <h3 class="category-title">Bodys</h3>
+                            {{--                                    <p class="category-subtitle">Shapewear</p>--}}
+                        </div>
+                    </div>
+
+                    <!-- Categoría 2 -->
+                    <div class="col-12 position-relative category-square">
+                        <div class="category-overlay"></div>
+                        <img src="{{ asset('camisetas.jpg') }}" alt="Categoría 2" class="category-img">
+                        <div class="category-content">
+                            <h3 class="category-title">Camisetas</h3>
+                            {{--                                    <p class="category-subtitle">Sknrit</p>--}}
+                        </div>
+                    </div>
+
+                    <!-- Categoría 3 -->
+                    <div class="col-12 position-relative category-square">
+                        <div class="category-overlay"></div>
+                        <img src="{{ asset('Fajas.jpg') }}" alt="Categoría 3" class="category-img">
+                        <div class="category-content">
+                            <h3 class="category-title">Fajas</h3>
+                            {{--                                    <p class="category-subtitle">&nbsp;</p>--}}
+                        </div>
+                    </div>
+
+                    <!-- Categoría 4 -->
+                    <div class="col-12 position-relative category-square">
+                        <div class="category-overlay"></div>
+                        <img src="{{ asset('ver-todos.jpg') }}" alt="Categoría 4" class="category-img">
+                        <div class="category-content">
+                            <h3 class="category-title">Ver todos</h3>
+                            {{--                                    <p class="category-subtitle">Intima</p>--}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            /* Contenedor principal para limitar el ancho en desktop */
+            .categories-container {
+                width: 100%;
+            }
+
+            @media (min-width: 992px) {
+                .categories-container {
+                    max-width: 100%;
+                    margin: 0 auto;
+                }
+
+                .category-square {
+                    width: 350px;
+                    height: 500px;
+                }
+            }
+
+            /* Estilos para las categorías */
+            .category-square {
+                aspect-ratio: 1 / 1; /* Hace que sea un cuadrado perfecto */
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .category-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+            .category-square:hover .category-img {
+                transform: scale(1.05);
+            }
+
+            .category-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.3); /* Overlay más sutil */
+                z-index: 1;
+                transition: background-color 0.3s ease;
+            }
+
+            .category-square:hover .category-overlay {
+                background-color: rgba(0, 0, 0, 0.2); /* Más claro al hacer hover */
+            }
+
+            .category-content {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 2;
+                text-align: center;
+                width: 100%;
+                padding: 0 1rem;
+            }
+
+            .category-title {
+                color: white;
+                font-size: 2rem;
+                font-weight: 400;
+                letter-spacing: 2px;
+                margin: 0 0 0.5rem 0;
+                line-height: 1;
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+            }
+
+            .category-subtitle {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: 300;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                margin: 0;
+                line-height: 1.2;
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                opacity: 0.9;
+            }
+
+            /* Estilos para móvil */
+            @media (max-width: 991.98px) {
+                .category-title {
+                    font-size: 2.5rem;
+                }
+
+                .category-subtitle {
+                    font-size: 1.2rem;
+                }
+            }
+        </style>
+    </section>
+
+
     {{--    products--}}
 
     <!-- Contenedor principal -->
-    <div class="mt-5 py-5" id="destacados">
-        <h2 class="d-block mt-5 text-center" style="font-size: 4rem">best sellers.</h2>
+    <section>
+        <div class="mt-5 py-5" id="destacados">
+            <h2 class="d-block mt-5 text-center" style="font-size: 4rem">best sellers.</h2>
 
-    </div>
-    <div id="products-container"
-         class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center">
-    </div>
+        </div>
+        <div id="products-container"
+             class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center">
+        </div>
+    </section>
 
     {{--    <div class="container-fluid px-0">--}}
     {{--        <div class="video-wrapper w-100">--}}
