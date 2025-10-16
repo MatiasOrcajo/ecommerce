@@ -108,7 +108,8 @@
                         <div class="card-body">
                             <h2 class="h5 mb-2">¿Cuánto tarda en llegar el pedido?</h2>
                             <p class="mb-1">
-                                El despacho se realiza dentro de <strong>5 a 7 días hábiles</strong> a partir de la acreditación del pago.
+                                Comprando antes de las 12:00 del mediodía el despacho se realiza <strong>el mismo día</strong>.
+                                Caso contrario se realizará <strong>al siguiente día hábil después de la compra</strong>.
                                 El tiempo de entrega dependerá del método seleccionado y de tu ubicación.
                             </p>
                             <p class="text-muted mb-0">
