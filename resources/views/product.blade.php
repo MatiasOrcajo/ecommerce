@@ -265,6 +265,9 @@
                         <input id="quantity" type="number" class="form-control" value="1" min="1" style="max-width:100px;">
                     </div>
 
+                    <div id="added-to-cart-succesfully" class="mb-3">
+
+                    </div>
 
                     <button id="add-product-to-cart" class="btn btn-lg w-100" style="background-color: #bc8d8a; color: white; font-weight: bold">AGREGAR AL CARRITO</button>
 
@@ -327,15 +330,16 @@
                 $('#add-product-to-cart').click(function () {
                     const id = {{$product->id}};
                     const route = '/carts/products/' + id
+                    const button = $(this);
+                    const successDiv = $('#added-to-cart-succesfully');
 
                     if (selectedSize == undefined) {
                         toastr.error('Debe seleccionar un talle');
-                    }
-                    else if (selectedColor == undefined){
+                    } else if (selectedColor == undefined) {
                         toastr.error('Debe seleccionar un color');
+                    } else {
+                        button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agregando...').prop('disabled', true);
 
-                    }
-                    else {
                         $.ajax({
                             type: "POST",
                             url: route,
@@ -347,9 +351,12 @@
                                 quantity: $('#quantity').val(),
                             },
                             success: function (xhr, status, error) {
-                                toastr.success('Producto agregado al carrito');
+                                button.html('AGREGAR AL CARRITO').prop('disabled', false);
+                                successDiv.html('<div class="alert alert-success mt-3">¡Producto agregado al carrito!</div>');
                                 updateCartCounter();
-
+                            },
+                            error: function () {
+                                button.html('AGREGAR AL CARRITO').prop('disabled', false);
                             }
                         })
                     }
