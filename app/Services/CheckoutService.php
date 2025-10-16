@@ -132,9 +132,18 @@ class CheckoutService
         foreach ($cart["products"] as $productInCart) {
             $productVariant = ProductVariant::find($productInCart["product_variant_id"]);
             $product = $productVariant->product;
+
             $subtotal = $product->price * $productInCart["quantity"];
+
             $total = $product->discount ? $product->price * $this->getRemainingPercentageInDecimals($product->discount) : $product->price;
-            $total = $total * $productInCart["quantity"];
+
+            //descomentar esta linea cuando se saque el 2x1 en toda la web
+//            $total = $total * $productInCart["quantity"];
+
+            //2x1
+            $qty = (int) $productInCart['quantity'];
+            $paidUnits = intdiv($qty, 2) + ($qty % 2); // = ceil($qty / 2)
+            $total = $total * $paidUnits;
 
             $productVariantColorPic = ProductVariant::where('color', $productVariant->color)
                 ->where('product_id', $product->id)

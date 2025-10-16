@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Cart;
+use App\Models\CartProducts;
 use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Product;
@@ -104,6 +105,11 @@ class CartService
         }
 
         $this->saveCartInSession($sessionCart);
+
+        $cartProducts = new CartProducts();
+        $cartProducts->product_variants_id = $productVariant->id;
+        $cartProducts->cart_id = $sessionCart["cart_id"];
+        $cartProducts->save();
 
         return response()->json(Session::get('cart'));
 

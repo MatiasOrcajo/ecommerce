@@ -17,39 +17,6 @@ class CartProducts extends Model
     protected $guarded;
 
 
-    /**
-     * Añade un producto al registro del usuario en la tabla cart_products
-     *
-     * Si el usuario no está logueado, solo se ejecuta la funcion addGuestProduct()
-     *
-     * @param Product $product
-     * @return \Illuminate\Http\JsonResponse|void
-     *
-     */
-    public static function addProduct(Product $product)
-    {
-
-        if (Auth::guest()) {
-            return self::addGuestProduct($product);
-        }
-
-        $productInCart = Auth::user()->cart->products->where('product_id', $product->id);
-
-        if ($productInCart) {
-            throw new Exception("Ya tenés este producto en el carrito");
-        }
-
-        $cartProducts = new CartProducts();
-        $cartProducts->product_id = $product->id;
-        $cartProducts->cart_id = Auth::user()->cart->id;
-
-        $cartProducts->save();
-
-        return response()->json([
-            'message' => 'Producto añadido!'
-        ], 200);
-
-    }
 
 
 
