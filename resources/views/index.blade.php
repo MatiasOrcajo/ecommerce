@@ -73,18 +73,22 @@
 
     {{-- Banner desktop --}}
     <div class="container-fluid mt-4 px-0 d-none d-lg-block">
-        <img
-            src="{{ asset('30_OFF.png') }}"
-            class="img-fluid w-100"
-            alt="Banner principal">
+        <a href="/search?q=Todos los productos">
+            <img
+                src="{{ asset('30_OFF.png') }}"
+                class="img-fluid w-100"
+                alt="Banner principal">
+        </a>
     </div>
 
     {{-- Banner mobile --}}
     <div class="container-fluid mt-4 px-0 d-block d-lg-none">
-        <img
-            src="{{ asset('30_OFF_mobile.png') }}"
-            class="img-fluid w-100"
-            alt="Banner principal móvil">
+        <a href="/search?q=Todos los productos">
+            <img
+                src="{{ asset('30_OFF_mobile.png') }}"
+                class="img-fluid w-100"
+                alt="Banner principal móvil">
+        </a>
     </div>
 
 

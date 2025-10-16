@@ -79,16 +79,34 @@ class CartService
             throw new \Exception("No hay stock suficiente. Por favor seleccione menos cantidad.");
         }
 
-        $sessionCart["products"][] = [
-            "product_variant_id" => $productVariant->id,
-            "quantity" => $request->quantity,
-        ];
+        $isProductAlreadyInCart = false;
+
+
+        //si el producto ya se encuentra en el carrito
+        //aumenta la cantidad
+        if (isset($sessionCart['products'])) {
+            foreach ($sessionCart['products'] as $index => &$item) {
+                if ($item['product_variant_id'] == $productVariant->id) {
+                    $item['quantity'] += (int) $request->quantity;
+                    $isProductAlreadyInCart = true;
+                    break;
+                }
+            }
+
+            unset($item);
+        }
+
+        if (!$isProductAlreadyInCart) {
+            $sessionCart['products'][] = [
+                'product_variant_id' => $productVariant->id,
+                'quantity' => (int) $request->quantity,
+            ];
+        }
 
         $this->saveCartInSession($sessionCart);
 
-//        $this->calculateTotalForEachItemInCart();
-
         return response()->json(Session::get('cart'));
+
     }
 
     /**
