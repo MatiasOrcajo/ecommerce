@@ -67,7 +67,7 @@
 
     <!-- Contenedor principal -->
     <div class="mt-5 py-5" id="destacados">
-        <h2 class="d-block mt-5 text-center" style="font-size: 4rem">Resultados para "{{$q}}".</h2>
+        <h2 class="d-block mt-5 text-center" style="font-size: 2.5rem">Resultados para "{{$q}}".</h2>
 
     </div>
     <div id="products-container"

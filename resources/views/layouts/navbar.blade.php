@@ -79,6 +79,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('index') }}#footer">Contacto</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('faqs')}}" >Preguntas Frecuentes</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -143,6 +147,10 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('index') }}#footer">Contacto</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('faqs')}}" >Preguntas Frecuentes</a>
                         </li>
                     </ul>
 

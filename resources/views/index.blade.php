@@ -175,7 +175,7 @@
     <section>
         <!-- Sección de Categorías -->
         <div class="container-fluid my-5 py-5 px-0">
-            <h2 class="text-center mb-5" style="font-size: 4rem">Categorías</h2>
+            <h2 class="text-center mb-5" style="font-size: 4rem">Collections.</h2>
 
             <!-- Contenedor principal con ancho limitado en desktop -->
             <div class="categories-container">
