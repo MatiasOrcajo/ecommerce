@@ -31,10 +31,12 @@
         }
 
         @media (max-width: 991.98px) {
-            .product-page-container {
-                padding-bottom: 0;
-                margin-top: 0;
-                transform: translateY(100px);
+            @media (max-width: 991.98px) {
+                .product-page-container {
+                    padding-bottom: 0;
+                    margin-top: 100px;     /* reemplaza el translateY */
+                    transform: none;       /* clave */
+                }
             }
 
         }
@@ -258,7 +260,101 @@
                     <div class="my-4">
                         <label id="sizeSelector" class="d-block mb-1"><strong>Talle:</strong></label>
                         <div class="d-flex gap-2" id="sizes-container"></div>
+                        <span id="sizes_help" style="text-decoration: underline; cursor: pointer" class="mt-1">¿Qué talle elijo?</span>👈
                     </div>
+
+
+                    <!-- Dropdown panel -->
+                    <div id="size-help-panel" class="position-fixed top-0 end-0 vh-100 shadow-lg overflow-y-scroll"
+                         style="width: 0; overflow: hidden; transition: all 0.3s ease; z-index: 999999999 !important; background-color: #f4f5f4">
+                        <button id="close-size-help"
+                                class="btn btn-link text-dark fw-bold position-absolute top-0 end-0 me-3 mt-3"
+                                aria-label="Close">×
+                        </button>
+                        <div class="p-4">
+                            <h4 style="font-size: 24px; font-weight: bold" class="mb-3">¿Qué talle elijo?</h4>
+
+                            <p>Cada cuerpo es distinto, por eso queremos ayudarte a encontrar el talle que mejor se adapte a vos. Nuestros productos vienen del talle S al XXL, y acá te dejamos una guía de equivalencias y recomendaciones para que elijas con confianza.</p>
+
+                            <small>👉 Tip: si estás entre dos talles, te recomendamos elegir el más grande para que te resulte más cómodo y el ajuste sea natural.</small>
+                                <br>
+                            <small>👉 Todos nuestros productos tienen compresión, así que no hace falta pedir un talle más chico.</small>
+
+                            <img src="{{asset('guia-talles-body.jpg')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+
+                            <img src="{{asset('guia-talles-body.jpg')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+
+                            <img src="{{asset('guia-talles-body.jpg')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+
+                        </div>
+                    </div>
+
+                    <style>
+                        #size-help-panel {
+                            position: fixed !important;
+                            top: 0;
+                            right: 0;
+                            width: 0;
+                            height: 100%;
+                            overflow-y: auto; /* Permitir scroll interno si es necesario */
+                            transition: all 0.3s ease;
+                            z-index: 2147483647; /* Valor máximo de z-index */
+                            background-color: #f4f5f4;
+                            /* Asegurar que ocupe toda la pantalla en mobile */
+                            max-width: 100vw;
+                        }
+
+                        /* Overlay de fondo para capturar clicks */
+                        #size-help-overlay {
+                            display: none;
+                            position: fixed !important;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0,0,0,0.5);
+                            z-index: 10000;
+                        }
+
+                        body.panel-open {
+                            overflow: hidden;
+                            height: 100vh;
+                        }
+                    </style>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const sizeHelpButton = document.getElementById('sizes_help');
+                            const sizeHelpPanel = document.getElementById('size-help-panel');
+                            const closeSizeHelp = document.getElementById('close-size-help');
+                            const body = document.body;
+
+                            // Crear overlay si no existe
+                            let overlay = document.getElementById('size-help-overlay');
+                            if (!overlay) {
+                                overlay = document.createElement('div');
+                                overlay.id = 'size-help-overlay';
+                                document.body.appendChild(overlay);
+                            }
+
+                            sizeHelpButton.addEventListener('click', () => {
+                                const isMobile = window.matchMedia("(max-width: 768px)").matches;
+                                sizeHelpPanel.style.width = isMobile ? '95%' : '40%';
+                                overlay.style.display = 'block';
+                                body.classList.add('panel-open');
+                                window.scrollTo(0, 0);
+                            });
+
+                            function closePanel() {
+                                sizeHelpPanel.style.width = '0';
+                                overlay.style.display = 'none';
+                                body.classList.remove('panel-open');
+                            }
+
+                            closeSizeHelp.addEventListener('click', closePanel);
+                            overlay.addEventListener('click', closePanel);
+                        });
+                    </script>
 
                     <div class="mb-4">
                         <label class="form-label"><strong>Cantidad</strong></label>
