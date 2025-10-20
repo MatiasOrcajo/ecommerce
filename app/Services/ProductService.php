@@ -25,6 +25,7 @@ class ProductService {
 
         $availableColors = $productVariants->select(["id", "color", "color_name"])
             ->unique('color_name')
+            ->orderBy('color_name')
             ->values()
             ->toArray();
 
