@@ -69,9 +69,10 @@
                         Productos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
-                        @foreach($categories as $category)
-                            <li><a class="dropdown-item" href="{{route('category.show', $category->slug)}}">{{$category->name}}</a></li>
-                        @endforeach
+                        <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camiseta reductora</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Faja reductora</a></li>
+                        <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                     </ul>
                 </li>
                 <!-- ↑ Fin dropdown ↑ -->
@@ -140,9 +141,10 @@
                                 Productos
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="productDropdown">
-                                @foreach($categories as $category)
-                                    <li><a class="dropdown-item" href="{{route('category.show', $category->slug)}}">{{$category->name}}</a></li>
-                                @endforeach
+                                <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camiseta reductora</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Faja reductora</a></li>
+                                <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
