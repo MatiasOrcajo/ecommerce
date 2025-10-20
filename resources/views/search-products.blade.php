@@ -220,9 +220,9 @@
                                 >
 
                                 <a>
-                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #bc8d8a; color: white;" >ENVÍO GRATIS</button>
+                                    <button class="btn position-absolute top-10 end-0 m-2" style="background-color: #bc8d8a; color: white;" >ENVÍO GRATIS</button>
 
-                                    <button class="btn position-absolute top-10 end-0 m-2" style="background-color: #724d3a; color: white;">2 X 1</button>
+                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #724d3a; color: white;">2 X 1</button>
 
                                 </a>
 
