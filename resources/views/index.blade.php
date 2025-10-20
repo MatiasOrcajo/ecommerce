@@ -75,7 +75,7 @@
     <div class="container-fluid mt-4 px-0 d-none d-lg-block">
         <a href="/search?q=Todos los productos">
             <img
-                src="{{ asset('30_OFF.png') }}"
+                src="{{ asset('2x1.png') }}"
                 class="img-fluid w-100"
                 alt="Banner principal">
         </a>
@@ -85,7 +85,7 @@
     <div class="container-fluid mt-4 px-0 d-block d-lg-none">
         <a href="/search?q=Todos los productos">
             <img
-                src="{{ asset('30_OFF_mobile.png') }}"
+                src="{{ asset('2x1_mobile.png') }}"
                 class="img-fluid w-100"
                 alt="Banner principal móvil">
         </a>
