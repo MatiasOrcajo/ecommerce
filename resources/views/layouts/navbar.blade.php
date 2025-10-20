@@ -66,7 +66,7 @@
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                     >
-                        Collections
+                        Productos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
                         @foreach($categories as $category)
@@ -137,7 +137,7 @@
                         <!-- Elemento desplegable -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="productDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Collections
+                                Productos
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="productDropdown">
                                 @foreach($categories as $category)
