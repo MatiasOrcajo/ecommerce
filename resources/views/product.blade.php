@@ -280,11 +280,11 @@
                                 <br>
                             <small>👉 Todos nuestros productos tienen compresión, así que no hace falta pedir un talle más chico.</small>
 
-                            <img src="{{asset('guia-talles-body.jpg')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+                            <img src="{{asset('guia-talles-body.png')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
 
-                            <img src="{{asset('guia-talles-body.jpg')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+                            <img src="{{asset('guia-talles-faja.png')}}" alt="Guia talles Faja" style="width: 100%; margin-top: 2rem">
 
-                            <img src="{{asset('guia-talles-body.jpg')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+                            <img src="{{asset('guia-talles-camiseta.png')}}" alt="Guia talles Camiseta" style="width: 100%; margin-top: 2rem">
 
                         </div>
                     </div>
