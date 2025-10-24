@@ -84,6 +84,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('faqs')}}" >Preguntas Frecuentes</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="https://wa.link/n5il16" target="_blank">Necesito Ayuda</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -153,6 +157,10 @@
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('faqs')}}" >Preguntas Frecuentes</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://wa.link/n5il16" target="_blank">Necesito Ayuda</a>
                         </li>
                     </ul>
 
