@@ -144,6 +144,14 @@
                                     </div>
                                 </div>
 
+                                <div class="row">
+
+                                    <div class="mb-3 col-md-12">
+                                        <textarea class="form-control" id="observations" rows="3"></textarea>
+                                    </div>
+
+                                </div>
+
                                 <button type="button" id="continue-to-payment-step-button" class="btn btn-primary" data-bs-target="#step2"
                                         data-bs-toggle="pill">Continuar con el método de pago
                                 </button>
@@ -591,6 +599,7 @@
                     number: document.getElementById('number').value,
                     apartment: document.getElementById('apartment').value,
                     zip_code: document.getElementById('zip_code').value,
+                    observations: document.getElementById('observations').value,
                     coupon_id: coupon_id,
                     payment_method: selectedPaymentMethod,
                     shipping_method: selectedShipmentMethod

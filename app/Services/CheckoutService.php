@@ -63,6 +63,8 @@ class CheckoutService
         $order = $this->orderService->create($request, $this->getCartInfo());
         $order->shipping_method = $shippingMethods[$request->shipping_method];
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];
+        $order->observations = $request->observations;
+        $order->valid_for_arrives_today = $request->valid_for_arrives_today;
         $order->save();
         Session::put("email_validated_$order->code", true);
 
