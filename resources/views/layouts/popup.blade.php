@@ -140,7 +140,7 @@
                 // Si no hay dato registrado, mostramos el modal por primera vez
                 showPromoModal();
             }
-        }, 4000);
+        }, 60000);
     });
 
 
