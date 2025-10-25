@@ -5,15 +5,182 @@
             --bs-offcanvas-width: 80vw; /* 80% del viewport */
         }
     }
+
+    /* Navbar transition styles */
+    header {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    header.nav-up {
+        transform: translateY(-100%);
+    }
+
+    body {
+        padding-top: 120px;
+    }
+
+    /* Desktop: altura reservada */
+    @media (max-width: 991.98px) {
+        body {
+            padding-top: 72px;
+        }
+
+        /* Mobile: top bar + navbar compacta */
+    }
+
+
+    /* Animación marquee CSS (reemplaza <marquee>) */
+    @keyframes marquee {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
+    .animate-marquee {
+        white-space: nowrap;
+        animation: marquee 15s linear infinite;
+    }
+
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll <= 0) {
+                header.classList.remove('nav-up');
+                return;
+            }
+
+            if (currentScroll > lastScroll && !header.classList.contains('nav-up')) {
+                // Scroll Down
+                header.classList.add('nav-up');
+            } else if (currentScroll < lastScroll && header.classList.contains('nav-up')) {
+                // Scroll Up
+                header.classList.remove('nav-up');
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        function computeShippingTitleForBA(nowBA) {
+            const hour = nowBA.hour;
+            const weekday = nowBA.weekday;        // 0=Dom...6=Sáb
+            const isWeekday = weekday >= 1 && weekday <= 5; // Lun-Vie
+            const beforeCutoff = hour < 13;
+
+            // Helper de padding
+            const pad = (n) => String(n).padStart(2, '0');
+
+            // “Ahora” en BA usando Intl (timeZone segura)
+            const parts = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'America/Argentina/Buenos_Aires',
+                hour12: false,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).formatToParts(new Date()).reduce((acc, p) => {
+                if (p.type !== 'literal') acc[p.type] = parseInt(p.value, 10);
+                return acc;
+            }, {});
+
+            const baNow = new Date(Date.UTC(
+                parts.year, parts.month - 1, parts.day,
+                parts.hour, parts.minute, parts.second
+            ));
+
+            let title;
+            let deadline = new Date(baNow);
+
+            // Fines de semana: llega el lunes
+            if (!isWeekday) {
+                title = '¡Llega gratis el lunes!';
+                const daysAhead = (1 - weekday + 7) % 7 || 7; // próximo lunes
+                deadline.setUTCDate(deadline.getUTCDate() + daysAhead);
+                deadline.setUTCHours(13, 0, 0, 0);
+            }
+            // Días de semana antes de las 13: hoy
+            else if (beforeCutoff) {
+                title = '¡Llega gratis hoy!';
+                deadline.setUTCHours(13, 0, 0, 0);
+            }
+            // Viernes después de las 13: lunes
+            else if (weekday === 5) {
+                title = '¡Llega gratis el lunes!';
+                const daysAhead = (1 - weekday + 7) % 7 || 7;
+                deadline.setUTCDate(deadline.getUTCDate() + daysAhead);
+                deadline.setUTCHours(13, 0, 0, 0);
+            }
+            // Resto: mañana
+            else {
+                title = '¡Llega gratis mañana!';
+                deadline.setUTCDate(deadline.getUTCDate() + 1);
+                deadline.setUTCHours(13, 0, 0, 0);
+            }
+
+            // Cuenta regresiva HH:MM:SS
+            const msLeft = Math.max(0, deadline - baNow);
+            const totalSec = Math.floor(msLeft / 1000);
+            const hh = Math.floor(totalSec / 3600);
+            const mm = Math.floor((totalSec % 3600) / 60);
+            const ss = totalSec % 60;
+
+            const countdown = `${hh}:${pad(mm)}:${pad(ss)}`;
+            return `${title} <br> Comprando antes de ${countdown}`;
+        }
+
+        function getNowInBuenosAires() {
+            const now = new Date();
+            const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+            const baMs = utcMs + (-3 * 3600000); // UTC-3 fijo
+            const ba = new Date(baMs);
+            return {
+                year: ba.getUTCFullYear(),
+                month: ba.getUTCMonth() + 1,
+                day: ba.getUTCDate(),
+                hour: ba.getUTCHours(),
+                minute: ba.getUTCMinutes(),
+                second: ba.getUTCSeconds(),
+                weekday: ba.getUTCDay(), // 0=Dom, 1=Lun, ..., 6=Sáb
+                date: ba
+            };
+        }
+
+        /**
+         * Setea el título dinámico de la opción “llega …”
+         */
+        function setTitle() {
+            const nowBA = getNowInBuenosAires();
+            document.getElementById('flex-shipping-title').innerHTML = computeShippingTitleForBA(nowBA);
+        }
+
+
+        setInterval(setTitle, 1000); // igual que en el código original
+
+    });
+
+</script>
 
 
 <header class="d-none d-lg-block fixed-top">
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center" style="height:36px; line-height:36px; overflow:hidden;">
-  <span class="animate-marquee d-inline-block" style="padding-left:100%; animation-duration: 20s;">
-  ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
-</span>
+          <span class="animate-marquee d-inline-block" style="padding-left:100%; animation-duration: 20s;">
+          ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
+        </span>
+
+    </div>
+
+    <div class="bg-green-100 text-white text-center" style="height:36px; line-height:36px; overflow:hidden;">
+          <span class="d-inline-block" style="color: black" id="flex-shipping-title">
+          TU PEDIDO LLEGA GRATIS HOY COMPRANDO ANTES DE
+        </span>
 
     </div>
 
@@ -209,38 +376,3 @@
     </nav>
 
 </header>
-
-<style>
-    /* Animación marquee CSS (reemplaza <marquee>) */
-    @keyframes marquee {
-        0% {
-            transform: translateX(100%);
-        }
-        100% {
-            transform: translateX(-100%);
-        }
-    }
-
-    .animate-marquee {
-        white-space: nowrap;
-        animation: marquee 15s linear infinite;
-    }
-</style>
-
-
-{{-- Espaciado para que el contenido no quede detrás del header fijo --}}
-<style>
-    body {
-        padding-top: 120px;
-    }
-
-    /* Desktop: altura reservada */
-    @media (max-width: 991.98px) {
-        body {
-            padding-top: 72px;
-        }
-
-        /* Mobile: top bar + navbar compacta */
-    }
-
-</style>
