@@ -9,6 +9,11 @@ use App\Traits\CartTrait;
 
 Route::group(['middleware' => ['web']], function () {
 
+    Route::get('/test-carbon', function (){
+
+
+    });
+
     Route::post('/v-beacon', BeaconController::class)->name('v-beacon');
 
     Route::get('/politicas-devolucion', [\App\Http\Controllers\IndexController::class, 'politics'])->name('politics');

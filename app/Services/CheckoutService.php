@@ -11,6 +11,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Traits\CartTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -51,9 +52,9 @@ class CheckoutService
         ];
 
         $shippingMethods = [
-            "correo-argentino" => "Correo Argentino",
             "andreani" => "Andreani",
-            "take-away" => "Retiro en CABA"
+            "take-away" => "Retiro en CABA",
+            "FLEX" => $this->determinesIfFlexShippingAppliesForToday(),
         ];
 
         $http = $request;
@@ -64,8 +65,9 @@ class CheckoutService
         $order->shipping_method = $shippingMethods[$request->shipping_method];
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];
         $order->observations = $request->observations;
-        $order->valid_for_arrives_today = $request->valid_for_arrives_today;
+        $order->valid_for_arrives_today = $request->shipping_method == "FLEX";
         $order->save();
+
         Session::put("email_validated_$order->code", true);
 
         $ctx = [
@@ -277,6 +279,27 @@ class CheckoutService
         $data['order_total_after_coupon_applied'] = $orderTotalAfterCoupon;
 
         return $data;
+    }
+
+
+    public function determinesIfFlexShippingAppliesForToday()
+    {
+        $today = Carbon::now()->getTranslatedDayName();
+        $hour = Carbon::now()->hour;
+        $weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        $weekendDays = ["Saturday", "Sunday"];
+
+        if(in_array($today, $weekDays) && $hour < 12){
+            return "Llega hoy entre las 16 y las 22";
+        }
+
+        if(in_array($today, $weekDays) && $hour >= 12 && $today != "Friday"){
+            return "Llega mañana entre las 16 y las 22";
+        }
+
+        if($today == "Friday" && $hour >= 12 || in_array($today, $weekendDays)){
+            return "Llega el lunes entre las 16 y las 22";
+        }
     }
 
 

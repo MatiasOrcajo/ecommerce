@@ -62,7 +62,7 @@ class OrderService
             'code' => $this->generateOrderCode(),
             'status' => 'No pago',
             'shipping_address' => $shippingAddress,
-            'expiration_date' => Carbon::now()->addDays(3),
+            'expiration_date' => Carbon::now()->addDays(1),
             'coupon_id' => $this->getCouponAppliedId(),
         ]);
 

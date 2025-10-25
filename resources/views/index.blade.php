@@ -76,8 +76,12 @@
         <a href="/search?q=Todos los productos">
             <img
                 src="{{ asset('2x1.png') }}"
+                alt="Banner principal"
+                width="1920" height="960"       {{-- ajustar al tamaño real --}}
+                fetchpriority="high"            {{-- prioriza el LCP en home --}}
+                decoding="async"
                 class="img-fluid w-100"
-                alt="Banner principal">
+            />
         </a>
     </div>
 
@@ -86,8 +90,12 @@
         <a href="/search?q=Todos los productos">
             <img
                 src="{{ asset('2x1_mobile.png') }}"
+                alt="Banner principal móvil"
+                width="608" height="1080"       {{-- ajustar al tamaño real --}}
+                fetchpriority="high"
+                decoding="async"
                 class="img-fluid w-100"
-                alt="Banner principal móvil">
+            />
         </a>
     </div>
 
@@ -398,7 +406,7 @@
 
     <!-- Contenedor principal -->
     <section>
-        <div class="mt-5 py-5" id="destacados">
+        <div class="mt-5" id="destacados">
             <h2 class="d-block mt-5 text-center" style="font-size: 4rem">best sellers.</h2>
 
         </div>

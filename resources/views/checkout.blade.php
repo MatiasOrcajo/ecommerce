@@ -8,7 +8,7 @@
 
     <style>
 
-        input, option, select{
+        input, option, select {
             background-color: #ffffff !important;
         }
 
@@ -17,11 +17,11 @@
                 display: none;
             }
 
-            .col-md-7.steps-container{
+            .col-md-7.steps-container {
                 padding-bottom: 5rem !important;
             }
 
-            .translate-y-mobile{
+            .translate-y-mobile {
                 transform: translateY(30px);
             }
 
@@ -29,7 +29,6 @@
                 padding-top: 3rem;
             }
         }
-
 
 
     </style>
@@ -145,14 +144,17 @@
                                 </div>
 
                                 <div class="row">
-
                                     <div class="mb-3 col-md-12">
-                                        <textarea class="form-control" id="observations" rows="3"></textarea>
+                                        <label for="observations" class="form-label">Observaciones para el
+                                            envío:</label>
+                                        <textarea class="form-control" id="observations" rows="3"
+                                                  placeholder="Referencias para el repartidor; cosas a tener en cuenta; etc."></textarea>
                                     </div>
 
                                 </div>
 
-                                <button type="button" id="continue-to-payment-step-button" class="btn btn-primary" data-bs-target="#step2"
+                                <button type="button" id="continue-to-payment-step-button" class="btn btn-primary"
+                                        data-bs-target="#step2"
                                         data-bs-toggle="pill">Continuar con el método de pago
                                 </button>
                             </form>
@@ -168,8 +170,7 @@
                                         border-color: #bc8d8a;
                                     }
 
-                                    .btn:hover
-                                    {
+                                    .btn:hover {
                                         color: var(--bs-btn-hover-color);
                                         background-color: #bc8d8a;
                                         border-color: #bc8d8a;
@@ -178,13 +179,30 @@
 
                                 <div class="row mb-5">
                                     <h5 class="mb-3">Método de envío</h5>
+
+                                    <div id="shipping-option-wrapper"
+                                         class="col-md-12 d-flex justify-content-center d-none">
+                                        <button
+                                            type="button"
+                                            id="shipping-option"
+                                            class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
+                                            style="font-size: 1rem; border-color: green; color: green; font-weight: bold"
+                                            data-shipment-method="shipping-option-wrapper"
+                                        >
+                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
+                                            <span id="shipping-option-title">¡Llega hoy!</span>
+                                        </button>
+                                    </div>
+
                                     <div class="col-md-12 d-flex justify-content-center">
                                         <button type="button" id="andreani-button"
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 shipping_method"
                                                 style="font-size: 1rem;"
                                                 data-shipment-method="andreani">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            Andreani
+                                            <span>Andreani</span>
+                                            <br>
+                                            <small>Gratis a todo el país</small>
                                         </button>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center">
@@ -193,7 +211,9 @@
                                                 style="font-size: 1rem;"
                                                 data-shipment-method="take-away">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            Retiro en CABA
+                                            <span>Retiro en CABA</span>
+                                            <br>
+                                            <small>Bernardo de Irigoyen 630</small>
                                         </button>
                                     </div>
                                 </div>
@@ -206,7 +226,8 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="mercado-pago">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}" style="width: 60px;" alt="">
+                                                <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}"
+                                                     style="width: 60px;" alt="">
                                                 <span>Mercado Pago</span>
                                             </div>
                                         </button>
@@ -217,10 +238,8 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="bank-transfer">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            <i class="fa-solid fa-building-columns"
-                                            ></i>
-                                            Transferencia Bancaria |
-                                            10% off
+                                            <span>Transferencia Bancaria |
+                                            10% off</span>
                                         </button>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center">
@@ -228,11 +247,12 @@
                                                 class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
                                                 style="font-size: 1rem;"
                                                 data-payment-method="cash">
-                                            <i class="fa-solid fa-wallet"></i>
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            Efectivo |
-                                            20% off
-                                                </button>
+                                            <span>Efectivo |
+                                            20% off</span>
+                                            <br>
+                                            <small>Solo para retirar en CABA</small>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -275,7 +295,7 @@
                         <div class="d-flex justify-content-between align-content-center mt-3">
                             <h2>Envío:</h2>
                             <div class="text-success">
-                            GRATIS!
+                                GRATIS!
                             </div>
                         </div>
                         <div class="d-flex justify-content-between align-content-center mt-3">
@@ -293,496 +313,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
-
-    <script>
-
-        document.addEventListener("DOMContentLoaded", () => {
-
-
-
-            // Capturar eventos de clic para elementos con las clases 'payment_method' y 'shipping_method'
-            let selectedShipmentMethod = null;
-            let selectedPaymentMethod = null;
-            const paymentMethodButtons = document.querySelectorAll(".payment_method");
-            const shipmentMethodButtons = document.querySelectorAll(".shipping_method");
-
-            document.getElementById("take-away-button").addEventListener("click", () => {
-                selectedShipmentMethod = "take-away";
-            })
-
-            document.getElementById("andreani-button").addEventListener("click", () => {
-                selectedShipmentMethod = "andreani";
-            })
-
-
-            // Cambiar las clases de los botones al hacer clic
-            paymentMethodButtons.forEach((button) => {
-                button.addEventListener("click", (event) => {
-
-                    // Remover estilos de otros botones
-                    paymentMethodButtons.forEach(btn => {
-                        btn.style.color = "";
-                        btn.style.backgroundColor = "";
-                        btn.style.borderColor = "";
-                    });
-
-                    // Aplicar clases al botón seleccionado
-                    event.target.style.color = "var(--bs-btn-hover-color)";
-                    event.target.style.backgroundColor = "#bc8d8a";
-                    event.target.style.borderColor = "#bc8d8a";
-
-                });
-            });
-
-            shipmentMethodButtons.forEach((button) => {
-                button.addEventListener("click", (event) => {
-
-                    // Remover estilos de otros botones
-                    shipmentMethodButtons.forEach(btn => {
-                        btn.style.color = "";
-                        btn.style.backgroundColor = "";
-                        btn.style.borderColor = "";
-                    });
-
-                    // Aplicar clases al botón seleccionado
-                    event.target.style.color = "var(--bs-btn-hover-color)";
-                    event.target.style.backgroundColor = "#bc8d8a";
-                    event.target.style.borderColor = "#bc8d8a";
-
-                });
-            });
-
-            // Agregar un event listener a todos los elementos con la clase 'payment_method'
-            paymentMethodButtons.forEach((button) => {
-                button.addEventListener("click", (event) => {
-
-                    selectedPaymentMethod = event.target.getAttribute("data-payment-method");
-
-                    $.ajax({
-                        url: "/test",
-                        type: "GET",
-                        data: {
-                            payment_method: selectedPaymentMethod
-                        },
-                        success: function (response) {
-                            console.log("Payment method successfully sent:", response);
-                            // Puedes manejar la respuesta aquí
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error sending the payment method:", error);
-                            // Puedes manejar el error aquí
-                        }
-                    });
-
-                });
-            });
-
-            let helperTotalAmountToBeDisplayed = 0;
-            let couponIsApplied = 0;
-
-            /**
-             * Retrieves a list of province and populates a dropdown menu with them.
-             * Also fetches and updates a list of locality in another dropdown when a province is selected.
-             *
-             * @return {void} This method does not return a value. It updates the dropdown menus in the DOM.
-             */
-            function listProvinces() {
-
-                axios.get("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre")
-                    .then(response => {
-                        let province = response.data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
-                        let html = "";
-
-                        province.forEach(province => {
-                            html += `<option value="${province.nombre}">${province.nombre}</option>`
-                        });
-
-                        html += `<option selected="true" disabled="disabled">Seleccione una opción</option>`
-                        document.getElementById('province').innerHTML = html;
-                    })
-
-                document.getElementById('province').addEventListener('change', (event) => {
-                    axios.get(`https://apis.datos.gob.ar/georef/api/municipios?provincia=${event.target.value}&campos=id,nombre&max=500`)
-                        .then(response => {
-                            let locality = response.data.municipios.sort((a, b) => a.nombre.localeCompare(b.nombre));
-                            let html = "";
-
-                            locality.forEach(locality => {
-                                if(locality.nombre.includes("Comuna")){
-                                    return;
-                                }
-                                html += `<option value="${locality.nombre}">${locality.nombre}</option>`
-                            });
-
-                            const barriosCABA = [
-                                "Agronomía",
-                                "Almagro",
-                                "Balvanera",
-                                "Barracas",
-                                "Belgrano",
-                                "Boedo",
-                                "Caballito",
-                                "Chacarita",
-                                "Coghlan",
-                                "Colegiales",
-                                "Constitución",
-                                "Flores",
-                                "Floresta",
-                                "La Boca",
-                                "La Paternal",
-                                "Liniers",
-                                "Mataderos",
-                                "Monte Castro",
-                                "Monserrat",
-                                "Nueva Pompeya",
-                                "Núñez",
-                                "Palermo",
-                                "Parque Avellaneda",
-                                "Parque Chacabuco",
-                                "Parque Chas",
-                                "Parque Patricios",
-                                "Puerto Madero",
-                                "Recoleta",
-                                "Retiro",
-                                "Saavedra",
-                                "San Cristóbal",
-                                "San Nicolás",
-                                "San Telmo",
-                                "Vélez Sársfield",
-                                "Versalles",
-                                "Villa Crespo",
-                                "Villa del Parque",
-                                "Villa Devoto",
-                                "Villa General Mitre",
-                                "Villa Lugano",
-                                "Villa Luro",
-                                "Villa Ortúzar",
-                                "Villa Pueyrredón",
-                                "Villa Real",
-                                "Villa Riachuelo",
-                                "Villa Santa Rita",
-                                "Villa Soldati",
-                                "Villa Urquiza"
-                            ];
-
-                            if(event.target.value == "Ciudad Autónoma de Buenos Aires"){
-                                barriosCABA.forEach(locality => {
-
-                                    html += `<option value="${locality}">${locality}</option>`
-                                })
-                            }
-
-
-
-
-                            html += `<option selected="true" disabled="disabled">Seleccione una opción</option>`
-
-                            document.getElementById('locality').innerHTML = html;
-                        })
-                })
-            }
-
-            listProvinces();
-
-            const steps = document.querySelectorAll("#steps .li-step");
-            const tabs = document.querySelectorAll(".tab-pane");
-
-            // Manejador de clics en los pasos (navegación por pestañas)
-            steps.forEach((step) => {
-                step.addEventListener("click", (event) => {
-                    const clickedStep = event.target.closest(".li-step");
-                    if (clickedStep) {
-                        let targetStep = null;
-
-                        // Activa la pestaña correspondiente
-                        if (clickedStep.id === "step-client") {
-                            targetStep = "step1";
-                            document.getElementById('step-client').classList.add("grey-background")
-                            document.getElementById('step-payment').classList.remove("grey-background")
-
-                        } else {
-                            targetStep = "step2";
-                            document.getElementById('step-client').classList.remove("grey-background")
-                            document.getElementById('step-payment').classList.add("grey-background")
-                        }
-
-                        setActiveTab(targetStep);
-                    }
-
-                    const otherStep = steps.find(step => step !== clickedStep);
-                    clickedStep.classList.add("grey-background");
-                    otherStep.classList.remove("grey-background");
-                });
-            });
-
-            document.getElementById('continue-to-payment-step-button').addEventListener('click', () => {
-
-                setActiveTab("step2");
-                document.getElementById('step-client').classList.remove("grey-background")
-                document.getElementById('step-payment').classList.add("grey-background")
-
-            })
-
-
-            // Función para activar la pestaña correspondiente
-            function setActiveTab(targetId) {
-                tabs.forEach((tab) => {
-                    tab.classList.remove("show", "active");
-                    if (tab.id === targetId) {
-                        tab.classList.add("show", "active");
-                    }
-                });
-
-                // Actualiza el estado visual de los pasos
-                steps.forEach((step) => {
-                    step.classList.remove("active");
-                    if (step.id === "step-client" && targetId === "step1") {
-                        step.classList.add("active", "grey-background");
-                    } else if (step.id === "step-payment" && targetId === "step2") {
-                        step.classList.add("active", "grey-background");
-                    }
-                });
-            }
-
-
-            //Validate coupon
-            function getRemainingPercentageInDecimals(discount){
-                return 1 - (discount / 100)
-            }
-
-
-            const btnSubmit = document.getElementById('submit');
-
-            // Recopilar datos y enviarlos
-            btnSubmit.addEventListener('click', () => {
-
-                // Validar que todos los campos del formulario sean obligatorios antes de enviar
-                const requiredFields = [
-                    'firstName',
-                    'lastName',
-                    'phone',
-                    'documentNumber',
-                    'email',
-                    'locality',
-                    'province',
-                    'street',
-                    'number',
-                    'zip_code'
-                ];
-
-                let isValid = true;
-
-                requiredFields.forEach((field) => {
-                    const inputField = document.getElementById(field);
-                    if (!inputField.value.trim()) {
-                        inputField.classList.add('is-invalid');
-                        isValid = false;
-                    } else {
-                        inputField.classList.remove('is-invalid');
-                    }
-                });
-
-                if (!isValid) {
-                    toastr.error("Por favor, complete todos los campos obligatorios.")
-                    return;
-                }
-
-                const data = {
-                    name: document.getElementById('firstName').value,
-                    surname: document.getElementById('lastName').value,
-                    phone: document.getElementById('phone').value,
-                    dni: document.getElementById('documentNumber').value,
-                    email: document.getElementById('email').value,
-                    locality: document.getElementById('locality').value,
-                    province: document.getElementById('province').value,
-                    street: document.getElementById('street').value,
-                    number: document.getElementById('number').value,
-                    apartment: document.getElementById('apartment').value,
-                    zip_code: document.getElementById('zip_code').value,
-                    observations: document.getElementById('observations').value,
-                    coupon_id: coupon_id,
-                    payment_method: selectedPaymentMethod,
-                    shipping_method: selectedShipmentMethod
-                };
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    type: "POST",
-                    url: '{{route('pay')}}',
-                    data: {
-                        data: JSON.stringify(data),
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (res) {
-
-                        window.open(res.init_point, '_blank');
-                    },
-                    error: function (res, textStatus, errorThrown) {
-                        // console.log(res);
-                    },
-                });
-
-            });
-
-            let coupon_id = null;
-            //items summary
-
-            function getItemsSummary() {
-
-                $('#items-summary-container').html("");
-
-                $.ajax({
-                    type: "GET",
-                    url: '{{route('cart-info')}}',
-                    success: function (xhr, status, error) {
-
-                        if(xhr.order_total == 0){
-                            location.reload();
-                        }
-
-                        let isCouponApplied = xhr.is_coupon_applied;
-
-                        if(isCouponApplied){
-                            coupon_id = xhr.coupon_id;
-                        }
-
-                        let products = xhr.products;
-                        let html = "";
-                        total = xhr.total;
-                        total = xhr.total;
-                        oldOrderTotalBeforeCoupon = xhr.old_order_total_before_coupon_was_applied;
-
-                        if(Object.entries(products).length <= 0){
-                            location.reload();
-                        }
-
-                        let cartCounter = 0;
-
-                        const moneyAR = (v) => {
-                            const nf = new Intl.NumberFormat('es-AR', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            });
-                            return `$${nf.format(Number(v))}`;
-                        };
-
-                        Object.entries(products).forEach(([key, product]) => {
-
-                            let priceHtml = ``;
-                            cartCounter++;
-
-                            if (product.subtotal > product.total) {
-                                priceHtml = `<del><h4>${moneyAR(product.subtotal)} </h4> </del>
-                                             <h4 class="text-success ms-2">${moneyAR(product.total)
-                                }</h4>
-                                            `
-                            } else {
-                                priceHtml = `<h4 class="text-success">${moneyAR(product.total)
-                                }</h4> `
-
-                            }
-
-                            html += `
-
-                                <div class="p-3 my-3 d-flex align-items-center border rounded w-100 w-md-75" style="position: relative">
-                                    <button class="x-cart-button delete_cart_product" data-variant-id="${product.product_variant_id}">X</button>
-                                    <div class="order-summary-thumbnail">
-                                        <img src="${product.pic}"
-                                             alt="" class="img-fluid">
-                                            <div class="item-quantity">${product.quantity}</div>
-                                    </div>
-                                    <a href="/productos/${product.slug}" target="_blank">
-                                        <div class="d-flex align-tems-center justify-content-center">
-                                        <h5 class="d-block mx-3">${product.product_name} <br> Talle: ${product.size} <br>
-                                         <div class="color-box" data-color="${product.color}" title="${product.color_name}" style="background:${product.color}; width:18px; height:18px; margin-right:0.5rem;"></div>
-                                        </h5>
-                                        ${priceHtml}
-                                    </div>
-                                    </a>
-                                </div>
-                                `
-
-                        })
-
-                        $('#order_total').html(`<h1>${moneyAR(xhr.order_total)}</h1>`);
-                        $('#items-summary-container').empty().append(html);
-
-                        if(isCouponApplied){
-                            $('#order_total').html(`<del><h1>${moneyAR(xhr.order_total)}</h1></del> <h1>${moneyAR(xhr.order_total_after_coupon_applied)}</h1>`);
-
-                            $('#coupon-validated-success').html("Cupón validado");
-                            $('#coupon-validated-failed').html("");
-                            $('#coupon-success-code').html(`Aplicado ${xhr.coupon_discount}% OFF`)
-                        }
-
-
-                        document.querySelectorAll('.delete_cart_product').forEach(element => {
-                            element.addEventListener('click', (event) => {
-
-                                const product_variant_id = event.target.getAttribute('data-variant-id');
-                                const route = '/cart';
-
-                                $.ajax({
-                                    type: "DELETE",
-                                    url: route,
-                                    data: {
-                                        _token: $('meta[name="csrf-token"]').attr('content'),
-                                        product_variant_id: product_variant_id,
-                                    },
-                                    success: function (xhr, status, error) {
-
-                                        getItemsSummary()
-                                        updateCartCounter()
-                                        toastr.success("Producto eliminado")
-
-
-                                    }
-                                })
-                            })
-
-
-                        })
-                    },
-                    error: function (xhr, status, error) {
-                        $('#items-summary-container').html("");
-                    },
-                });
-
-            }
-
-            getItemsSummary();
-
-
-            let oldOrderTotalBeforeCoupon = 0;
-            let total = 0;
-
-            const btnValidateCoupon = document.getElementById('validate-coupon-button');
-
-            btnValidateCoupon.addEventListener('click', () => {
-
-                let coupon = document.getElementById('coupon').value;
-
-                axios.get(`{{route('validate-coupon')}}` + '?code=' + coupon)
-                    .then(response => {
-
-                        getItemsSummary();
-
-                    })
-                    .catch(error => {
-                        $('#coupon-validated-success').html("");
-                        const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
-                        $('#coupon-validated-failed').html(errorMessage);
-                    })
-
-            });
-
-        });
-    </script>
+    <script src="{{ asset('js/checkout.js') }}"></script>
 
 @endsection
 

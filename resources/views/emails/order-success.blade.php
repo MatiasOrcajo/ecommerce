@@ -24,7 +24,7 @@
             <p style="margin: 0;">Banco Santander</p>
             <p style="margin: 0;">Tipo y número de cuenta: Cuentas en Pesos  000-199196/7</p>
             <p style="margin: 0;">Número de CBU: 0720000788000019919672</p>
-            <p style="margin: 0;">Alias de CBU: DEBATE.OFERTA.PETALO</p>
+            <p style="margin: 0;">Alias de CBU: ATICAOFICIAL</p>
             <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
             <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
 

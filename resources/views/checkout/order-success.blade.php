@@ -6,6 +6,19 @@
 
 @section('content')
 
+    @php
+
+        $totalDiscount = 0;
+
+        if($order->coupon) $totalDiscount += $order->coupon->discount;
+
+        if($order->payment_method == "Transferencia bancaria") $totalDiscount += 10;
+
+
+        if($order->payment_method == "Efectivo") $totalDiscount += 10;
+
+    @endphp
+
     <style>
 
         @media (max-width: 991.98px) {
@@ -65,7 +78,6 @@
                                 <th>Talle</th>
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
-                                <th>Descuento cupón</th>
                                 <th>Subtotal</th>
                             </tr>
                             </thead>
@@ -87,18 +99,15 @@
                                     <td>{{ $orderProduct->productVariant->size }}</td>
                                     <td>{{ $orderProduct->quantity }}</td>
                                     <td>${{ $orderProduct->unit_price }}</td>
-                                    <td>{{ $orderProduct->discount }}</td>
                                     <td>${{ $orderProduct->total }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
                             <tfoot>
-                            @if($order->coupon_id !== null)
                                 <tr>
-                                    <td colspan="6" class="text-end"><strong>Descuento:</strong></td>
-                                    <td><strong>{{ $order->coupon->discount }}%</strong></td>
+                                    <td colspan="6" class="text-end"><strong>Descuentos:</strong></td>
+                                    <td><strong>{{ $totalDiscount }}%</strong></td>
                                 </tr>
-                            @endif
 
                             <tr>
                                 <td colspan="6" class="text-end"><strong>Total:</strong></td>
@@ -152,7 +161,7 @@
                                 <p style="margin: 0;">Banco Santander</p>
                                 <p style="margin: 0;">Tipo y número de cuenta: Cuentas en Pesos  000-199196/7</p>
                                 <p style="margin: 0;">Número de CBU: 0720000788000019919672</p>
-                                <p style="margin: 0;">Alias de CBU: DEBATE.OFERTA.PETALO</p>
+                                <p style="margin: 0;">Alias de CBU: ATICAOFICIAL</p>
                                 <p style="margin: 0;">Titular de la cuenta: Orcajo Matias</p>
                                 <p style="margin: 0;">Tipo y número de documento: DNI - 41564192</p>
 
