@@ -59,6 +59,8 @@ class ProductController extends Controller
         $date = Carbon::parse($request->discount_until);
         $request['discount_until'] = $date->format('Y-m-d');
         $product->update($request->toArray());
+        $product->slug = Str::slug($product->name);
+        $product->save();
 
         return back()->with('success', 'Producto editado correctamente');
 
