@@ -31,6 +31,8 @@ class PanelController extends Controller
                 "status" => $order->status,
                 "created_at" => Carbon::parse($order->created_at)->format('d/m/Y h:i A'),
                 "shipping_address" => $order->shipping_address,
+                "shipping_method" => $order->shipping_method,
+                "observations" => $order->observations,
                 "order" => $order->products->map(function ($orderProduct) use ($order){
                     return $orderProduct->quantity . "x " .
                         $orderProduct->productVariant->product->name . '<br/>' .

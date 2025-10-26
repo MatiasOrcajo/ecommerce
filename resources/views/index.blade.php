@@ -246,58 +246,56 @@
                     </div>
                 </div>
 
-                <!-- Grid para móvil (una columna) -->
-                <div class="row g-0 d-flex d-lg-none">
-                    <!-- Categoría 1 -->
-                    <div class="col-12 position-relative category-square">
-                        <a href="{{route('category.show', "bodys")}}">
+                <!-- Slider para móvil -->
+                <div class="d-flex d-lg-none overflow-auto">
+                    <div class="d-flex">
+                        <!-- Categoría 1 -->
+                        <div class="position-relative category-square flex-shrink-0"
+                             style="width: 80vw; margin-right: 1rem;">
+                            <a href="{{route('category.show', "bodys")}}">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('bodys.jpg') }}" alt="Categoría 1" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Bodys</h3>
+                                </div>
+                            </a>
+                        </div>
 
-                            <div class="category-overlay"></div>
-                            <img src="{{ asset('bodys.jpg') }}" alt="Categoría 1" class="category-img">
-                            <div class="category-content">
-                                <h3 class="category-title">Bodys</h3>
-                                {{--                                    <p class="category-subtitle">Shapewear</p>--}}
-                            </div>
-                        </a>
-                    </div>
+                        <!-- Categoría 2 -->
+                        <div class="position-relative category-square flex-shrink-0"
+                             style="width: 80vw; margin-right: 1rem;">
+                            <a href="{{route('category.show', "camiseta-reductora")}}">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('camisetas.jpg') }}" alt="Categoría 2" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Camisetas</h3>
+                                </div>
+                            </a>
+                        </div>
 
-                    <!-- Categoría 2 -->
-                    <div class="col-12 position-relative category-square">
-                        <a href="{{route('category.show', "camiseta-reductora")}}">
+                        <!-- Categoría 3 -->
+                        <div class="position-relative category-square flex-shrink-0"
+                             style="width: 80vw; margin-right: 1rem;">
+                            <a href="{{route('category.show', "faja-reductora")}}">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('fajas.jpg') }}" alt="Categoría 3" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Fajas</h3>
+                                </div>
+                            </a>
+                        </div>
 
-                            <div class="category-overlay"></div>
-                            <img src="{{ asset('camisetas.jpg') }}" alt="Categoría 2" class="category-img">
-                            <div class="category-content">
-                                <h3 class="category-title">Camisetas</h3>
-                                {{--                                    <p class="category-subtitle">Sknrit</p>--}}
-                            </div>
-                        </a>
-                    </div>
-
-                    <!-- Categoría 3 -->
-                    <div class="col-12 position-relative category-square">
-                        <a href="{{route('category.show', "faja-reductora")}}">
-
-                            <div class="category-overlay"></div>
-                            <img src="{{ asset('fajas.jpg') }}" alt="Categoría 3" class="category-img">
-                            <div class="category-content">
-                                <h3 class="category-title">Fajas</h3>
-                                {{--                                    <p class="category-subtitle">&nbsp;</p>--}}
-                            </div>
-                        </a>
-                    </div>
-
-                    <!-- Categoría 4 -->
-                    <div class="col-12 position-relative category-square">
-                        <a href="/search?q=Todos los productos">
-
-                            <div class="category-overlay"></div>
-                            <img src="{{ asset('ver-todos.jpg') }}" alt="Categoría 4" class="category-img">
-                            <div class="category-content">
-                                <h3 class="category-title">Ver todos</h3>
-                                {{--                                    <p class="category-subtitle">Intima</p>--}}
-                            </div>
-                        </a>
+                        <!-- Categoría 4 -->
+                        <div class="position-relative category-square flex-shrink-0"
+                             style="width: 80vw; margin-right: 1rem;">
+                            <a href="/search?q=Todos los productos">
+                                <div class="category-overlay"></div>
+                                <img src="{{ asset('ver-todos.jpg') }}" alt="Categoría 4" class="category-img">
+                                <div class="category-content">
+                                    <h3 class="category-title">Ver todos</h3>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

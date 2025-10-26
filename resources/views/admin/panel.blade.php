@@ -4,6 +4,12 @@
     <title>Panel - Atica</title>
 @endsection
 
+<style>
+    .container-fluid{
+        overflow-x: scroll;
+    }
+</style>
+
 @section('content')
     <div class="container-fluid p-0">
         <h2 class="my-4">Panel de pedidos</h2>
@@ -89,8 +95,18 @@
                     data: 'shipping_address'
                 },
                 {
+                    title: "Observaciones",
+                    data: 'observations'
+                },
+                {
+                    title: "Modo de envío",
+                    data: 'shipping_method',
+                    width: "10%",
+                },
+                {
                     title: "STATUS",
                     data: 'status',
+                    width: "1%",
                     render: function (data, type, full, meta) {
                         if (type === 'display') {
                             let id = full.id;
