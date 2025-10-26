@@ -239,6 +239,10 @@
                     <p class="text-secondary" style="font-size: 1.5rem; color: #785c64 !important">{{ $money($transferPrice) }} con Transferencia</p>
                     <p class="text-secondary" style="font-size: 1.5rem; color: #785c64 !important">{{ $money($cashPrice) }} en efectivo</p>
 
+                    <span id="flex-shipping-title" style="color: green; font-weight: bold; font-size: 19px"></span>
+                    <br>
+                    <span style="text-decoration: underline; cursor: pointer; font-size: 15px">Válido para CABA y GBA</span>
+
                     <div class="my-3">
                         <span class="me-2"><strong>Medios de pago:</strong></span>
                         <div class="d-flex gap-2">
@@ -417,8 +421,21 @@
 
     @push('scripts')
         <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
+        <script src="{{ asset('js/hoursCalc.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
+
+
+                /**
+                 * Setea el título dinámico de la opción “llega …”
+                 */
+                function setTitle() {
+                    const nowBA = getNowInBuenosAires();
+
+                    document.getElementById('flex-shipping-title').innerHTML = computeShippingTitleForBA(nowBA);
+                }
+
+                setInterval(setTitle, 1000); // igual que en el código original
 
                 let selectedColor, selectedSize;
                 const productId = {{$product->id}};

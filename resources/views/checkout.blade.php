@@ -202,7 +202,7 @@
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
                                             <span>Andreani</span>
                                             <br>
-                                            <small>Gratis a todo el país</small>
+                                            <small>De 1 a 3 días hábiles</small>
                                         </button>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center">
