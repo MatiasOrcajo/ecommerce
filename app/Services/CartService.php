@@ -11,7 +11,10 @@ use App\Models\ProductVariant;
 use App\Traits\CartTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class CartService
 {
@@ -110,6 +113,94 @@ class CartService
         $cartProducts->product_variants_id = $productVariant->id;
         $cartProducts->cart_id = $sessionCart["cart_id"];
         $cartProducts->save();
+
+
+        // ====== ENVIAR EVENTO A META CAPI: AddToCart ======
+
+        if(app()->environment('production')) {
+
+            try {
+
+                $pixelId     = config('facebook.pixel_id');
+                $accessToken = config('facebook.access_token');
+
+                // 1) Datos básicos del producto (ajustá los campos según tu modelo)
+                $unitPrice = $productVariant->price ?? $product->price ?? 0;
+                $quantity  = (int) $request->quantity;
+                $contentId = (string) $productVariant->id; // o sku
+
+                // 2) Armar custom_data
+                $customData = [
+                    'currency'     => 'ARS',
+                    'value'        => round($unitPrice * $quantity, 2),
+                    'content_ids'  => [$contentId],
+                    'content_type' => 'product',
+                    'contents'     => [[
+                        'id'         => $contentId,
+                        'quantity'   => $quantity,
+                        'item_price' => (float) $unitPrice,
+                    ]],
+                ];
+
+                // Cookies de Meta
+                $fbp = request()->cookie('_fbp');
+                $fbc = request()->cookie('_fbc') ?? (request('fbclid') ? 'fb.1.'.time().'.'.request('fbclid') : null);
+
+                $userData = array_filter([
+                    'client_ip_address'  => $request->ip(),
+                    'client_user_agent'  => $request->userAgent(),
+                    'fbp'                => $fbp,
+                    'fbc'                => $fbc,
+                ]);
+
+                // 4) Endpoint + payload
+                $eventId = (string) Str::uuid();
+                $endpoint = "https://graph.facebook.com/v19.0/{$pixelId}/events";
+
+                $body = [
+                    'data' => [[
+                        'event_name'       => 'AddToCart',
+                        'event_time'       => time(),
+                        'action_source'    => 'website',
+                        'event_id'         => $eventId,
+                        'event_source_url' => url()->current(),
+                        'user_data'        => $userData,
+                        'custom_data'      => $customData,
+                    ]],
+                    'access_token' => $accessToken,
+                ];
+
+                // 5) Enviar
+                $res = Http::asJson()->timeout(6)->retry(2, 200)->post($endpoint, $body);
+
+                $payloadOk = $res->successful() && ($res->json()['events_received'] ?? 0) > 0;
+
+                Log::info('Meta CAPI AddToCart response', [
+                    'ok'            => $payloadOk,
+                    'status'        => $res->status(),
+                    'events_received'=> $res->json()['events_received'] ?? null,
+                    'messages'      => $res->json()['messages'] ?? null,
+                    'fbtrace_id'    => $res->json()['fbtrace_id'] ?? null,
+                ]);
+
+                if (!$payloadOk) {
+                    Log::warning('Meta CAPI AddToCart failed', [
+                        'status' => $res->status(),
+                        'body'   => $res->json(),
+                        'endpoint' => $endpoint,
+                    ]);
+                }
+
+            } catch (\Throwable $e) {
+                Log::error('Meta CAPI AddToCart exception: '.$e->getMessage());
+            }
+
+        }
+
+
+// ====== FIN CAPI ======
+
+
 
         return response()->json(Session::get('cart'));
 
