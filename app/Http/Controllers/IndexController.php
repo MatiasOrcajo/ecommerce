@@ -34,7 +34,10 @@ class IndexController extends Controller
 
     public function index()
     {
-        $products = Product::where('featured', true)->with('variants.pictures')->get();
+        $products = Product::where('featured', true)
+            ->where('visible', true)
+            ->with('variants.pictures')
+            ->get();
         $categories = \App\Models\Category::all();
 
         return view('index', compact('products', 'categories'));
@@ -45,6 +48,7 @@ class IndexController extends Controller
     {
 
         $products = \App\Models\Product::where('featured', true)
+            ->where('visible', true)
             ->with('variants')
             ->get();
 
@@ -66,8 +70,10 @@ class IndexController extends Controller
     public function searchProductsAjax(Request $request)
     {
 
-        $products = Product::where('name', 'like', '%' . $request->q . '%')->get();
-        if($request->q == "Todos los productos") $products = Product::all();
+        $products = Product::where('name', 'like', '%' . $request->q . '%')
+            ->where('visible', true)
+            ->get();
+        if($request->q == "Todos los productos") $products = Product::where('visible', true)->get();
 
         return $this->productService->productsData($products);
 

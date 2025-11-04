@@ -74,6 +74,18 @@
                             </label>
                         </div>
 
+                        <div class="form-check mb-3">
+                            <!-- Campo oculto -->
+                            <input type="hidden" name="visible" value="0">
+
+                            <!-- Checkbox -->
+                            <input class="form-check-input" name="visible" type="checkbox" value="1"
+                                   id="visible" {{$product->visible == 1 ? 'checked' : ''}}>
+                            <label class="form-check-label" for="visible">
+                                ¿Visible?
+                            </label>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
                 </div>
