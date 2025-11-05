@@ -185,6 +185,7 @@ class CheckoutService
                 'product_variant_id' => $productVariant->id,
                 'product_name'       => $product->name,
                 'quantity'           => $qty,
+                'pic'                => $productVariant->pictures->first()?->path ?? null,
                 'subtotal'           => $subtotal,
                 'total'              => 0.0,                    // se seteará más abajo
                 'color'              => $productVariant->color      ?? null,
