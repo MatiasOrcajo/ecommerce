@@ -59,8 +59,8 @@ readonly class MercadoPagoService
                         "title" => "Orden {$order->code} atica.com.ar",
                         "quantity" => 1,
                         "currency_id" => "ARS",
-//                        "unit_price" => $order->total_amount
-                        "unit_price" => 10
+                        "unit_price" => $order->total_amount
+//                        "unit_price" => 10
 
                     ),
                 ),
