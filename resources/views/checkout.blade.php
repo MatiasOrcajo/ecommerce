@@ -37,7 +37,8 @@
     <div class="container mt-5 mt-md-4 translate-y-mobile" style="max-width: 100%; ">
         <div class="row">
             <!-- Formulario de compra -->
-            <div class="col-md-7 steps-container" style="padding-bottom: 20rem; background: #ffffff;">
+            <div class="col-md-7 steps-container order-2 order-md-1"
+                 style="padding-bottom: 20rem; background:#ffffff;">
                 <div id="stepForm" class="step-form-container">
                     <!-- Step navigation -->
                     <ul class="nav nav-pills mb-4 ul-steps" id="steps">
@@ -265,7 +266,7 @@
             </div>
 
             <!-- Información del producto -->
-            <div class="col-md-5 checkout-info-container">
+            <div class="col-md-5 checkout-info-container order-1 order-md-2">
                 <h3 class="mb-3">Resumen de la compra</h3>
                 <div class="m-0 p-0" id="items-summary-container">
 

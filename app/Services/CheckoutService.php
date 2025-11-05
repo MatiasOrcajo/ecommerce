@@ -117,162 +117,144 @@ class CheckoutService
     /**
      * Obtiene toda la información del carrito
      *
+     * Modifica la variable $applyTwoForOne (true / false) para
+     * activar o desactivar la promoción 2×1 sin tocar otro código.
+     *
      * @return array
      */
     public function getCartInfo()
     {
+        /*-----------------------------------------------------------
+         | Cambia este valor para controlar la promo 2×1
+         +----------------------------------------------------------*/
+        $applyTwoForOne = true;
+
+        /*------------------  Datos base del carrito ----------------*/
         $cart = Session::get('cart', [
-            'products' => [],
+            'products'          => [],
             'is_coupon_applied' => false,
-            'coupon_code' => null,
-            'coupon_discount' => 0,
-            'coupon_id' => null,
+            'coupon_code'       => null,
+            'coupon_discount'   => 0,
+            'coupon_id'         => null,
         ]);
 
-        $data = [
-            'products' => [],
-        ];
+        $data = [ 'products' => [] ];
 
         if (!empty($cart['is_coupon_applied'])) {
             $data['is_coupon_applied'] = (bool) $cart['is_coupon_applied'];
-            $data['coupon_code'] = $cart['coupon_code'] ?? null;
-            $data['coupon_discount'] = $cart['coupon_discount'] ?? 0;
+            $data['coupon_code']       = $cart['coupon_code']     ?? null;
+            $data['coupon_discount']   = $cart['coupon_discount'] ?? 0;
         }
 
-        // Convierte un % en factor restante [0..1]
+        /* Helper: % → factor restante [0..1] */
         $remainingPercentage = static function ($discount): float {
             $d = is_numeric($discount) ? (float) $discount : 0.0;
-            if ($d < 0) $d = 0;
-            if ($d > 100) $d = 100;
+            $d = max(0, min(100, $d));
             return 1 - ($d / 100);
         };
 
-        // Genera una clave de grupo a partir del nombre sin la última palabra.
-        // Normaliza: quita acentos, a minúsculas y colapsa espacios.
+        /* Helper: genera clave de grupo (nombre sin última palabra) */
         $groupKeyFromName = static function (?string $name): string {
-            $name = (string) $name;
-            $name = trim(preg_replace('/\s+/u', ' ', $name));
-            // Quitar última palabra si hay más de una
+            $name   = trim(preg_replace('/\s+/u', ' ', (string) $name));
             $tokens = $name !== '' ? preg_split('/\s+/u', $name, -1, PREG_SPLIT_NO_EMPTY) : [];
-            if (is_array($tokens) && count($tokens) > 1) {
-                array_pop($tokens);
-                $base = implode(' ', $tokens);
-            } else {
-                $base = $name;
-            }
-            // Normalización: ascii + lower
-            $base = \Illuminate\Support\Str::ascii($base);
-            $base = mb_strtolower($base);
-            // Clave "estable" (sin espacios raros)
-            return trim($base);
+            $base   = (is_array($tokens) && count($tokens) > 1) ? implode(' ', array_slice($tokens, 0, -1)) : $name;
+            return trim(mb_strtolower(\Illuminate\Support\Str::ascii($base)));
         };
 
-        $items = [];   // items enriquecidos
-        $line = 0;
+        /*------------------- Armado de ítems ----------------------*/
+        $items = [];
+        $line  = 0;
 
         foreach ($cart['products'] as $productInCart) {
             $variantId = $productInCart['product_variant_id'] ?? null;
-            $qty = (int) ($productInCart['quantity'] ?? 0);
-            if (!$variantId || $qty <= 0) {
-                $line++;
-                continue;
-            }
+            $qty       = (int) ($productInCart['quantity']   ?? 0);
+
+            if (!$variantId || $qty <= 0) { $line++; continue; }
 
             $productVariant = \App\Models\ProductVariant::find($variantId);
-            if (!$productVariant || !$productVariant->product) {
-                $line++;
-                continue;
-            }
+            if (!$productVariant || !$productVariant->product) { $line++; continue; }
 
-            $product = $productVariant->product;
-
-            $unitBasePrice = (float) $product->price;
-            $subtotal = $unitBasePrice * $qty;
-
-            // Precio unitario tras descuento de producto (si lo tiene)
-            $unitPriceAfterProductDiscount = $product->discount
+            $product          = $productVariant->product;
+            $unitBasePrice    = (float) $product->price;
+            $subtotal         = $unitBasePrice * $qty;
+            $unitPriceAfterPd = $product->discount
                 ? $unitBasePrice * $remainingPercentage($product->discount)
                 : $unitBasePrice;
 
             $data['products'][$line] = [
                 'product_variant_id' => $productVariant->id,
-                'product_name' => $product->name,
-                'quantity' => $qty,
-                'subtotal' => $subtotal,
-                'total' => 0.0, // se actualizará tras distribuir el 2x1 por grupo
-                'color' => $productVariant->color ?? null,
-                'size' => $productVariant->size ?? null,
-                'color_name' => $productVariant->color_name ?? null,
-                'slug' => $product->slug,
+                'product_name'       => $product->name,
+                'quantity'           => $qty,
+                'subtotal'           => $subtotal,
+                'total'              => 0.0,                    // se seteará más abajo
+                'color'              => $productVariant->color      ?? null,
+                'size'               => $productVariant->size       ?? null,
+                'color_name'         => $productVariant->color_name ?? null,
+                'slug'               => $product->slug,
             ];
 
             $items[] = [
-                'line' => $line, // índice en $data['products']
-                'group_key' => $groupKeyFromName($product->name), // nombre sin última palabra
-                'product_id' => $product->id,
-                'variant_id' => $productVariant->id,
-                'qty' => $qty,
-                'unit_price' => $unitPriceAfterProductDiscount,
+                'line'        => $line,
+                'group_key'   => $groupKeyFromName($product->name),
+                'product_id'  => $product->id,
+                'variant_id'  => $productVariant->id,
+                'qty'         => $qty,
+                'unit_price'  => $unitPriceAfterPd,
             ];
 
             $line++;
         }
 
-        // Agrupamos por nombre base (sin última palabra)
+        /*-------------------- Agrupación --------------------------*/
         $groups = [];
-        foreach ($items as $it) {
-            $groups[$it['group_key']][] = $it;
-        }
+        foreach ($items as $it) { $groups[$it['group_key']][] = $it; }
 
-        // Para cada grupo: 2x1 a nivel de grupo y distribución de unidades pagas
-        foreach ($groups as $groupKey => $groupItems) {
-            $totalQty = array_sum(array_column($groupItems, 'qty'));
-            if ($totalQty <= 0) {
+        /*-------------------- Cálculo totales ---------------------*/
+        foreach ($groups as $groupItems) {
+
+            // --- Sin 2×1: cobra todo normalmente ---
+            if (!$applyTwoForOne) {
+                foreach ($groupItems as $gi) {
+                    $idx = $gi['line'];
+                    $data['products'][$idx]['total'] = $gi['qty'] * $gi['unit_price'];
+                }
                 continue;
             }
 
-            // 2x1: se pagan ceil(totalQty / 2)
-            $paidUnits = intdiv($totalQty, 2) + ($totalQty % 2);
+            // --- Con 2×1 ---
+            $totalQty = array_sum(array_column($groupItems, 'qty'));
+            if ($totalQty <= 0) continue;
+
+            $paidUnits     = intdiv($totalQty, 2) + ($totalQty % 2);
             $paidRemaining = $paidUnits;
 
-            // Asignar primero a líneas con mayor precio unitario
-            usort($groupItems, function ($a, $b) {
-                if ($a['unit_price'] === $b['unit_price']) return 0;
-                return ($a['unit_price'] > $b['unit_price']) ? -1 : 1;
-            });
+            // Prioriza los más caros
+            usort($groupItems, fn($a,$b) => $a['unit_price'] <=> $b['unit_price'] ? ($a['unit_price'] > $b['unit_price'] ? -1 : 1) : 0);
 
             foreach ($groupItems as $gi) {
-                $lineIndex = $gi['line'];
+                $idx = $gi['line'];
 
                 if ($paidRemaining <= 0) {
-                    // todas estas unidades entran como “gratis”
-                    $data['products'][$lineIndex]['total'] = 0.0;
+                    $data['products'][$idx]['total'] = 0.0;   // gratis
                     continue;
                 }
 
-                $paidForThisVariant = min($gi['qty'], $paidRemaining);
-                $lineTotal = $paidForThisVariant * $gi['unit_price'];
-
-                $data['products'][$lineIndex]['total'] = $lineTotal;
-
-                $paidRemaining -= $paidForThisVariant;
+                $paidForVariant               = min($gi['qty'], $paidRemaining);
+                $data['products'][$idx]['total'] = $paidForVariant * $gi['unit_price'];
+                $paidRemaining                -= $paidForVariant;
             }
         }
 
-        // Totales de orden
-        $order_total = 0.0;
-        foreach ($data['products'] as $p) {
-            $order_total += (float) $p['total'];
-        }
+        /*------------------ Total del pedido ----------------------*/
+        $order_total = array_reduce($data['products'], fn($c,$p)=>$c+$p['total'], 0.0);
         $data['order_total'] = $order_total;
 
-        // Cupón (si aplica)
+        /*------------------ Cupón (opcional) ----------------------*/
         $orderTotalAfterCoupon = $order_total;
         if (!empty($cart['is_coupon_applied'])) {
-            $coupon = null;
-            if (!empty($cart['coupon_code'])) {
-                $coupon = \App\Models\Coupon::where('code', $cart['coupon_code'])->first();
-            }
+            $coupon          = !empty($cart['coupon_code'])
+                ? \App\Models\Coupon::where('code', $cart['coupon_code'])->first()
+                : null;
             $discountPercent = $coupon?->discount ?? ($cart['coupon_discount'] ?? 0);
             $orderTotalAfterCoupon = $order_total * $remainingPercentage($discountPercent);
         }
