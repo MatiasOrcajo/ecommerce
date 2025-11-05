@@ -148,6 +148,9 @@ class ProductController extends Controller
         $product = Product::where("slug", $slug)->firstOrFail();
         $categories = \App\Models\Category::all();
 
+        $product->visits += 1;
+        $product->save();
+
         return view('product', compact('product', 'categories'));
     }
 
