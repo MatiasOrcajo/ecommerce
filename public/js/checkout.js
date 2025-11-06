@@ -486,6 +486,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+
+        if(!selectedPaymentMethod || !selectedShipmentMethod) {
+
+            toastr.error("Por favor, seleccione un método de pago y de envío.");
+            return;
+        }
+
         const data = {
             name: document.getElementById('firstName').value,
             surname: document.getElementById('lastName').value,
@@ -508,14 +515,18 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
         });
 
+        $('#submit').html('<div class="spinner-border text-white" role="status"><span class="visually-hidden">Cargando...</span></div>');
+
         $.ajax({
             type: "POST",
             url: '/pay',
             data: {data: JSON.stringify(data), _token: $('meta[name="csrf-token"]').attr('content')},
             success: function (res) {
                 window.open(res.init_point, '_blank');
+                $('#submit').html('Finalizar compra');
             },
-            error: function () { /* logging opcional */
+            error: function () {
+                $('#submit').html('Finalizar compra');
             }
         });
     });
