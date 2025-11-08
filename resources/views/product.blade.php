@@ -284,7 +284,7 @@
 
                             <img src="{{asset('guia-talles-body2.png')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
 
-                            <img src="{{asset('guia-talles-faja2.png')}}" alt="Guia talles Faja" style="width: 100%; margin-top: 2rem">
+                            <img src="{{asset('guia-talles-faja3.png')}}" alt="Guia talles Faja" style="width: 100%; margin-top: 2rem">
 
                             <img src="{{asset('guia-talles-camiseta.png')}}" alt="Guia talles Camiseta" style="width: 100%; margin-top: 2rem">
 
