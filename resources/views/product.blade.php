@@ -280,13 +280,11 @@
 
                             <p>Cada cuerpo es distinto, por eso queremos ayudarte a encontrar el talle que mejor se adapte a vos. Nuestros productos vienen del talle S al XXL, y acá te dejamos una guía de equivalencias y recomendaciones para que elijas con confianza.</p>
 
-                            <small>👉 Tip: si estás entre dos talles, te recomendamos elegir el más grande para que te resulte más cómodo y el ajuste sea natural.</small>
-                                <br>
                             <small>👉 Todos nuestros productos tienen compresión, así que no hace falta pedir un talle más chico.</small>
 
-                            <img src="{{asset('guia-talles-body.png')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
+                            <img src="{{asset('guia-talles-body2.png')}}" alt="Guia talles Body" style="width: 100%; margin-top: 2rem">
 
-                            <img src="{{asset('guia-talles-faja.png')}}" alt="Guia talles Faja" style="width: 100%; margin-top: 2rem">
+                            <img src="{{asset('guia-talles-faja2.png')}}" alt="Guia talles Faja" style="width: 100%; margin-top: 2rem">
 
                             <img src="{{asset('guia-talles-camiseta.png')}}" alt="Guia talles Camiseta" style="width: 100%; margin-top: 2rem">
 
