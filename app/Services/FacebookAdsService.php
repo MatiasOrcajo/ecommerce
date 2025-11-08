@@ -23,15 +23,9 @@ class FacebookAdsService
     public function __construct()
     {
         // Compat: primero busca en services.facebook.*, si no encuentra usa facebook.*
-        $this->accessToken = (string) (
-        config('services.facebook.pixel_access_token')
-            ?: config('facebook.access_token')
-        );
+        $this->accessToken = config('facebook.access_token');
 
-        $this->pixelId = (string) (
-        config('services.facebook.pixel_id')
-            ?: config('facebook.pixel_id')
-        );
+        $this->pixelId = config('facebook.pixel_id');
 
         $this->testEventCode = config('services.facebook.pixel_test_code')
             ?: config('facebook.pixel_test_code');
