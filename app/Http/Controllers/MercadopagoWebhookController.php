@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FacebookPurchaseEventJob;
 use App\Jobs\SendNewSaleEmail;
 use App\Jobs\SendOrderSuccessEmail;
 use App\Models\Order;
@@ -65,6 +66,9 @@ class MercadopagoWebhookController extends Controller
 
         if($response["order_status"] == "paid" ){
             $order->status = "Pago recibido";
+
+            FacebookPurchaseEventJob::dispatch($order, $order->ctx);
+
 
             if($order->email_sent == false){
                 SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));

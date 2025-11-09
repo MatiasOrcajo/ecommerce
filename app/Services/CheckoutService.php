@@ -66,11 +66,8 @@ class CheckoutService
         $order->payment_method = $paymentMethods[$selectedPaymentMethod];
         $order->observations = $request->observations;
         $order->valid_for_arrives_today = $request->shipping_method == "FLEX";
-        $order->save();
 
-        Session::put("email_validated_$order->code", true);
-
-        $ctx = [
+        $order->ctx = [
             'ip'         => $http->ip(),
             'user_agent' => $http->userAgent(),
             'url'        => $http->fullUrl(),
@@ -81,7 +78,10 @@ class CheckoutService
             'phone'      => optional($http->user())->phone,
         ];
 
-        FacebookPurchaseEventJob::dispatch($order, $ctx);
+        $order->save();
+
+        Session::put("email_validated_$order->code", true);
+
 
         if ($selectedPaymentMethod == "bank-transfer" || $selectedPaymentMethod == "cash") {
 

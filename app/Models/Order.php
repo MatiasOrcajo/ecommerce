@@ -12,6 +12,10 @@ class Order extends Model
     protected $table = 'orders';
     protected $guarded;
 
+    protected $casts = [
+        'ctx' => 'array',
+    ];
+
 
     /**
      * Retorna al cliente relacionado con una orden (pedido)
