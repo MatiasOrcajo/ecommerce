@@ -63,7 +63,7 @@ class MercadopagoWebhookController extends Controller
 
         $order = Order::find($response["external_reference"]);
 
-        if($response["order_status"] == "paid" || $response["order_status"] == "partially_paid" ){
+        if($response["order_status"] == "paid" ){
             $order->status = "Pago recibido";
 
             if($order->email_sent == false){

@@ -23,9 +23,8 @@ class FacebookAdsService
     public function __construct()
     {
         // Compat: primero busca en services.facebook.*, si no encuentra usa facebook.*
-        $this->accessToken = config('facebook.access_token');
-
-        $this->pixelId = config('facebook.pixel_id');
+        $pixelId     = config('facebook.pixel_id');
+        $accessToken = config('facebook.access_token');
 
         $this->testEventCode = config('services.facebook.pixel_test_code')
             ?: config('facebook.pixel_test_code');
@@ -36,14 +35,14 @@ class FacebookAdsService
         );
 
         // Validaciones claras para evitar “id vacío”
-        if (empty($this->accessToken)) {
+        if (empty($accessToken)) {
             throw new \InvalidArgumentException('Facebook CAPI access token is missing (services.facebook.pixel_access_token / facebook.access_token).');
         }
-        if (empty($this->pixelId) || !ctype_digit($this->pixelId)) {
+        if (empty($pixelId) || !ctype_digit($pixelId)) {
             throw new \InvalidArgumentException('Facebook Pixel ID missing/invalid. It must be numeric.');
         }
 
-        Api::init(null, null, $this->accessToken);
+        Api::init(null, null, $accessToken);
         Api::instance()->setLogger(new CurlLogger());
     }
 
