@@ -119,13 +119,13 @@
                                 'Envío realizado',
                                 'Esperando que el cliente retire',
                                 'Retiro realizado',
-                                'Expirado',
                             ];
 
                             // Estados que deben deshabilitar el select
                             const disabledStatuses = [
                                 'Pago fallido',
-                                'Pago pendiente de aprobación'
+                                'Pago pendiente de aprobación',
+                                'Expirado',
                             ];
 
                             // Verificamos si el select debe estar deshabilitado
