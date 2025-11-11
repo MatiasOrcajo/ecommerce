@@ -119,6 +119,7 @@
                                 'Envío realizado',
                                 'Esperando que el cliente retire',
                                 'Retiro realizado',
+                                'Expirado',
                             ];
 
                             // Estados que deben deshabilitar el select
