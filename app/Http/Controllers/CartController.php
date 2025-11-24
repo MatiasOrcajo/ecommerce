@@ -70,9 +70,8 @@ class CartController extends Controller
      */
     public function calculateCartTotalItems()
     {
-        $cart = $this->getCart();
 
-        return isset($cart) ? count($cart["products"]) : 0;
+        return $this->getCart();
     }
 
 

@@ -1,4 +1,141 @@
 <style>
+
+
+    .cart-panel-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .25s ease;
+        z-index: 1040;
+    }
+
+    .cart-panel-overlay.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .cart-panel {
+        position: fixed;
+        top: 0;
+        right: -420px;
+        width: 420px;
+        max-width: 100%;
+        height: 100vh;
+        background: #ffffff;
+        box-shadow: -4px 0 20px rgba(15, 23, 42, .25);
+        z-index: 1041;
+        display: flex;
+        flex-direction: column;
+        transition: right .35s ease;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .cart-panel.is-open {
+        right: 0;
+    }
+
+    .cart-panel-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .cart-panel-body {
+        padding: 16px 20px;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .cart-panel-footer {
+        padding: 16px 20px 24px;
+        border-top: 1px solid #e5e7eb;
+        background: #ffffff;
+    }
+
+    .cart-panel-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .cart-panel-item-img {
+        width: 64px;
+        height: 64px;
+        border-radius: 4px;
+        overflow: hidden;
+        background: #f3f4f6;
+        flex-shrink: 0;
+    }
+
+    .cart-panel-item-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .cart-panel-item-info {
+        flex: 1;
+    }
+
+    .cart-panel-item-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    .cart-panel-item-qty {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        overflow: hidden;
+    }
+
+    .cart-panel-item-qty button {
+        border: none;
+        background: #f9fafb;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+    }
+
+    .cart-panel-item-qty span {
+        padding: 2px 12px;
+        font-size: 14px;
+    }
+
+    .cart-panel-item-price {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+        white-space: nowrap;
+    }
+
+    .cart-panel-btn-primary {
+        background: #1f2933;
+        color: #ffffff;
+        border-radius: 999px;
+        padding: 10px 16px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        cursor: pointer;
+    }
+
+    .cart-panel-btn-primary:hover {
+        filter: brightness(1.05);
+    }
+
+
     /* Ancho del offcanvas móvil al 80% */
     @media (max-width: 991.98px) {
         #mainOffcanvas {
@@ -70,11 +207,125 @@
             lastScroll = currentScroll;
         });
 
+        function formatMoneyAR(value) {
+            const nf = new Intl.NumberFormat('es-AR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            return `$${nf.format(Number(value) || 0)}`;
+        }
+
+// Cargar la info del carrito desde /cart-info
+        function loadCartPanelData() {
+            $.ajax({
+                type: 'GET',
+                url: '/cart-info',
+                success: function (cart) {
+                    const products = cart.products || [];
+
+                    const itemsHtml = products.map(function (p) {
+                        // precio unitario aproximado (por las dudas)
+                        const unitPrice = p.quantity ? (p.subtotal / p.quantity) : p.subtotal;
+
+                        return `
+                <div class="cart-panel-item">
+                    <div class="cart-panel-item-img">
+                        <img src="${p.pic}" alt="${p.product_name}">
+                    </div>
+
+                    <div class="cart-panel-item-info">
+                        <div class="cart-panel-item-name">${p.product_name}</div>
+
+                        <div class="cart-panel-item-qty">
+                            <button type="button" data-action="minus" data-id="${p.product_variant_id}">−</button>
+                            <span>${p.quantity}</span>
+                            <button type="button" data-action="plus" data-id="${p.product_variant_id}">+</button>
+                        </div>
+                    </div>
+
+                    <div class="cart-panel-item-price">
+                        ${formatMoneyAR(unitPrice)}
+                    </div>
+                </div>`;
+                    }).join('');
+
+                    $('#cartPanelItems').html(itemsHtml);
+
+                    const orderTotal = cart.order_total_after_coupon_applied ?? cart.order_total ?? 0;
+
+                    // como no tenés envío aún, uso el mismo valor para subtotal y total
+                    $('#cartPanelSubtotal').text(formatMoneyAR(orderTotal));
+                    $('#cartPanelTotal').text(formatMoneyAR(orderTotal));
+                },
+                error: function () {
+                    $('#cartPanelItems').html('<p>No se pudo cargar el carrito.</p>');
+                    $('#cartPanelSubtotal').text('$0,00');
+                    $('#cartPanelTotal').text('$0,00');
+                }
+            });
+        }
+
+        document.querySelectorAll('.js-open-cart').forEach(function (event) {
+
+            event.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                $('#cartPanelOverlay').addClass('is-open');
+                $('#cartPanel').addClass('is-open');
+                loadCartPanelData();
+
+                $('#cartPanelOverlay').on('click', function () {
+                    $('#cartPanelOverlay').removeClass('is-open');
+                    $('#cartPanel').removeClass('is-open');
+                });
+
+                $('#cartPanelClose').on('click', function () {
+                    $('#cartPanelOverlay').removeClass('is-open');
+                    $('#cartPanel').removeClass('is-open');
+                });
+            })
+
+        })
 
 
     });
 
 </script>
+
+<!-- Overlay oscuro -->
+<div id="cartPanelOverlay" class="cart-panel-overlay"></div>
+
+<!-- Panel lateral de carrito -->
+<div id="cartPanel" class="cart-panel">
+    <div class="cart-panel-header">
+        <h5 class="mb-0">Carrito de Compras</h5>
+        <button type="button" class="btn-close" id="cartPanelClose" aria-label="Cerrar"></button>
+    </div>
+
+    <div class="cart-panel-body">
+        <div id="cartPanelItems"></div>
+    </div>
+
+    <div class="cart-panel-footer">
+        <div class="cart-panel-subtotal d-flex justify-content-between">
+            <span>Subtotal (sin envío):</span>
+            <strong id="cartPanelSubtotal">$0,00</strong>
+        </div>
+        <div class="cart-panel-total d-flex justify-content-between mt-2">
+            <span class="fw-bold">Total:</span>
+            <span class="fw-bold fs-5" id="cartPanelTotal">$0,00</span>
+        </div>
+
+        <button class="cart-panel-btn-primary mt-3 w-100"
+                onclick="window.location.href='{{ route('cart') }}'">
+            INICIAR COMPRA
+        </button>
+
+        <a href="{{ route('cart') }}" class="d-block text-center mt-3 small text-decoration-underline">
+            Ver más productos
+        </a>
+    </div>
+</div>
 
 
 <header class="d-none d-lg-block fixed-top">
@@ -114,12 +365,14 @@
             </div>
 
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-                <a href="{{ route('cart') }}" class="position-relative text-dark">
+                <a
+                    class="position-relative text-dark js-open-cart">
                     <i class="fa-solid fa-cart-shopping fs-5"></i>
                     <span id="cart_counter"
                           class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">0</span>
                 </a>
             </div>
+
         </div>
     </nav>
 
@@ -202,11 +455,12 @@
             </a>
 
             <!-- Derecha: carrito -->
-            <a href="{{ route('cart') }}" class="d-flex align-items-center text-dark"
+            <a class="d-flex align-items-center text-dark js-open-cart"
                style="position:absolute; right:12px; top:12px; z-index:2;">
                 <i class="fa-solid fa-cart-shopping fs-4"></i>
                 <span class="badge bg-dark text-white ms-2" id="cart_counter_responsive">0</span>
             </a>
+
             <!-- Offcanvas: Buscador + Carrito + Enlaces -->
             <div class="offcanvas offcanvas-start" tabindex="-1" id="mainOffcanvas" aria-labelledby="offcanvasLabel">
                 <div class="offcanvas-header">

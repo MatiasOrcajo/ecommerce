@@ -46,7 +46,28 @@ trait CartTrait
      */
     public function getCart()
     {
-        return Session::get('cart');
+        $cart = collect(Session::get('cart'));
+
+        $cart['products'] = collect($cart['products'])
+            ->map(function (array $item) {
+
+                $variant = ProductVariant::with('product')
+                    ->find($item['product_variant_id']);
+
+                if (! $variant) {
+                    return $item;
+                }
+
+                return [
+                    'product_variant_id' => $variant->id,
+                    'quantity'           => $item['quantity'],
+                    'name'               => $variant->product->name,
+                    'image'              => $variant->findFirstSimilarVariantWithPicture(),
+                ];
+            })
+            ->toArray();
+
+        return $cart;
     }
 
 

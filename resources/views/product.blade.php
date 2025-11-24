@@ -464,7 +464,7 @@
                             success: function (xhr, status, error) {
                                 button.html('AGREGAR AL CARRITO').prop('disabled', false);
                                 successDiv.html('<div class="alert alert-success mt-3">¡Producto agregado al carrito!</div>');
-                                updateCartCounter();
+                                updateCartCounter(true);
                             },
                             error: function () {
                                 button.html('AGREGAR AL CARRITO').prop('disabled', false);

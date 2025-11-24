@@ -17,6 +17,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const provinceEl = document.getElementById('province');
     const localityEl = document.getElementById('locality');
 
+
+    const addressSectionEl = document.getElementById('address-section');
+
+// Summary (step 2)
+    const summaryEmailEl = document.getElementById('summaryEmail');
+    const summaryPhoneEl = document.getElementById('summaryPhone');
+    const summaryShippingMethodEl = document.getElementById('summaryShippingMethod');
+    const summaryAddressEl = document.getElementById('summaryAddress');
+    const summaryCityZipEl = document.getElementById('summaryCityZip');
+    const summaryEditContactBtn = document.getElementById('summaryEditContact');
+    const summaryEditShippingBtn = document.getElementById('summaryEditShipping');
+
+
+    function toggleAddressSectionByShipmentMethod(method) {
+        if (!addressSectionEl) return;
+
+        if (method === 'take-away') {
+            addressSectionEl.classList.add('d-none');
+        } else {
+            addressSectionEl.classList.remove('d-none');
+            const zip = document.getElementById('zip_code')?.value || '';
+            const zipReadonly = document.getElementById('zip_code_readonly');
+            if (zipReadonly) zipReadonly.value = zip;
+        }
+    }
+
+
     // Opción “llega hoy / mañana / lunes”
     const arrivesWrapper = document.getElementById('shipping-option-wrapper');
     const arrivesTitleEl = document.getElementById('shipping-option-title');
@@ -191,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const countdown = `${hh}:${pad(mm)}:${pad(ss)}`;
 
-        return `${title} Comprando antes de ${countdown}`;
+        return `${title}`;
     }
 
     /**
@@ -246,16 +273,19 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("take-away-button")
         ?.addEventListener("click", () => {
             selectedShipmentMethod = "take-away";
+            toggleAddressSectionByShipmentMethod(selectedShipmentMethod);
         });
 
     document.getElementById("andreani-button")
         ?.addEventListener("click", () => {
             selectedShipmentMethod = "andreani";
+            toggleAddressSectionByShipmentMethod(selectedShipmentMethod);
         });
 
     document.getElementById("shipping-option-wrapper")
         ?.addEventListener("click", () => {
             selectedShipmentMethod = "FLEX";
+            toggleAddressSectionByShipmentMethod(selectedShipmentMethod);
         });
 
     // Mostrar/ocultar la opción “llega …” al cambiar localidad/provincia
@@ -287,74 +317,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* =========================================================================
-     * 5) STYLING DE BOTONES (PAGO / ENVÍO)
-     * ========================================================================= */
+ * 5) STYLING DE BOTONES (PAGO / ENVÍO)
+ * ========================================================================= */
 
-    // Botones de método de pago: marcan selección con estilos inline
+// Método de pago: usamos clase .selected
     paymentMethodButtons.forEach((button) => {
-        button.addEventListener("click", (event) => {
+        button.addEventListener("click", () => {
+            // quitamos selección de todos
+            paymentMethodButtons.forEach(btn => btn.classList.remove('selected'));
 
-            // Remover estilos de otros botones
-            paymentMethodButtons.forEach(btn => {
-                btn.style.color = "";
-                btn.style.backgroundColor = "";
-                btn.style.borderColor = "";
-            });
+            // marcamos el clickeado
+            button.classList.add('selected');
 
-            // Aplicar clases al botón seleccionado
-            event.target.closest('button').style.color = "var(--bs-btn-hover-color)";
-            event.target.closest('button').style.backgroundColor = "#bc8d8a";
-            event.target.closest('button').style.borderColor = "#bc8d8a";
-
-            selectedPaymentMethod = event.target.closest('.payment_method').getAttribute('data-payment-method');
-
+            selectedPaymentMethod = button.getAttribute('data-payment-method');
         });
     });
 
-    // Botones de método de envío: seleccionan/deseleccionan con estilo
-    let currentlySelectedButton = null;
+// Método de envío: solo manejamos visual, el valor ya lo seteás
+// en los listeners de "take-away-button", "andreani-button" y "shipping-option-wrapper".
     shipmentMethodButtons.forEach((button) => {
-        button.addEventListener("click", (event) => {
-            const clickedButton = event.target.closest('button');
-            if (!clickedButton) return;
-
-            // Si clickeo el ya seleccionado → lo “des-selecciono”
-            if (currentlySelectedButton === clickedButton) {
-                if (clickedButton.textContent.includes('Llega')) {
-                    clickedButton.style.color = "green";
-                    clickedButton.style.backgroundColor = "";
-                    clickedButton.style.borderColor = "green";
-                    clickedButton.style.fontWeight = "bold";
-                } else {
-                    clickedButton.style.color = "";
-                    clickedButton.style.backgroundColor = "";
-                    clickedButton.style.borderColor = "";
-                }
-                currentlySelectedButton = null;
-                return;
-            }
-
-            // Reset de todos
-            shipmentMethodButtons.forEach(btn => {
-                if (btn.textContent.includes('Llega')) {
-                    btn.style.color = "green";
-                    btn.style.backgroundColor = "";
-                    btn.style.borderColor = "green";
-                    btn.style.fontWeight = "bold";
-                } else {
-                    btn.style.color = "";
-                    btn.style.backgroundColor = "";
-                    btn.style.borderColor = "";
-                }
-            });
-
-            // Aplico estilo al clickeado
-            clickedButton.style.color = "var(--bs-btn-hover-color)";
-            clickedButton.style.backgroundColor = "#bc8d8a";
-            clickedButton.style.borderColor = "#bc8d8a";
-            currentlySelectedButton = clickedButton;
+        button.addEventListener("click", () => {
+            shipmentMethodButtons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
         });
     });
+
 
     /* =========================================================================
      * 6) POBLADO DE PROVINCIAS / LOCALIDADES
@@ -438,7 +425,16 @@ document.addEventListener("DOMContentLoaded", () => {
             setActiveTab("step2");
             document.getElementById('step-client').classList.remove("grey-background");
             document.getElementById('step-payment').classList.add("grey-background");
+            fillSummary();
         });
+
+    summaryEditContactBtn?.addEventListener('click', () => {
+        setActiveTab('step1');
+    });
+
+    summaryEditShippingBtn?.addEventListener('click', () => {
+        setActiveTab('step1');
+    });
 
     /**
      * Activa la pestaña dada (step1/step2) y ajusta visualmente los pasos.
@@ -466,9 +462,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('submit')?.addEventListener('click', () => {
         // Validaciones mínimas
         const requiredFields = [
-            'firstName', 'lastName', 'phone', 'documentNumber', 'email',
-            'locality', 'province', 'street', 'number', 'zip_code'
+            'firstName', 'lastName', 'phone', 'documentNumber', 'email'
         ];
+
+// Solo obligamos domicilio si NO es retiro en CABA
+        if (selectedShipmentMethod !== 'take-away') {
+            requiredFields.push('locality', 'province', 'street', 'number', 'zip_code');
+        }
 
         let isValid = true;
         requiredFields.forEach((field) => {
@@ -487,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        if(!selectedPaymentMethod || !selectedShipmentMethod) {
+        if (!selectedPaymentMethod || !selectedShipmentMethod) {
 
             toastr.error("Por favor, seleccione un método de pago y de envío.");
             return;
@@ -573,33 +573,64 @@ document.addEventListener("DOMContentLoaded", () => {
                         : `<h4 class="text-success">${moneyAR(product.total)}</h4>`;
 
                     html += `
-                        <div class="p-3 my-3 d-flex align-items-center border rounded w-100 w-md-75" style="position: relative">
-                            <button class="x-cart-button delete_cart_product" data-variant-id="${product.product_variant_id}">X</button>
-                            <div class="order-summary-thumbnail">
-                                <img src="${product.pic}" alt="" class="img-fluid">
-                                <div class="item-quantity">${product.quantity}</div>
-                            </div>
-                            <a href="/productos/${product.slug}" target="_blank">
-                                <div class="d-flex align-tems-center justify-content-center">
-                                    <h5 class="d-block mx-3">
-                                        ${product.product_name} <br>
-                                        Talle: ${product.size} <br>
-                                        <div class="color-box" data-color="${product.color}" title="${product.color_name}" style="background:${product.color}; width:18px; height:18px; margin-right:0.5rem;"></div>
-                                    </h5>
-                                    ${priceHtml}
+                        <div class="cart-item-card p-3 my-3 border rounded w-100 w-md-75 position-relative">
+                            <button class="x-cart-button delete_cart_product"
+                                    data-variant-id="${product.product_variant_id}">
+                                X
+                            </button>
+
+                            <div class="d-flex gap-3">
+                                <!-- Thumbnail -->
+                                <div class="order-summary-thumbnail flex-shrink-0">
+                                    <img src="${product.pic}" alt="" class="img-fluid">
+                                    <div class="item-quantity">${product.quantity}</div>
                                 </div>
-                            </a>
-                        </div>`;
+
+                                <!-- Info + precio -->
+                                <div class="d-flex flex-column flex-md-row flex-grow-1 justify-content-between">
+                                    <!-- Texto del producto -->
+                                    <a href="/productos/${product.slug}"
+                                       target="_blank"
+                                       class="cart-item-link text-decoration-none text-dark flex-grow-1">
+                                        <h5 class="cart-item-title mb-1">
+                                            ${product.product_name}
+                                        </h5>
+
+                                        <div class="small text-muted mb-1">
+                                            Talle: ${product.size}
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <div class="color-box"
+                                                 data-color="${product.color}"
+                                                 title="${product.color_name}"
+                                                 style="background:${product.color}; width:18px; height:18px; margin-right:0.5rem;">
+                                            </div>
+                                            <span class="small text-muted">${product.color_name}</span>
+                                        </div>
+                                    </a>
+
+                                    <!-- Precio -->
+                                    <div class="cart-item-price mt-2 mt-md-0 ms-md-3 text-md-end">
+                                        ${priceHtml}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 });
 
                 $('#order_total').html(`<h1>${moneyAR(xhr.order_total)}</h1>`);
                 $('#items-summary-container').empty().append(html);
+
+                $('#order_total_inline').html(moneyAR(xhr.order_total));
 
                 if (isCouponApplied) {
                     $('#order_total').html(`<del><h1>${moneyAR(xhr.order_total)}</h1></del> <h1>${moneyAR(xhr.order_total_after_coupon_applied)}</h1>`);
                     $('#coupon-validated-success').html("Cupón validado");
                     $('#coupon-validated-failed').html("");
                     $('#coupon-success-code').html(`Aplicado ${xhr.coupon_discount}% OFF`);
+                    $('#order_total_inline').html(moneyAR(xhr.order_total_after_coupon_applied));
                 }
 
                 // Eliminar producto del carrito
@@ -660,4 +691,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Refresco cada 60s (como en el original)
     setInterval(updateShippingOptionUI, 60 * 1000);
+
+
+    /**
+     * fill summary
+     */
+
+    function fillSummary() {
+        if (summaryEmailEl) summaryEmailEl.textContent = document.getElementById('email')?.value || '';
+        if (summaryPhoneEl) summaryPhoneEl.textContent = document.getElementById('phone')?.value || '';
+
+        // Texto del método de envío
+        let shippingText = 'A definir';
+        if (selectedShipmentMethod === 'take-away') {
+            shippingText = 'Retiro en CABA';
+        } else if (selectedShipmentMethod === 'andreani') {
+            shippingText = 'Andreani Estandar “Envío a domicilio”';
+        } else if (selectedShipmentMethod === 'FLEX') {
+            shippingText = arrivesTitleEl?.textContent || 'Envío rápido';
+        }
+
+        if (summaryShippingMethodEl) summaryShippingMethodEl.textContent = shippingText;
+
+        // Dirección
+        const street = document.getElementById('street')?.value || '';
+        const number = document.getElementById('number')?.value || '';
+        const apartment = document.getElementById('apartment')?.value || '';
+        const localityText = localityEl?.options[localityEl.selectedIndex]?.text || '';
+        const provinceText = provinceEl?.options[provinceEl.selectedIndex]?.text || '';
+        const zip = document.getElementById('zip_code')?.value || '';
+
+        let addressLine = '';
+        if (street || number) {
+            addressLine = street;
+            if (number) addressLine += ' ' + number;
+            if (apartment) addressLine += ', ' + apartment;
+        }
+
+        if (selectedShipmentMethod === 'take-away') {
+            if (summaryAddressEl) summaryAddressEl.textContent = 'Retiro en persona';
+            if (summaryCityZipEl) summaryCityZipEl.textContent = '';
+        } else {
+            if (summaryAddressEl) summaryAddressEl.textContent = addressLine;
+            if (summaryCityZipEl) summaryCityZipEl.textContent =
+                `${localityText}${localityText && provinceText ? ', ' : ''}${provinceText}${zip ? ' (CP ' + zip + ')' : ''}`;
+        }
+    }
+
+
+    // === Toggle "Ver detalles de mi compra" ===
+    const checkoutSummaryToggle = document.getElementById('checkoutSummaryToggle');
+    const checkoutSummaryBody = document.getElementById('checkoutSummaryBody');
+    const checkoutSummaryChevron = document.getElementById('checkoutSummaryChevron');
+
+    checkoutSummaryToggle?.addEventListener('click', () => {
+        if (!checkoutSummaryBody) return;
+        const isOpen = checkoutSummaryBody.classList.toggle('is-open');
+        if (checkoutSummaryChevron) {
+            checkoutSummaryChevron.classList.toggle('rotated', isOpen);
+        }
+    });
+
 });

@@ -27,8 +27,10 @@ class ProductVariant extends Model
     {
         // 1) Prioriza foto del propio variant
         $ownPath = $this->pictures()->select('path')->first()?->path;
+
         if ($ownPath) {
-            return Storage::url($ownPath);
+
+            return $ownPath;
         }
 
         // 2) Busca un variant similar que tenga fotos, cargándolas con eager loading
@@ -41,7 +43,7 @@ class ProductVariant extends Model
 
         $path = $variant?->pictures->first()?->path;
 
-        return $path ? Storage::url($path) : null;
+        return $path ?: null;
     }
 
 
