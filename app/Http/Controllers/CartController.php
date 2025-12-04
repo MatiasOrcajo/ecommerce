@@ -85,4 +85,35 @@ class CartController extends Controller
         $this->cartService->clearCart();
     }
 
+
+
+    public function updateProductQuantity(Request $request)
+    {
+
+        $cart = Session::get('cart');
+
+        foreach ($cart["products"] as $index => $productVariantInCart){
+            if($productVariantInCart["product_variant_id"] == $request->productVariantId){
+
+                if($request->action == "plus"){
+                    $cart["products"][$index]["quantity"]++;
+                }
+
+                else{
+                    $cart["products"][$index]["quantity"]--;
+                }
+
+                if($cart["products"][$index]["quantity"] == 0){
+                    unset($cart["products"][$index]);
+                }
+            }
+        }
+
+        Session::put('cart', $cart);
+
+        return response()->json(Session::get('cart'));
+
+
+    }
+
 }

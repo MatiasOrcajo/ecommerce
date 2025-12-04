@@ -151,6 +151,114 @@ function updateCartTotal(callback) {
     });
 }
 
+
+function formatMoneyAR(value) {
+    const nf = new Intl.NumberFormat('es-AR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    return `$${nf.format(Number(value) || 0)}`;
+}
+
+
+function loadCartPanelData() {
+    $.ajax({
+        type: 'GET',
+        url: '/cart-info',
+        success: function (cart) {
+            const products = cart.products || [];
+
+            const itemsHtml = products.map(function (p) {
+                // precio unitario aproximado (por las dudas)
+                const unitPrice = p.quantity ? (p.subtotal / p.quantity) : p.subtotal;
+
+                return `
+                <div class="cart-panel-item">
+                    <div class="cart-panel-item-img">
+                        <img src="${p.pic}" alt="${p.product_name}">
+                    </div>
+
+                    <div class="cart-panel-item-info">
+                        <div class="cart-panel-item-name p-0">${p.product_name}</div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="color-box"
+                                 data-color="${p.color}"
+                                 title="${p.color_name}"
+                                 style="background:${p.color}; width:18px; height:18px; margin-right:0.5rem;">
+                            </div>
+                            <span class="small text-muted">${p.color_name}</span>
+                        </div>
+
+                        <div class="cart-panel-item-qty">
+                            <button type="button" class="cartProductQuantityButton" data-action="minus" data-id="${p.product_variant_id}">−</button>
+                            <span>${p.quantity}</span>
+                            <button type="button" class="cartProductQuantityButton" data-action="plus" data-id="${p.product_variant_id}">+</button>
+                        </div>
+                    </div>
+
+                    <div class="cart-panel-item-price">
+                        ${formatMoneyAR(unitPrice)}
+                    </div>
+                </div>`;
+            }).join('');
+
+            $('#cartPanelItems').html(itemsHtml);
+
+            const orderTotal = cart.order_total_after_coupon_applied ?? cart.order_total ?? 0;
+
+            $('#cartPanelTotal').text(formatMoneyAR(orderTotal));
+
+
+            function updateCartProductQuantity(productVariantId, action) {
+                axios.put('/carts/products/update-quantity', {
+                    productVariantId: productVariantId,
+                    action: action
+                })
+                    .then(function () {
+                        loadCartPanelData();
+                    })
+                    .catch(function (error) {
+                        console.error('Error updating quantity:', error);
+                    });
+            }
+
+            document.querySelectorAll('.cartProductQuantityButton').forEach(function (el) {
+                el.addEventListener('click', function (button) {
+                    let productVariantId = button.target.getAttribute('data-id')
+                    let action = button.target.getAttribute('data-action')
+                    updateCartProductQuantity(productVariantId, action);
+                })
+            })
+
+        },
+        error: function () {
+            $('#cartPanelItems').html('<p>No se pudo cargar el carrito.</p>');
+            $('#cartPanelTotal').text('$0,00');
+        }
+    });
+}
+
+function openCartPanel(){
+
+    $('#cartPanelOverlay').addClass('is-open');
+    $('#cartPanel').addClass('is-open');
+    loadCartPanelData();
+
+    $('#cartPanelOverlay').on('click', function () {
+        $('#cartPanelOverlay').removeClass('is-open');
+        $('#cartPanel').removeClass('is-open');
+    });
+
+    $('#cartPanelClose').on('click', function () {
+        $('#cartPanelOverlay').removeClass('is-open');
+        $('#cartPanel').removeClass('is-open');
+    });
+
+    $('#cartPopupClose').click()
+
+}
+
 function updateCartCounter(isProductAddedToCart = false) {
     $.ajax({
         url: '/calculate-cart-total-items',
@@ -192,7 +300,7 @@ function updateCartCounter(isProductAddedToCart = false) {
                       </span>
                     </div>
 
-                    <button class="cart-popup-button" onclick="window.location.href='/cart'">
+                    <button class="cart-popup-button" onclick="openCartPanel()">
                       Ver carrito
                     </button>
                   </div>

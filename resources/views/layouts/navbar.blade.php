@@ -234,12 +234,21 @@
                     </div>
 
                     <div class="cart-panel-item-info">
-                        <div class="cart-panel-item-name">${p.product_name}</div>
+                        <div class="cart-panel-item-name p-0">${p.product_name}</div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="color-box"
+                                 data-color="${p.color}"
+                                 title="${p.color_name}"
+                                 style="background:${p.color}; width:18px; height:18px; margin-right:0.5rem;">
+                            </div>
+                            <span class="small text-muted">${p.color_name}</span>
+                        </div>
 
                         <div class="cart-panel-item-qty">
-                            <button type="button" data-action="minus" data-id="${p.product_variant_id}">−</button>
+                            <button type="button" class="cartProductQuantityButton" data-action="minus" data-id="${p.product_variant_id}">−</button>
                             <span>${p.quantity}</span>
-                            <button type="button" data-action="plus" data-id="${p.product_variant_id}">+</button>
+                            <button type="button" class="cartProductQuantityButton" data-action="plus" data-id="${p.product_variant_id}">+</button>
                         </div>
                     </div>
 
@@ -253,13 +262,33 @@
 
                     const orderTotal = cart.order_total_after_coupon_applied ?? cart.order_total ?? 0;
 
-                    // como no tenés envío aún, uso el mismo valor para subtotal y total
-                    $('#cartPanelSubtotal').text(formatMoneyAR(orderTotal));
                     $('#cartPanelTotal').text(formatMoneyAR(orderTotal));
+
+
+                    function updateCartProductQuantity(productVariantId, action) {
+                        axios.put('/carts/products/update-quantity', {
+                            productVariantId: productVariantId,
+                            action: action
+                        })
+                            .then(function () {
+                                loadCartPanelData();
+                            })
+                            .catch(function (error) {
+                                console.error('Error updating quantity:', error);
+                            });
+                    }
+
+                    document.querySelectorAll('.cartProductQuantityButton').forEach(function (el) {
+                        el.addEventListener('click', function (button) {
+                            let productVariantId = button.target.getAttribute('data-id')
+                            let action = button.target.getAttribute('data-action')
+                            updateCartProductQuantity(productVariantId, action);
+                        })
+                    })
+
                 },
                 error: function () {
                     $('#cartPanelItems').html('<p>No se pudo cargar el carrito.</p>');
-                    $('#cartPanelSubtotal').text('$0,00');
                     $('#cartPanelTotal').text('$0,00');
                 }
             });
@@ -307,12 +336,9 @@
     </div>
 
     <div class="cart-panel-footer">
-        <div class="cart-panel-subtotal d-flex justify-content-between">
-            <span>Subtotal (sin envío):</span>
-            <strong id="cartPanelSubtotal">$0,00</strong>
-        </div>
+
         <div class="cart-panel-total d-flex justify-content-between mt-2">
-            <span class="fw-bold">Total:</span>
+            <span class="fw-bold">Subtotal:</span>
             <span class="fw-bold fs-5" id="cartPanelTotal">$0,00</span>
         </div>
 

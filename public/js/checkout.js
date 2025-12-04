@@ -538,8 +538,24 @@ document.addEventListener("DOMContentLoaded", () => {
     /**
      * Pinta el resumen de items del carrito, maneja borrado, totales y cupón aplicado.
      */
+
     function getItemsSummary() {
         $('#items-summary-container').html("");
+
+
+        window.updateCartProductQuantityCheckout = function updateCartProductQuantityCheckout(productVariantId, action) {
+
+            axios.put('/carts/products/update-quantity', {
+                productVariantId: productVariantId,
+                action: action
+            })
+                .then(function () {
+                    getItemsSummary();
+                })
+                .catch(function (error) {
+                    console.error('Error updating quantity:', error);
+                });
+        }
 
         $.ajax({
             type: "GET",
@@ -582,16 +598,18 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div class="d-flex gap-3">
                                 <!-- Thumbnail -->
                                 <div class="order-summary-thumbnail flex-shrink-0">
-                                    <img src="${product.pic}" alt="" class="img-fluid">
-                                    <div class="item-quantity">${product.quantity}</div>
+                                    <a href="/productos/${product.slug}"
+                                       target="_blank"
+                                       class="cart-item-link text-decoration-none text-dark flex-grow-1">
+                                        <img src="${product.pic}" alt="" class="img-fluid">
+                                        <div class="item-quantity">${product.quantity}</div>
+                                    <a>
                                 </div>
 
                                 <!-- Info + precio -->
                                 <div class="d-flex flex-column flex-md-row flex-grow-1 justify-content-between">
                                     <!-- Texto del producto -->
-                                    <a href="/productos/${product.slug}"
-                                       target="_blank"
-                                       class="cart-item-link text-decoration-none text-dark flex-grow-1">
+                                    <div>
                                         <h5 class="cart-item-title mb-1">
                                             ${product.product_name}
                                         </h5>
@@ -607,8 +625,15 @@ document.addEventListener("DOMContentLoaded", () => {
                                                  style="background:${product.color}; width:18px; height:18px; margin-right:0.5rem;">
                                             </div>
                                             <span class="small text-muted">${product.color_name}</span>
+
                                         </div>
-                                    </a>
+
+                                        <div class="cart-panel-item-qty mt-2">
+                                            <button type="button" class="cartProductQuantityButtonCheckout" onclick="updateCartProductQuantityCheckout(${product.product_variant_id}, 'minus')">−</button>
+                                            <span>${product.quantity}</span>
+                                            <button type="button" class="cartProductQuantityButtonCheckout" onclick="updateCartProductQuantityCheckout(${product.product_variant_id}, 'plus')">+</button>
+                                        </div>
+                                    </div>
 
                                     <!-- Precio -->
                                     <div class="cart-item-price mt-2 mt-md-0 ms-md-3 text-md-end">

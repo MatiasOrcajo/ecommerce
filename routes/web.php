@@ -66,6 +66,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::delete('/cart', [\App\Http\Controllers\CartController::class, 'deleteProduct']);
 
     Route::post('/carts/products/{product}', [\App\Http\Controllers\CartController::class, 'addProduct']);
+    Route::put('/carts/products/update-quantity', [\App\Http\Controllers\CartController::class, 'updateProductQuantity']);
 
     //search product pictures by color
     Route::get('/products/{product}/search-pictures-by-color', [\App\Http\Controllers\ProductController::class, 'searchProductImagesByColor']);
