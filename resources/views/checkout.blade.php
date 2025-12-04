@@ -630,9 +630,12 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="mercado-pago">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}"
-                                                     style="width: 60px;" alt="">
-                                                <span>Mercado Pago</span>
+                                                <div class="text-center">
+                                                    <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}"
+                                                         style="width: 100%; max-width: 150px; height: auto;">
+                                                    <br>
+                                                    <span style="font-weight: bold">Mercado Pago</span>
+                                                </div>
                                             </div>
                                         </button>
                                     </div>
@@ -642,7 +645,9 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="bank-transfer">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            <span>Transferencia Bancaria | 10% off</span>
+                                            <span style="font-weight: bold">Transferencia bancaria</span>
+                                            <br>
+                                            <small>10% off</small>
                                         </button>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center">
@@ -651,8 +656,8 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="cash">
                                             <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            <span>Efectivo | 20% off</span><br>
-                                            <small>Solo para retirar en CABA</small>
+                                            <span style="font-weight: bold">Efectivo</span><br>
+                                            <small>20% off | Solo para retirar en CABA</small>
                                         </button>
                                     </div>
                                 </div>
