@@ -630,12 +630,8 @@
                                                 style="font-size: 1rem;"
                                                 data-payment-method="mercado-pago">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <div class="text-center">
                                                     <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}"
-                                                         style="width: 100%; max-width: 150px; height: auto;">
-                                                    <br>
-                                                    <span style="font-weight: bold">Mercado Pago</span>
-                                                </div>
+                                                         style="width: 100%; max-width: 150px; height: auto;" alt="Mercado Pago">
                                             </div>
                                         </button>
                                     </div>
