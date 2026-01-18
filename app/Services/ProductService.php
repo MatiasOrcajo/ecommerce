@@ -49,10 +49,12 @@ class ProductService {
 
         $productsVariantsArray = $productVariants->select(["size", "color", "stock"])->toArray();
 
+
         return [
             "availableColors" => $availableColors,
             "availableSizes" => $availableSizes,
             "productsVariantsArray" => $productsVariantsArray,
+            "youtube_link" => $product->youtube_link ?? null
         ];
     }
 

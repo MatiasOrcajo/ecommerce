@@ -80,5 +80,13 @@ class IndexController extends Controller
     }
 
 
+    public function getMainProducts()
+    {
+        $products = Product::whereIn('id', [8, 13, 15, 16])->get();
+
+        return $this->productService->productsData($products);
+    }
+
+
 
 }

@@ -44,6 +44,12 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="discount" class="form-label">Link YouTube</label>
+                            <input value="{{$product->youtube_link}}" type="text" class="form-control" id="youtube_link"
+                                   name="youtube_link" min="0">
+                        </div>
+
+                        <div class="mb-3">
                             <label for="precio" class="form-label">Precio</label>
                             <input type="number" value="{{$product->price}}" class="form-control" id="price"
                                    name="price" min="0" step="0.01" required>

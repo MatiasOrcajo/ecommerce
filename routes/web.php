@@ -26,6 +26,8 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/featured-products', [\App\Http\Controllers\IndexController::class, 'getFeaturedProducts']);
 
+    Route::get('/main-products', [\App\Http\Controllers\IndexController::class, 'getMainProducts']);
+
     Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);
 
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index')->middleware(['set-cookie-unique-visitant']);
