@@ -32,10 +32,10 @@
                     <div class="p-3 bg-light border rounded quick-box">
                         <strong class="d-block mb-2">Resumen rápido</strong>
                         <ul class="mb-0">
-                            <li>Enviamos con <strong>Andreani</strong> a todo el país.</li>
+                            <li>Enviamos con <strong>Correo Argentino</strong> a todo el país.</li>
                             <li>El costo aparece en el <strong>checkout</strong> antes de pagar.</li>
                             <li>Si comprás antes de <strong>12:00</strong>, despachamos <strong>hoy</strong>.</li>
-                            <li>Rastreo con tu número en <strong>andreani.com</strong>.</li>
+                            <li>Rastreo con tu número en <strong>correoargentino.com.ar</strong>.</li>
                             <li><strong>No</strong> hacemos cambios por talle en bodys y bragas.</li>
                         </ul>
                     </div>
@@ -63,7 +63,7 @@
                         <div class="card-body">
                             <h2 class="h5 mb-2">¿Dónde recibo mi pedido?</h2>
                             <p class="mb-0">
-                                Enviamos a tu domicilio con <strong>Andreani</strong>.
+                                Enviamos a tu domicilio con <strong>Correo Argentino</strong>.
                             </p>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                             <h2 class="h5 mb-3">¿Cómo enviamos?</h2>
                             <ul class="mb-0">
                                 <li class="mb-1">
-                                    <strong>A domicilio:</strong> Andreani hace <strong>2 visitas</strong>. Si no te encuentran, dejan el paquete en la sucursal más cercana por <strong>48&nbsp;hs</strong>. Después vuelve al remitente.
+                                    <strong>A domicilio:</strong> Correo Argentino hace <strong>2 visitas</strong>. Si no te encuentran, dejan el paquete en la sucursal más cercana por <strong>48&nbsp;hs</strong>. Después vuelve al remitente.
                                 </li>
                             </ul>
                         </div>
@@ -102,7 +102,7 @@
                             <h2 class="h5 mb-2">¿Cómo sigo mi pedido?</h2>
                             <p class="mb-0">
                                 Cuando despachamos, te enviamos un mail con tu <strong>número de seguimiento</strong>.
-                                Entrá a <a href="https://www.andreani.com" target="_blank" rel="noopener">andreani.com</a> y pegalo ahí.
+                                Entrá a <a href="https://www.correoargentino.com.ar" target="_blank" rel="noopener">correoargentino.com.ar</a> y pegalo ahí.
                             </p>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                             <ul class="mb-2">
                                 <li class="mb-1"><strong>Demora fuerte:</strong> escribinos; buscamos solución.</li>
                                 <li class="mb-1"><strong>Dirección mal cargada:</strong> si <em>no</em> se despachó, la corregimos sin costo; si ya salió, el reenvío va a cargo del cliente.</li>
-                                <li class="mb-1"><strong>Paquete perdido/robado:</strong> lo verificamos con Andreani y te enviamos <strong>otro</strong> o un <strong>cupón</strong> por el mismo valor.</li>
+                                <li class="mb-1"><strong>Paquete perdido/robado:</strong> lo verificamos con Correo Argentino y te enviamos <strong>otro</strong> o un <strong>cupón</strong> por el mismo valor.</li>
                                 <li><strong>Paquete devuelto al remitente:</strong> si vuelve por no retiro/entrega, <strong>no</strong> hay reembolso; podemos <strong>re-enviar</strong> abonando nuevamente el envío.</li>
                             </ul>
 

@@ -16,9 +16,9 @@
     </div>
 
     <p>Nos encanta darte buenas noticias: ya preparamos tu pedido y lo despachamos con mucho cuidado.
-        Ahora está viajando con Andreani rumbo a tu domicilio.</p>
+        Ahora está viajando con Correo Argentino rumbo a tu domicilio.</p>
 
-    <p>Muy pronto vas a recibir un mail de Andreani con el seguimiento del envío, para que puedas ver por dónde está tu paquete en todo momento.</p>
+    <p>Muy pronto vas a recibir un mail de Correo Argentino con el seguimiento del envío, para que puedas ver por dónde está tu paquete en todo momento.</p>
 
     <h3>Y porque nos encanta mimarte…</h3>
     <p>Te regalamos un cupón con <b>{{$coupon->discount}}% de descuento</b> para que uses en tu próxima compra 💌</p>

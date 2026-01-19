@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const countdown = `${hh}:${pad(mm)}:${pad(ss)}`;
 
-        return `${title}`;
+        return `${title} con motomensajería`;
     }
 
     /**
@@ -276,9 +276,9 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleAddressSectionByShipmentMethod(selectedShipmentMethod);
         });
 
-    document.getElementById("andreani-button")
+    document.getElementById("correo-argentino-button")
         ?.addEventListener("click", () => {
-            selectedShipmentMethod = "andreani";
+            selectedShipmentMethod = "correo-argentino";
             toggleAddressSectionByShipmentMethod(selectedShipmentMethod);
         });
 
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 // Método de envío: solo manejamos visual, el valor ya lo seteás
-// en los listeners de "take-away-button", "andreani-button" y "shipping-option-wrapper".
+// en los listeners de "take-away-button", "correo-argentino-button" y "shipping-option-wrapper".
     shipmentMethodButtons.forEach((button) => {
         button.addEventListener("click", () => {
             shipmentMethodButtons.forEach(btn => btn.classList.remove('selected'));
@@ -730,8 +730,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let shippingText = 'A definir';
         if (selectedShipmentMethod === 'take-away') {
             shippingText = 'Retiro en CABA';
-        } else if (selectedShipmentMethod === 'andreani') {
-            shippingText = 'Andreani Estandar “Envío a domicilio”';
+        } else if (selectedShipmentMethod === 'correo-argentino') {
+            shippingText = 'Correo Argentino Estandar “Envío a domicilio”';
         } else if (selectedShipmentMethod === 'FLEX') {
             shippingText = arrivesTitleEl?.textContent || 'Envío rápido';
         }

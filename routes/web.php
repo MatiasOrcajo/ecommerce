@@ -30,6 +30,13 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);
 
+    Route::get('/guia-de-talles', function(){
+
+        $categories = \App\Models\Category::all()->toArray();
+
+        return view('sizes-guide', compact('categories'));
+    })->name('sizes-guide');
+
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index')->middleware(['set-cookie-unique-visitant']);
 
     Route::get('/productos/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show')->middleware(['set-cookie-unique-visitant']);

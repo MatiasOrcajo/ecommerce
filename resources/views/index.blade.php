@@ -77,8 +77,8 @@
             <img
                 src="{{ asset('banner.png') }}"
                 alt="Banner principal"
-                width="1920" height="960"       {{-- ajustar al tamaño real --}}
-                fetchpriority="high"            {{-- prioriza el LCP en home --}}
+                width="1920" height="960" {{-- ajustar al tamaño real --}}
+                fetchpriority="high" {{-- prioriza el LCP en home --}}
                 decoding="async"
                 class="img-fluid w-100"
             />
@@ -91,7 +91,7 @@
             <img
                 src="{{ asset('banner_mobile.png') }}"
                 alt="Banner principal móvil"
-                width="608" height="1080"       {{-- ajustar al tamaño real --}}
+                width="608" height="1080" {{-- ajustar al tamaño real --}}
                 fetchpriority="high"
                 decoding="async"
                 class="img-fluid w-100"
@@ -102,7 +102,8 @@
 
 
     {{--    info desktop--}}
-    <div class="d-none d-lg-flex row justify-content-center align-items-center bg-black text-white" style="padding: 3rem 0">
+    <div class="d-none d-lg-flex row justify-content-center align-items-center bg-black text-white"
+         style="padding: 3rem 0">
         <div class="col-lg-4 d-flex justify-content-center align-items-center border-end flex-column text-center">
             <div class="mb-3">
                 <i style="font-size: 2rem; color: white;" class="fa-solid fa-truck"></i>
@@ -202,7 +203,7 @@
                         <div class="row g-0">
                             <!-- Categoría 1 -->
                             <div class="col-3 position-relative category-square m-2">
-                                <a href="{{route('category.show', "bodys")}}">
+                                <a href="{{route('category.show', "summer-sale")}}">
                                     <div class="category-overlay"></div>
                                     <img src="{{ asset('50_off.jpg') }}" alt="Categoría 1" class="category-img">
                                     <div class="category-content">
@@ -213,8 +214,9 @@
                             <!-- Categoría 2 -->
                             <div class="col-3 position-relative category-square m-2">
                                 <div class="category-overlay"></div>
-                                <a href="{{route('category.show', "camiseta-reductora")}}">
-                                    <img src="{{ asset('bodys_moldeadores.jpg') }}" alt="Categoría 2" class="category-img">
+                                <a href="{{route('category.show', "bodys")}}">
+                                    <img src="{{ asset('bodys_moldeadores.jpg') }}" alt="Categoría 2"
+                                         class="category-img">
                                     <div class="category-content">
                                     </div>
                                 </a>
@@ -228,7 +230,8 @@
                             <div class="col-3 position-relative category-square m-2">
                                 <a href="{{route('category.show', "faja-reductora")}}">
                                     <div class="category-overlay"></div>
-                                    <img src="{{ asset('trusas_moldeadoras.jpg') }}" alt="Categoría 3" class="category-img">
+                                    <img src="{{ asset('trusas_moldeadoras.jpg') }}" alt="Categoría 3"
+                                         class="category-img">
                                     <div class="category-content">
                                     </div>
                                 </a>
@@ -371,7 +374,7 @@
 
     <!-- Contenedor destacados -->
     <section>
-        <div class="mt-5" id="destacados">
+        <div class="mt-5" id="destacados" style="margin-top: 7rem; margin-bottom: 3rem">
             <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">Los más pedidos ❤️</h2>
 
         </div>
@@ -389,12 +392,162 @@
 
     <!-- Contenedor infaltables -->
     <section>
-        <div class="mt-5" id="destacados">
-            <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">¡Los infaltables para modelar tu figura!</h2>
+        <div class="mt-5" id="destacados" style="margin-top: 7rem; margin-bottom: 3rem">
+            <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">¡Los infaltables para
+                modelar tu figura!</h2>
 
         </div>
         <div id="main-products-container"
-             class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center">
+             class="row row-cols-1 row-cols-lg-2 g-4 justify-content-center col-lg-8 col-12 mx-auto">
+        </div>
+    </section>
+
+
+    <!-- banner movimiento -->
+    <section>
+        <!-- Banner con texto deslizante -->
+        <div class="announcement-bar mt-5" style="background-color: black; overflow: hidden; padding: 10px 0;">
+            <div class="announcement-container">
+                <div class="announcement-track" style="display: flex; white-space: nowrap;">
+                    <!-- Primera secuencia -->
+                    <div class="announcement-item">
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                    </div>
+                    <!-- Segunda secuencia (duplicada para efecto continuo) -->
+                    <div class="announcement-item">
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                        <span class="announcement-text">🔥 50% OFF EN TODA LA WEB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Estilos para el banner animado */
+        .announcement-bar {
+            background-color: black; /* Color marrón de tu imagen */
+            overflow: hidden;
+            padding: 12px 0;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .announcement-container {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .announcement-track {
+            display: flex;
+            white-space: nowrap;
+            animation: scrollLeft 10s linear infinite;
+        }
+
+        .announcement-item {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .announcement-text {
+            display: inline-block;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0 25px;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animación de desplazamiento */
+        @keyframes scrollLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Efecto de borde para mejor legibilidad */
+        .announcement-text {
+            position: relative;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Efecto hover opcional */
+        .announcement-bar:hover .announcement-track {
+            animation-play-state: paused;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .announcement-text {
+                font-size: 16px;
+                margin: 0 15px;
+                padding: 3px 10px;
+            }
+
+            .announcement-track {
+                animation: scrollLeft 10s linear infinite;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .announcement-text {
+                font-size: 14px;
+                margin: 0 10px;
+                padding: 2px 8px;
+            }
+        }
+    </style>
+
+    <!-- Clientas -->
+    <section>
+        <div class="" id="destacados" style="margin-bottom: 3rem">
+            <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">Lo que dicen nuestras
+                clientas 💞</h2>
+
+        </div>
+        <div class="swiper customers-swiper mx-3">
+            <div class="swiper-wrapper pb-3 justify-content-md-center" id="customers-container">
+                <div class="swiper-slide">
+                    <img src="{{ asset('/testimonial/1.jpg') }}" alt="Testimonial 1" class="img-fluid">
+                </div>
+                <div class="swiper-slide">
+                    <img src="{{ asset('/testimonial/2.jpg') }}" alt="Testimonial 2" class="img-fluid">
+                </div>
+                <div class="swiper-slide">
+                    <img src="{{ asset('/testimonial/3.jpg') }}" alt="Testimonial 3" class="img-fluid">
+                </div>
+                <div class="swiper-slide">
+                    <img src="{{ asset('/testimonial/4.jpg') }}" alt="Testimonial 4" class="img-fluid">
+                </div>
+                <div class="swiper-slide">
+                    <img src="{{ asset('/testimonial/5.jpg') }}" alt="Testimonial 5" class="img-fluid">
+                </div>
+                <div class="swiper-slide">
+                    <img src="{{ asset('/testimonial/6.jpg') }}" alt="Testimonial 6" class="img-fluid">
+                </div>
+            </div>
+            <!-- Paginación -->
+            <div class="swiper-pagination"></div>
+            <!-- Scrollbar -->
+            <div class="swiper-scrollbar"></div>
         </div>
     </section>
 
@@ -474,8 +627,7 @@
         <div>
             <!-- Top bar -->
             <div class="bg-dark text-white d-flex justify-content-between align-items-center px-4 py-3">
-                <h5 class="m-0" style="font-size: 1.5rem">Unite a nuestro <strong>#ClubAtica</strong> y recibí muchos
-                    beneficios</h5>
+                <h5 class="m-0" style="font-size: 1.5rem">Dejá tu correo y recibí un regalo especial 💖</h5>
             </div>
 
             <!-- Formulario -->
@@ -527,16 +679,40 @@
 
     @push('scripts')
 
-
         <script src="{{ asset('js/updateCartProductsQuantity.js') }}"></script>
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
 
+                const customersSwiper = new Swiper('.customers-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                    loop: true,
+                    infinity: true,
+                    autoplay: true,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true
+                    },
+                    scrollbar: {
+                        el: '.swiper-scrollbar',
+                    },
+                    breakpoints: {
+                        576: {
+                            slidesPerView: 2,
+                        },
+                        992: {
+                            slidesPerView: 3,
+                            autoplay: false
+                        }
+                    }
+                });
+
                 const swiper = new Swiper('.products-swiper', {
                     slidesPerView: 1,
                     spaceBetween: 20,
                     loop: true,
+                    infinity: true,
                     scrollbar: {
                         el: '.swiper-scrollbar',
                     },
@@ -549,6 +725,7 @@
                         },
                         1200: {
                             slidesPerView: 4,
+                            scrollbar: false
                         }
                     }
                 });
@@ -624,53 +801,53 @@
                         // Swatches
                         let swatches = '';
                         variants.forEach((v, i) => {
-                            swatches += `
-                          <div
-                            class="color-box mx-1"
-                            data-variant-index="${i}"
-                            style="
-                              width:24px; height:24px;
-                              background:${v.colorCode};
-                              border:1px solid #ccc;
-                              cursor:pointer;
-                            "
-                            title="${colorNames[i]}"
-                          ></div>
-                        `;
-                        });
+                            colorNames[i].includes('PACK') ? swatches += '' :
+                                swatches += `
+                  <div
+                    class="color-box mx-1"
+                    data-variant-index="${i}"
+                    style="
+                      width:24px; height:24px;
+                      background:${v.colorCode};
+                      border:1px solid #ccc;
+                      cursor:pointer;
+                    "
+                    title="${colorNames[i]}"
+                  ></div>
+                `;
 
-                        const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
-                        const priceWithTransfer = (productPrice * 0.9).toFixed(2);
+                            const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
+                            const priceWithTransfer = (productPrice * 0.9).toFixed(2);
 
-                        const moneyAR = (v) => {
-                            const nf = new Intl.NumberFormat('es-AR', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            });
-                            return `$${nf.format(Number(v))}`;
-                        };
+                            const moneyAR = (v) => {
+                                const nf = new Intl.NumberFormat('es-AR', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                });
+                                return `$${nf.format(Number(v))}`;
+                            };
 
-                        // **Generación de la card**
-                        html += `
+                            // **Generación de la card**
+                            html += `
                           <div class="swiper-slide">
                             <div class="card border-0 p-0 h-50">
                               <div class="ratio image-container"
                                    style="--bs-aspect-ratio:120%;"
                                    data-variants='${JSON.stringify(variants)}'>
                                 <img
-                                  src="${firstImg}"
+                                  src="https://www.atica.com.ar${firstImg}"
                                   class="card-img-top img-first"
                                   alt="${product.name}"
                                 >
                                 <img
-                                  src="${secondImg}"
+                                  src="https://www.atica.com.ar${secondImg}"
                                   class="card-img-top img-second"
                                   alt="${product.name} - Hover"
                                 >
                                 <a>
-                                    <button class="btn position-absolute top-10 end-0 m-2" style="background-color: #bc8d8a; color: white;">ENVÍO GRATIS</button>
+                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #bc8d8a; color: white;">ENVÍO GRATIS</button>
 
-                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #724d3a; color: white;">2 X 1</button>
+                                    ${product.discount === 50 ? '<button class="btn position-absolute top-10 end-0 m-2" style="background-color: #724d3a; color: white;">50% OFF</button>' : ''}
 
                                 </a>
                                 <a href="/productos/${product.slug}">
@@ -688,12 +865,12 @@
                                 <h5 class="card-title text-center mb-2">${product.name}</h5>
 
                                 ${product.discount
-                            ? `<p class="text-center mb-1 fw-bold">
+                                ? `<p class="text-center mb-1 fw-bold">
                                        <del>${moneyAR(product.price)}</del>
                                        ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
                                      </p>`
-                            : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
-                        }
+                                : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
+                            }
 
                                 <p class="text-center mb-2 text-muted">
                                   ${moneyAR(priceWithTransfer)} con Transferencia bancaria
@@ -709,104 +886,104 @@
                           </div>
                         `;
 
-                    });
+                        });
 
-                    container.innerHTML = html;
-                    swiper.update();
+                        container.innerHTML = html;
+                        swiper.update();
 
 
-                    // Click sobre swatches
-                    container.querySelectorAll('.image-container').forEach(container => {
-                        const variants = JSON.parse(container.dataset.variants);
-                        const imgFirst = container.querySelector('.img-first');
-                        const imgSecond = container.querySelector('.img-second');
-                        const card = container.closest('.card');
+                        // Click sobre swatches
+                        container.querySelectorAll('.image-container').forEach(container => {
+                            const variants = JSON.parse(container.dataset.variants);
+                            const imgFirst = container.querySelector('.img-first');
+                            const imgSecond = container.querySelector('.img-second');
+                            const card = container.closest('.card');
 
-                        card.querySelectorAll('.color-box').forEach(box => {
-                            box.addEventListener('click', () => {
-                                const i = parseInt(box.dataset.variantIndex, 10);
-                                const pics = variants[i].pics || [];
-                                if (!pics.length) return;
-                                imgFirst.src = pics[0];
-                                imgSecond.src = pics[1] || pics[0];
+                            card.querySelectorAll('.color-box').forEach(box => {
+                                box.addEventListener('click', () => {
+                                    const i = parseInt(box.dataset.variantIndex, 10);
+                                    const pics = variants[i].pics || [];
+                                    if (!pics.length) return;
+                                    imgFirst.src = pics[0];
+                                    imgSecond.src = pics[1] || pics[0];
+                                });
                             });
                         });
-                    });
-                }
+                    })
 
 
+                    //main products
 
-                //main products
+                    fetch('/main-products')
+                        .then(res => res.json())
+                        .then(data => renderMainProducts(data))
+                        .catch(err => console.error(err));
 
-                fetch('/main-products')
-                    .then(res => res.json())
-                    .then(data => renderMainProducts(data))
-                    .catch(err => console.error(err));
+                    function renderMainProducts(data) {
+                        const container = document.getElementById('main-products-container');
+                        let html = '';
 
-                function renderMainProducts(data) {
-                    const container = document.getElementById('main-products-container');
-                    let html = '';
+                        Object.values(data).forEach(item => {
+                            const {product, colors} = item;
 
-                    Object.values(data).forEach(item => {
-                        const {product, colors} = item;
+                            const colorNames = colors.names;
 
-                        const colorNames = colors.names;
-
-                        // Construyo variantes [{ colorCode, pics }]
-                        const variants = colorNames.map((_, idx) => {
-                            const entry = colors[idx];
-                            const code = Object.keys(entry)[0];
-                            const pics = entry[code][0];
-                            return {colorCode: code, pics};
-                        });
-
-                        // Primeras dos imágenes
-                        const firstImg = variants[0].pics[0];
-                        const secondImg = variants[0].pics[1] || variants[0].pics[0];
-
-                        // Swatches
-                        let swatches = '';
-                        variants.forEach((v, i) => {
-                            swatches += `
-                          <div
-                            class="color-box mx-1"
-                            data-variant-index="${i}"
-                            style="
-                              width:24px; height:24px;
-                              background:${v.colorCode};
-                              border:1px solid #ccc;
-                              cursor:pointer;
-                            "
-                            title="${colorNames[i]}"
-                          ></div>
-                        `;
-                        });
-
-                        const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
-                        const priceWithTransfer = (productPrice * 0.9).toFixed(2);
-
-                        const moneyAR = (v) => {
-                            const nf = new Intl.NumberFormat('es-AR', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
+                            // Construyo variantes [{ colorCode, pics }]
+                            const variants = colorNames.map((_, idx) => {
+                                const entry = colors[idx];
+                                const code = Object.keys(entry)[0];
+                                const pics = entry[code][0];
+                                return {colorCode: code, pics};
                             });
-                            return `$${nf.format(Number(v))}`;
-                        };
 
-                        // **Generación de la card**
-                        html += `
+                            // Primeras dos imágenes
+                            const firstImg = variants[0].pics[0];
+                            const secondImg = variants[0].pics[1] || variants[0].pics[0];
+
+                            // Swatches
+                            let swatches = '';
+                            variants.forEach((v, i) => {
+                                colorNames[i].includes('PACK') ? swatches += '' :
+                                    swatches += `
+                  <div
+                    class="color-box mx-1"
+                    data-variant-index="${i}"
+                    style="
+                      width:24px; height:24px;
+                      background:${v.colorCode};
+                      border:1px solid #ccc;
+                      cursor:pointer;
+                    "
+                    title="${colorNames[i]}"
+                  ></div>
+                `;
+                            });
+
+                            const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
+                            const priceWithTransfer = (productPrice * 0.9).toFixed(2);
+
+                            const moneyAR = (v) => {
+                                const nf = new Intl.NumberFormat('es-AR', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                });
+                                return `$${nf.format(Number(v))}`;
+                            };
+
+                            // **Generación de la card**
+                            html += `
                           <div class="col">
                             <div class="card border-0 p-0 h-100">
                               <div class="ratio image-container"
                                    style="--bs-aspect-ratio:120%;"
                                    data-variants='${JSON.stringify(variants)}'>
                                 <img
-                                  src="${firstImg}"
+                                  src="https://www.atica.com.ar${firstImg}"
                                   class="card-img-top img-first"
                                   alt="${product.name}"
                                 >
                                 <img
-                                  src="${secondImg}"
+                                  src="https://www.atica.com.ar${secondImg}"
                                   class="card-img-top img-second"
                                   alt="${product.name} - Hover"
                                 >
@@ -831,12 +1008,12 @@
                                 <h5 class="card-title text-center mb-2">${product.name}</h5>
 
                                 ${product.discount
-                            ? `<p class="text-center mb-1 fw-bold">
+                                ? `<p class="text-center mb-1 fw-bold">
                                        <del>${moneyAR(product.price)}</del>
                                        ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
                                      </p>`
-                            : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
-                        }
+                                : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
+                            }
 
                                 <p class="text-center mb-2 text-muted">
                                   ${moneyAR(priceWithTransfer)} con Transferencia bancaria
@@ -852,32 +1029,32 @@
                           </div>
                         `;
 
-                    });
+                        });
 
-                    container.innerHTML = html;
-                    swiper.update();
+                        container.innerHTML = html;
+                        swiper.update();
 
 
-                    // Click sobre swatches
-                    container.querySelectorAll('.image-container').forEach(container => {
-                        const variants = JSON.parse(container.dataset.variants);
-                        const imgFirst = container.querySelector('.img-first');
-                        const imgSecond = container.querySelector('.img-second');
-                        const card = container.closest('.card');
+                        // Click sobre swatches
+                        container.querySelectorAll('.image-container').forEach(container => {
+                            const variants = JSON.parse(container.dataset.variants);
+                            const imgFirst = container.querySelector('.img-first');
+                            const imgSecond = container.querySelector('.img-second');
+                            const card = container.closest('.card');
 
-                        card.querySelectorAll('.color-box').forEach(box => {
-                            box.addEventListener('click', () => {
-                                const i = parseInt(box.dataset.variantIndex, 10);
-                                const pics = variants[i].pics || [];
-                                if (!pics.length) return;
-                                imgFirst.src = pics[0];
-                                imgSecond.src = pics[1] || pics[0];
+                            card.querySelectorAll('.color-box').forEach(box => {
+                                box.addEventListener('click', () => {
+                                    const i = parseInt(box.dataset.variantIndex, 10);
+                                    const pics = variants[i].pics || [];
+                                    if (!pics.length) return;
+                                    imgFirst.src = pics[0];
+                                    imgSecond.src = pics[1] || pics[0];
+                                });
                             });
                         });
-                    });
+                    }
                 }
-            });
-
+            })
             updateCartCounter();
         </script>
     @endpush

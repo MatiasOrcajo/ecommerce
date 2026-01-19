@@ -358,7 +358,7 @@
     {{-- Top Bar Negra con Texto Deslizante --}}
     <div class="bg-dark text-white text-center" style="height:36px; line-height:36px; overflow:hidden;">
           <span class="animate-marquee d-inline-block" style="padding-left:100%; animation-duration: 20s;">
-          ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
+          ENVÍOS GRATIS A TODO EL PAÍS A PARTIR DE $35.000. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
         </span>
 
     </div>
@@ -444,6 +444,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://wa.link/n5il16" target="_blank">Necesito Ayuda</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('sizes-guide')}}">Guía de talles</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -455,7 +459,7 @@
 
     <div class="bg-dark text-white text-center" style="height:36px; line-height:36px; overflow:hidden;">
   <span class="animate-marquee d-inline-block" style="padding-left:100%">
-    ENVÍOS GRATIS A TODO EL PAÍS. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
+    ENVÍOS GRATIS A TODO EL PAÍS A PARTIR DE $35.000. 10% OFF PAGANDO CON TRANSFERENCIA. 20% OFF EN EFECTIVO.
   </span>
     </div>
 
@@ -533,6 +537,10 @@
 
                         <li class="nav-item">
                             <a class="nav-link" href="https://wa.link/n5il16" target="_blank">Necesito Ayuda</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('sizes-guide')}}">Guía de talles</a>
                         </li>
                     </ul>
 

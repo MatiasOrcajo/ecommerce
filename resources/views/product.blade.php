@@ -666,9 +666,27 @@
 
                 function printAvailableColors() {
                     const container = document.getElementById('colors-container');
+
+                    // Si hay 0 o 1 color, no mostramos selector (caso pack u “un solo color”)
+                    if (!availableColors || availableColors.length <= 1 || availableColors[0].color_name.includes('PACK')) {
+                        container.innerHTML = '';
+                        container.style.display = 'none';
+
+                        // Auto-selecciona el único color si existe
+                        selectedColor = availableColors?.[0]?.color;
+
+                        updateCarousel();
+                        printAvailableSizes();
+                        return;
+                    }
+
+                    // Si hay más de 1 color, comportamiento actual
+                    container.style.display = '';
                     container.innerHTML = availableColors.map((c, i) => `
-                        <div class="btn btn-outline-secondary color-box" data-color="${c.color}" title="${c.color_name}" style="background:${c.color}; width:32px; height:32px; margin-right:0.5rem;"></div>
-                    `).join('');
+            <div class="btn btn-outline-secondary color-box" data-color="${c.color}" title="${c.color_name}"
+                 style="background:${c.color}; width:32px; height:32px; margin-right:0.5rem;"></div>
+        `).join('');
+
                     const boxes = container.querySelectorAll('.color-box');
                     boxes.forEach((box, i) => {
                         if (i === 0) box.style.outline = '1px solid black';
@@ -680,6 +698,7 @@
                             printAvailableSizes();
                         });
                     });
+
                     selectedColor = availableColors[0].color;
                     updateCarousel();
                 }

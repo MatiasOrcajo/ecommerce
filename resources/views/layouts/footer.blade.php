@@ -77,8 +77,8 @@
                 <span class="d-block d-md-inline-block align-middle mb-3 mb-md-1 mr-md-2">Medios de envío</span>
                 <span class="d-flex align-middle">
 
-                    <img src="https://iot.org.ar/wp-content/uploads/2020/11/logo-andreani.jpg"
-                         data-src="https://iot.org.ar/wp-content/uploads/2020/11/logo-andreani.jpg"
+                    <img src="https://www.correoargentino.com.ar/sites/default/files/logo-correo.png"
+                         data-src="https://www.correoargentino.com.ar/sites/default/files/logo-correo.png"
                          class="me-1 mt-1" alt="api_2682" width="45" height="25">
 
 

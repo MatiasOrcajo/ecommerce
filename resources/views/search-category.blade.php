@@ -174,7 +174,8 @@
                         // Swatches
                         let swatches = '';
                         variants.forEach((v, i) => {
-                            swatches += `
+                            colorNames[i].includes('PACK') ? swatches += '' :
+                                swatches += `
                   <div
                     class="color-box mx-1"
                     data-variant-index="${i}"
@@ -219,10 +220,9 @@
                                 >
 
                                 <a>
-                                    <button class="btn position-absolute top-10 end-0 m-2" style="background-color: #bc8d8a; color: white;" >ENVÍO GRATIS</button>
+                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #bc8d8a; color: white;">ENVÍO GRATIS</button>
 
-                                    <button class="btn position-absolute top-0 end-0 m-2" style="background-color: #724d3a; color: white;">2 X 1</button>
-
+                                    ${product.discount === 50 ? '<button class="btn position-absolute top-10 end-0 m-2" style="background-color: #724d3a; color: white;">50% OFF</button>' : ''}
                                 </a>
 
                                 <a href="/productos/${product.slug}">
@@ -233,9 +233,7 @@
                               </div>
                               <div class="card-body d-flex flex-column position-relative">
                                 <div class="d-flex justify-content-center mb-3">
-                                  <div class="color-box-parent d-flex justify-content-center align-items-center">
-                                    ${swatches}
-                                  </div>
+                                  ${swatches}
                                 </div>
                                 <h5 class="card-title text-center mb-2">${product.name}</h5>
 

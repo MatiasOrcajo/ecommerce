@@ -52,7 +52,7 @@ class CheckoutService
         ];
 
         $shippingMethods = [
-            "andreani" => "Andreani",
+            "correo-argentino" => "Correo Argentino",
             "take-away" => "Retiro en CABA",
             "FLEX" => $this->determinesIfFlexShippingAppliesForToday(),
         ];
