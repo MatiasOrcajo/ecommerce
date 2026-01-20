@@ -214,7 +214,7 @@
                             <!-- Categoría 2 -->
                             <div class="col-3 position-relative category-square m-2">
                                 <div class="category-overlay"></div>
-                                <a href="{{route('category.show', "bodys")}}">
+                                <a href="{{route('category.show', "bodys-reductores")}}">
                                     <img src="{{ asset('bodys_moldeadores.jpg') }}" alt="Categoría 2"
                                          class="category-img">
                                     <div class="category-content">
@@ -228,7 +228,7 @@
                         <div class="row g-0">
                             <!-- Categoría 3 -->
                             <div class="col-3 position-relative category-square m-2">
-                                <a href="{{route('category.show', "faja-reductora")}}">
+                                <a href="{{route('category.show', "fajas-modeladoras")}}">
                                     <div class="category-overlay"></div>
                                     <img src="{{ asset('trusas_moldeadoras.jpg') }}" alt="Categoría 3"
                                          class="category-img">
