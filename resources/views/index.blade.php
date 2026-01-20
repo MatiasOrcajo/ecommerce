@@ -803,32 +803,33 @@
                         variants.forEach((v, i) => {
                             colorNames[i].includes('PACK') ? swatches += '' :
                                 swatches += `
-                  <div
-                    class="color-box mx-1"
-                    data-variant-index="${i}"
-                    style="
-                      width:24px; height:24px;
-                      background:${v.colorCode};
-                      border:1px solid #ccc;
-                      cursor:pointer;
-                    "
-                    title="${colorNames[i]}"
-                  ></div>
-                `;
+                              <div
+                                class="color-box mx-1"
+                                data-variant-index="${i}"
+                                style="
+                                  width:24px; height:24px;
+                                  background:${v.colorCode};
+                                  border:1px solid #ccc;
+                                  cursor:pointer;
+                                "
+                                title="${colorNames[i]}"
+                              ></div>
+                            `;
+                        })
 
-                            const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
-                            const priceWithTransfer = (productPrice * 0.9).toFixed(2);
+                        const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
+                        const priceWithTransfer = (productPrice * 0.9).toFixed(2);
 
-                            const moneyAR = (v) => {
-                                const nf = new Intl.NumberFormat('es-AR', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                });
-                                return `$${nf.format(Number(v))}`;
-                            };
+                        const moneyAR = (v) => {
+                            const nf = new Intl.NumberFormat('es-AR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            });
+                            return `$${nf.format(Number(v))}`;
+                        };
 
-                            // **Generación de la card**
-                            html += `
+                        // **Generación de la card**
+                        html += `
                           <div class="swiper-slide">
                             <div class="card border-0 p-0 h-50">
                               <div class="ratio image-container"
@@ -864,12 +865,12 @@
                                 <h5 class="card-title text-center mb-2">${product.name}</h5>
 
                                 ${product.discount
-                                ? `<p class="text-center mb-1 fw-bold">
+                            ? `<p class="text-center mb-1 fw-bold">
                                        <del>${moneyAR(product.price)}</del>
                                        ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
                                      </p>`
-                                : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
-                            }
+                            : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
+                        }
 
                                 <p class="text-center mb-2 text-muted">
                                   ${moneyAR(priceWithTransfer)} con Transferencia bancaria
@@ -885,92 +886,93 @@
                           </div>
                         `;
 
-                        });
-
                         container.innerHTML = html;
                         swiper.update();
 
+                    });
 
-                        // Click sobre swatches
-                        container.querySelectorAll('.image-container').forEach(container => {
-                            const variants = JSON.parse(container.dataset.variants);
-                            const imgFirst = container.querySelector('.img-first');
-                            const imgSecond = container.querySelector('.img-second');
-                            const card = container.closest('.card');
 
-                            card.querySelectorAll('.color-box').forEach(box => {
-                                box.addEventListener('click', () => {
-                                    const i = parseInt(box.dataset.variantIndex, 10);
-                                    const pics = variants[i].pics || [];
-                                    if (!pics.length) return;
-                                    imgFirst.src = pics[0];
-                                    imgSecond.src = pics[1] || pics[0];
-                                });
+                    // Click sobre swatches
+                    container.querySelectorAll('.image-container').forEach(container => {
+                        const variants = JSON.parse(container.dataset.variants);
+                        const imgFirst = container.querySelector('.img-first');
+                        const imgSecond = container.querySelector('.img-second');
+                        const card = container.closest('.card');
+
+                        card.querySelectorAll('.color-box').forEach(box => {
+                            box.addEventListener('click', () => {
+                                const i = parseInt(box.dataset.variantIndex, 10);
+                                const pics = variants[i].pics || [];
+                                if (!pics.length) return;
+                                imgFirst.src = pics[0];
+                                imgSecond.src = pics[1] || pics[0];
                             });
                         });
-                    })
+                    });
+                }
+            })
 
 
-                    //main products
+            //main products
 
-                    fetch('/main-products')
-                        .then(res => res.json())
-                        .then(data => renderMainProducts(data))
-                        .catch(err => console.error(err));
+            fetch('/main-products')
+                .then(res => res.json())
+                .then(data => renderMainProducts(data))
+                .catch(err => console.error(err));
 
-                    function renderMainProducts(data) {
-                        const container = document.getElementById('main-products-container');
-                        let html = '';
+            function renderMainProducts(data) {
+                const container = document.getElementById('main-products-container');
+                let html = '';
 
-                        Object.values(data).forEach(item => {
-                            const {product, colors} = item;
+                Object.values(data).forEach(item => {
+                    const {product, colors} = item;
 
-                            const colorNames = colors.names;
+                    const colorNames = colors.names;
 
-                            // Construyo variantes [{ colorCode, pics }]
-                            const variants = colorNames.map((_, idx) => {
-                                const entry = colors[idx];
-                                const code = Object.keys(entry)[0];
-                                const pics = entry[code][0];
-                                return {colorCode: code, pics};
-                            });
+                    // Construyo variantes [{ colorCode, pics }]
+                    const variants = colorNames.map((_, idx) => {
+                        const entry = colors[idx];
+                        const code = Object.keys(entry)[0];
+                        const pics = entry[code][0];
+                        return {colorCode: code, pics};
+                    });
 
-                            // Primeras dos imágenes
-                            const firstImg = variants[0].pics[0];
-                            const secondImg = variants[0].pics[1] || variants[0].pics[0];
+                    // Primeras dos imágenes
+                    const firstImg = variants[0].pics[0];
+                    const secondImg = variants[0].pics[1] || variants[0].pics[0];
 
-                            // Swatches
-                            let swatches = '';
-                            variants.forEach((v, i) => {
-                                colorNames[i].includes('PACK') ? swatches += '' :
-                                    swatches += `
-                  <div
-                    class="color-box mx-1"
-                    data-variant-index="${i}"
-                    style="
-                      width:24px; height:24px;
-                      background:${v.colorCode};
-                      border:1px solid #ccc;
-                      cursor:pointer;
-                    "
-                    title="${colorNames[i]}"
-                  ></div>
-                `;
-                            });
+                    // Swatches
+                    let swatches = '';
+                    variants.forEach((v, i) => {
+                        colorNames[i].includes('PACK') ? swatches += '' :
+                            swatches += `
+                          <div
+                            class="color-box mx-1"
+                            data-variant-index="${i}"
+                            style="
+                              width:24px; height:24px;
+                              background:${v.colorCode};
+                              border:1px solid #ccc;
+                              cursor:pointer;
+                            "
+                            title="${colorNames[i]}"
+                          ></div>
+                        `;
+                    });
 
-                            const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
-                            const priceWithTransfer = (productPrice * 0.9).toFixed(2);
+                    const productPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
+                    const priceWithTransfer = (productPrice * 0.9).toFixed(2);
 
-                            const moneyAR = (v) => {
-                                const nf = new Intl.NumberFormat('es-AR', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                });
-                                return `$${nf.format(Number(v))}`;
-                            };
+                    const moneyAR = (v) => {
+                        const nf = new Intl.NumberFormat('es-AR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        });
+                        return `$${nf.format(Number(v))}`;
+                    };
 
-                            // **Generación de la card**
-                            html += `
+                    // **Generación de la card**
+                    html += `
                           <div class="col">
                             <div class="card border-0 p-0 h-100">
                               <div class="ratio image-container"
@@ -1006,12 +1008,12 @@
                                 <h5 class="card-title text-center mb-2">${product.name}</h5>
 
                                 ${product.discount
-                                ? `<p class="text-center mb-1 fw-bold">
+                        ? `<p class="text-center mb-1 fw-bold">
                                        <del>${moneyAR(product.price)}</del>
                                        ${moneyAR((product.price * (1 - product.discount / 100)).toFixed(2))}
                                      </p>`
-                                : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
-                            }
+                        : `<p class="text-center mb-1 fw-bold">${moneyAR(product.price)}</p>`
+                    }
 
                                 <p class="text-center mb-2 text-muted">
                                   ${moneyAR(priceWithTransfer)} con Transferencia bancaria
@@ -1027,32 +1029,32 @@
                           </div>
                         `;
 
+                    container.innerHTML = html;
+
+
+                });
+
+
+                // Click sobre swatches
+                container.querySelectorAll('.image-container').forEach(container => {
+                    const variants = JSON.parse(container.dataset.variants);
+                    const imgFirst = container.querySelector('.img-first');
+                    const imgSecond = container.querySelector('.img-second');
+                    const card = container.closest('.card');
+
+                    card.querySelectorAll('.color-box').forEach(box => {
+                        box.addEventListener('click', () => {
+                            const i = parseInt(box.dataset.variantIndex, 10);
+                            const pics = variants[i].pics || [];
+                            if (!pics.length) return;
+                            imgFirst.src = pics[0];
+                            imgSecond.src = pics[1] || pics[0];
                         });
+                    });
+                });
 
-                        container.innerHTML = html;
-                        swiper.update();
+            }
 
-
-                        // Click sobre swatches
-                        container.querySelectorAll('.image-container').forEach(container => {
-                            const variants = JSON.parse(container.dataset.variants);
-                            const imgFirst = container.querySelector('.img-first');
-                            const imgSecond = container.querySelector('.img-second');
-                            const card = container.closest('.card');
-
-                            card.querySelectorAll('.color-box').forEach(box => {
-                                box.addEventListener('click', () => {
-                                    const i = parseInt(box.dataset.variantIndex, 10);
-                                    const pics = variants[i].pics || [];
-                                    if (!pics.length) return;
-                                    imgFirst.src = pics[0];
-                                    imgSecond.src = pics[1] || pics[0];
-                                });
-                            });
-                        });
-                    }
-                }
-            })
             updateCartCounter();
         </script>
     @endpush
