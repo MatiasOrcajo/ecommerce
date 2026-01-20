@@ -244,7 +244,7 @@
                 <div class="d-flex flex-column d-lg-none">
                     <!-- Categoría 1 -->
                     <div class="position-relative category-square">
-                        <a href="{{route('category.show', "bodys-reductores")}}">
+                        <a href="{{route('category.show', "summer-sale")}}">
                             <div class="category-overlay"></div>
                             <img src="{{ asset('50_off.jpg') }}" alt="Categoría 1" class="category-img">
                             <div class="category-content">
@@ -254,7 +254,7 @@
 
                     <!-- Categoría 2 -->
                     <div class="position-relative category-square">
-                        <a href="{{route('category.show', "camiseta-reductora")}}">
+                        <a href="{{route('category.show', "bodys-reductores")}}">
                             <div class="category-overlay"></div>
                             <img src="{{ asset('bodys_moldeadores.jpg') }}" alt="Categoría 2" class="category-img">
                             <div class="category-content">
@@ -264,7 +264,7 @@
 
                     <!-- Categoría 3 -->
                     <div class="position-relative category-square">
-                        <a href="{{route('category.show', "faja-reductora")}}">
+                        <a href="{{route('category.show', "fajas-modeladoras")}}">
                             <div class="category-overlay"></div>
                             <img src="{{ asset('trusas_moldeadoras.jpg') }}" alt="Categoría 3" class="category-img">
                             <div class="category-content">
