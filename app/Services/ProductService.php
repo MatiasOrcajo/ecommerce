@@ -61,6 +61,7 @@ class ProductService {
 
 
     /**
+     * Devuelve un json con los datos de los productos
      * @param $products
      * @return false|string
      */

@@ -67,13 +67,20 @@ class IndexController extends Controller
     }
 
 
+    /**
+     * Busqueda de productos segun ciertas condiciones
+     * @param Request $request
+     * @return false|string
+     */
     public function searchProductsAjax(Request $request)
     {
 
         $products = Product::where('name', 'like', '%' . $request->q . '%')
             ->where('visible', true)
             ->get();
+
         if($request->q == "Todos los productos") $products = Product::where('visible', true)->get();
+        if($request->q == "SUMMER SALE") $products = Product::where('visible', true)->where('discount', 50)->get();
 
         return $this->productService->productsData($products);
 

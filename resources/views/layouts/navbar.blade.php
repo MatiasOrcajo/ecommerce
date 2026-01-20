@@ -423,7 +423,7 @@
                         Productos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
-                        <li><a class="dropdown-item" href="{{route('category.show', 'summer-sale')}}">SUMMER SALE</a></li>
+                        <li><a class="dropdown-item" href="/search?q=SUMMER SALE">SUMMER SALE</a></li>
                         <li><a class="dropdown-item" href="{{route('category.show', 'bodys-reductores')}}">Bodys reductores</a></li>
                         <li><a class="dropdown-item" href="{{route('category.show', 'camisetas-reductoras')}}">Camisetas
                                 reductoras</a></li>
@@ -519,7 +519,7 @@
                                 Productos
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="productDropdown">
-                                <li><a class="dropdown-item" href="{{route('category.show', 'summer-sale')}}">SUMMER SALE</a></li>
+                                <li><a class="dropdown-item" href="/search?q=SUMMER SALE">SUMMER SALE</a></li>
                                 <li><a class="dropdown-item" href="{{route('category.show', 'bodys-reductores')}}">Bodys reductores</a></li>
                                 <li><a class="dropdown-item" href="{{route('category.show', 'camisetas-reductoras')}}">Camisetas
                                         reductoras</a></li>
