@@ -203,7 +203,7 @@
                         <div class="row g-0">
                             <!-- Categoría 1 -->
                             <div class="col-3 position-relative category-square m-2">
-                                <a href="/search?q=Todos los productos">
+                                <a href="/search?q=SUMMER SALE">
 
                                     <img src="{{ asset('50_off.jpg') }}" alt="Categoría 1" class="category-img">
                                     <div class="category-content">
@@ -244,7 +244,7 @@
                 <div class="d-flex flex-column d-lg-none">
                     <!-- Categoría 1 -->
                     <div class="position-relative category-square">
-                        <a href="/search?q=Todos los productos">
+                        <a href="/search?q=SUMMER SALE">
 
                             <img src="{{ asset('50_off.jpg') }}" alt="Categoría 1" class="category-img">
                             <div class="category-content">
