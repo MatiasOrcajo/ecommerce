@@ -244,7 +244,7 @@
                 <div class="d-flex flex-column d-lg-none">
                     <!-- Categoría 1 -->
                     <div class="position-relative category-square">
-                        <a href="{{route('category.show', "bodys")}}">
+                        <a href="{{route('category.show', "bodys-reductores")}}">
                             <div class="category-overlay"></div>
                             <img src="{{ asset('50_off.jpg') }}" alt="Categoría 1" class="category-img">
                             <div class="category-content">
