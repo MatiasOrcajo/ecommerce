@@ -68,7 +68,7 @@
     <!-- Contenedor principal -->
     <div class="mt-5 py-5" id="destacados">
         @if($q == "SUMMER SALE")
-            <h2 class="d-block mt-5 text-center" style="font-size: 2.5rem">Summer sale</h2>
+            <h2 class="d-block mt-5 text-center" style="font-size: 2.5rem">Summer Sale</h2>
 
         @else
             <h2 class="d-block mt-5 text-center" style="font-size: 2.5rem">Resultados para "{{$q}}".</h2>
