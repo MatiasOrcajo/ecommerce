@@ -424,11 +424,11 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
                         <li><a class="dropdown-item" href="{{route('category.show', 'summer-sale')}}">SUMMER SALE</a></li>
-                        <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys reductores</a></li>
-                        <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camisetas
+                        <li><a class="dropdown-item" href="{{route('category.show', 'bodys-reductores')}}">Bodys reductores</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'camisetas-reductoras')}}">Camisetas
                                 reductoras</a></li>
-                        <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Fajas
-                                moldeadoras</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'fajas-modeladoras')}}">Fajas
+                                modeladoras</a></li>
                         <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                     </ul>
                 </li>
@@ -520,11 +520,11 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="productDropdown">
                                 <li><a class="dropdown-item" href="{{route('category.show', 'summer-sale')}}">SUMMER SALE</a></li>
-                                <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys reductores</a></li>
-                                <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camisetas
+                                <li><a class="dropdown-item" href="{{route('category.show', 'bodys-reductores')}}">Bodys reductores</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'camisetas-reductoras')}}">Camisetas
                                         reductoras</a></li>
-                                <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Fajas
-                                        moldeadoras</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'fajas-modeladoras')}}">Fajas
+                                        modeladoras</a></li>
                                 <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                             </ul>
                         </li>
