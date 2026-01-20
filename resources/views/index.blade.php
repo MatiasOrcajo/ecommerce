@@ -944,7 +944,7 @@
                     // Swatches
                     let swatches = '';
                     variants.forEach((v, i) => {
-                        colorNames[i].includes('PACK') ? swatches += '' :
+                        colorNames[i].includes('PACK') || colorNames[i].includes('Pack') ? swatches += '' :
                             swatches += `
                           <div
                             class="color-box mx-1"
