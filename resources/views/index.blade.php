@@ -835,12 +835,12 @@
                                    style="--bs-aspect-ratio:120%;"
                                    data-variants='${JSON.stringify(variants)}'>
                                 <img
-                                  src="https://www.atica.com.ar${firstImg}"
+                                  src="${firstImg}"
                                   class="card-img-top img-first"
                                   alt="${product.name}"
                                 >
                                 <img
-                                  src="https://www.atica.com.ar${secondImg}"
+                                  src="${secondImg}"
                                   class="card-img-top img-second"
                                   alt="${product.name} - Hover"
                                 >
@@ -977,12 +977,12 @@
                                    style="--bs-aspect-ratio:120%;"
                                    data-variants='${JSON.stringify(variants)}'>
                                 <img
-                                  src="https://www.atica.com.ar${firstImg}"
+                                  src="${firstImg}"
                                   class="card-img-top img-first"
                                   alt="${product.name}"
                                 >
                                 <img
-                                  src="https://www.atica.com.ar${secondImg}"
+                                  src="${secondImg}"
                                   class="card-img-top img-second"
                                   alt="${product.name} - Hover"
                                 >
