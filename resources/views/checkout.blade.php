@@ -469,7 +469,7 @@
                                                     <span style="font-weight: bold">Envío a domicilio</span><br>
                                                     <small>De 1 a 5 días hábiles</small>
                                                 </div>
-                                                <span class="fw-semibold small" id="correo-argentino-price" style="color: green; font-weight: bold">GRATIS</span>
+                                                <span class="fw-semibold small shipping-cost-price" id="correo-argentino-price" style="color: green; font-weight: bold">GRATIS</span>
                                             </div>
                                         </button>
                                     </div>
@@ -508,7 +508,7 @@
                                                         <span id="shipping-option-title">¡Llega hoy!</span><br>
                                                         <small id="shipping-option-subtitle">Comprando antes de las 13:00 hs</small>
                                                     </div>
-                                                    <span class="fw-semibold small">Gratis</span>
+                                                    <span class="fw-semibold small shipping-cost-price">Gratis</span>
                                                 </div>
                                             </button>
                                         </div>
@@ -713,8 +713,8 @@
                             <div id="coupon-success-code" class="mb-2 small text-success"></div>
 
                             <div class="d-flex justify-content-between align-content-center mt-3">
-                                <span class="fw-semibold">Envío:</span>
-                                <span class="text-success fw-semibold">GRATIS</span>
+                                <span class="fw-semibold">Envío (gratis a partir de $35.000):</span>
+                                <span class="text-success fw-semibold shipping-cost-price">GRATIS</span>
                             </div>
 
                             <div class="d-flex justify-content-between align-content-center mt-3">

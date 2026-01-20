@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\MercadoPagoConfig;
 
@@ -33,20 +34,9 @@ readonly class MercadoPagoService
     public function createPreference(Order $order)
     {
 
-        // Creates service record
-//        $order = $this->orderService->create(json_decode($request->data));
-//        dd($order);
-//        $order->status = "Orden no paga por el cliente";
-//        $order->save();
-
-        // Retrieves items to be purchased, with final price including discounts
-//        $items = $this->orderProductsService->mapOrderProductToItem($order->id);
-
-//        dd($items);
-
         try {
-            $client = new PreferenceClient();
 
+            $client = new PreferenceClient();
             $preference = $client->create([
                 "back_urls" => [
                     "success" => url("/payment-success/" . Crypt::encryptString($order->id)),
@@ -59,7 +49,7 @@ readonly class MercadoPagoService
                         "title" => "Orden {$order->code} atica.com.ar",
                         "quantity" => 1,
                         "currency_id" => "ARS",
-                        "unit_price" => $order->total_amount
+                        "unit_price" => $order->total_amount + $order->shipping_cost
 //                        "unit_price" => 10
 
                     ),
@@ -73,6 +63,7 @@ readonly class MercadoPagoService
 
         } catch (\Exception $e) {
 
+            Log::error($e->toString());
             return response()->json(['error' => 'Failed to create preference', 'message' => $e->getMessage()], 500);
         }
 

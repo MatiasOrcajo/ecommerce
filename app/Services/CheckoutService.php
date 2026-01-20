@@ -127,7 +127,7 @@ class CheckoutService
         /*-----------------------------------------------------------
          | Cambia este valor para controlar la promo 2×1
          +----------------------------------------------------------*/
-        $applyTwoForOne = true;
+        $applyTwoForOne = false;
 
         /*------------------  Datos base del carrito ----------------*/
         $cart = Session::get('cart', [
@@ -260,6 +260,12 @@ class CheckoutService
             $orderTotalAfterCoupon = $order_total * $remainingPercentage($discountPercent);
         }
         $data['order_total_after_coupon_applied'] = $orderTotalAfterCoupon;
+
+        /*------------------ Cargo por envío ----------------------*/
+        $shippingThreshold = 35000;
+        $shippingCost = ($orderTotalAfterCoupon < $shippingThreshold) ? 8000 : 0;
+        $data['shipping_cost'] = $shippingCost;
+        $data['final_total'] = $orderTotalAfterCoupon + $shippingCost;
 
         return $data;
     }

@@ -63,6 +63,7 @@ class OrderService
             'status' => 'No pago',
             'shipping_address' => $shippingAddress,
             'expiration_date' => Carbon::now()->addDays(1),
+            'shipping_cost' => $cartInfo["shipping_cost"],
             'coupon_id' => $this->getCouponAppliedId(),
         ]);
 

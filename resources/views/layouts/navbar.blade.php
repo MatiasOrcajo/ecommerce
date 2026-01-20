@@ -423,11 +423,12 @@
                         Productos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="collectionsDropdown">
-                        <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys</a></li>
-                        <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camiseta
-                                reductora</a></li>
-                        <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Faja
-                                reductora</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'summer-sale')}}">SUMMER SALE</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys reductores</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camisetas
+                                reductoras</a></li>
+                        <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Fajas
+                                moldeadoras</a></li>
                         <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                     </ul>
                 </li>
@@ -518,13 +519,13 @@
                                 Productos
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="productDropdown">
-                                <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys</a></li>
-                                <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camiseta
-                                        reductora</a></li>
-                                <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Faja
-                                        reductora</a></li>
-                                <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los
-                                        productos</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'summer-sale')}}">SUMMER SALE</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'bodys')}}">Bodys reductores</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'camiseta-reductora')}}">Camisetas
+                                        reductoras</a></li>
+                                <li><a class="dropdown-item" href="{{route('category.show', 'faja-reductora')}}">Fajas
+                                        moldeadoras</a></li>
+                                <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">

@@ -38,7 +38,7 @@
     <div class="container mt-5 translate-y-mobile">
         <div class="card">
             <div class="card-header text-center text-white" style="background-color: #bc8d8a;">
-                <h3 class="card-title">¡Orden Realizada con Éxito!</h3>
+                <h3 class="card-title">¡Gracias por tu compra!</h3>
             </div>
             <div class="card-body">
                 <!-- Información General de la Orden -->
@@ -48,9 +48,7 @@
                 <div class="mb-3">
                     <h5>Datos del Cliente:</h5>
                     <ul class="list-group">
-                        <li class="list-group-item"><strong>Costo Total:</strong> ${{ $order->total_amount }}</li>
-                        <li class="list-group-item"><strong>Nombre del
-                                Cliente:</strong> {{ $order->customer->name.' '.$order->customer->surname }}</li>
+                        <li class="list-group-item"><strong>Nombre:</strong> {{ $order->customer->name.' '.$order->customer->surname }}</li>
                         <li class="list-group-item"><strong>Email:</strong> {{ $order->customer->email }}</li>
                         <li class="list-group-item"><strong>DNI:</strong> {{ $order->customer->dni }}</li>
                         <li class="list-group-item"><strong>Dirección de envío:</strong> {{ $order->shipping_address }}
@@ -109,9 +107,14 @@
                                     <td><strong>{{ $totalDiscount }}%</strong></td>
                                 </tr>
 
+                                <tr>
+                                    <td colspan="6" class="text-end"><strong>Costo de envío:</strong></td>
+                                    <td><strong>${{ $order->shipping_cost == 0 ? 'GRATIS' : $order->shipping_cost }}</strong></td>
+                                </tr>
+
                             <tr>
                                 <td colspan="6" class="text-end"><strong>Total:</strong></td>
-                                <td><strong>${{ $order->total_amount }}</strong></td>
+                                <td><strong>${{ $order->total_amount + $order->shipping_cost }}</strong></td>
                             </tr>
                             </tfoot>
                         </table>

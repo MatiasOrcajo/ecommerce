@@ -185,26 +185,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Fines de semana: llega el lunes
         if (!isWeekday) {
-            title = '¡Llega gratis el lunes!';
+            title = '¡Llega el lunes!';
             const daysAhead = (1 - weekday + 7) % 7 || 7; // próximo lunes
             deadline.setUTCDate(deadline.getUTCDate() + daysAhead);
             deadline.setUTCHours(15, 0, 0, 0);
         }
         // Días de semana antes de las 13: hoy
         else if (beforeCutoff) {
-            title = '¡Llega gratis hoy!';
+            title = '¡Llega hoy!';
             deadline.setUTCHours(15, 0, 0, 0);
         }
         // Viernes después de las 13: lunes
         else if (weekday === 5) {
-            title = '¡Llega gratis el lunes!';
+            title = '¡Llega el lunes!';
             const daysAhead = (1 - weekday + 7) % 7 || 7;
             deadline.setUTCDate(deadline.getUTCDate() + daysAhead);
             deadline.setUTCHours(15, 0, 0, 0);
         }
         // Resto: mañana
         else {
-            title = '¡Llega gratis mañana!';
+            title = '¡Llega mañana!';
             deadline.setUTCDate(deadline.getUTCDate() + 1);
             deadline.setUTCHours(15, 0, 0, 0);
         }
@@ -561,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
             type: "GET",
             url: '/cart-info',
             success: function (xhr) {
-                if (xhr.order_total == 0) {
+                if (xhr.final_total == 0) {
                     location.reload();
                 }
 
@@ -645,17 +645,25 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                 });
 
-                $('#order_total').html(`<h1>${moneyAR(xhr.order_total)}</h1>`);
+                let shippingCost = xhr.shipping_cost == 0 ? 'GRATIS':moneyAR(xhr.shipping_cost);
+
+                $('#order_total').html(`<h1>${moneyAR(xhr.final_total)}</h1>`);
                 $('#items-summary-container').empty().append(html);
 
-                $('#order_total_inline').html(moneyAR(xhr.order_total));
+                $('#order_total_inline').html(moneyAR(xhr.final_total));
+
+                $('#correo-argentino-price').html(shippingCost)
+
+                document.querySelectorAll('.shipping-cost-price').forEach(element => {
+                    element.innerHTML = shippingCost
+                })
 
                 if (isCouponApplied) {
-                    $('#order_total').html(`<del><h1>${moneyAR(xhr.order_total)}</h1></del> <h1>${moneyAR(xhr.order_total_after_coupon_applied)}</h1>`);
+                    $('#order_total').html(`<del><h1>${moneyAR(xhr.final_total)}</h1></del> <h1>${moneyAR(xhr.final_total_after_coupon_applied)}</h1>`);
                     $('#coupon-validated-success').html("Cupón validado");
                     $('#coupon-validated-failed').html("");
                     $('#coupon-success-code').html(`Aplicado ${xhr.coupon_discount}% OFF`);
-                    $('#order_total_inline').html(moneyAR(xhr.order_total_after_coupon_applied));
+                    $('#order_total_inline').html(moneyAR(xhr.final_total_after_coupon_applied));
                 }
 
                 // Eliminar producto del carrito
