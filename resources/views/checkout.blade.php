@@ -8,6 +8,92 @@
 
     <style>
 
+        .payment-methods {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 16px;
+            margin: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .payment-option + .payment-option {
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Radio “tipo imagen” */
+        .payment-option__radio {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .payment-option__circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 2px solid #9ca3af;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 18px;
+        }
+
+        .payment-option__radio:checked + .payment-option__circle {
+            border-color: #111827;
+        }
+
+        .payment-option__radio:checked + .payment-option__circle::after {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #111827;
+        }
+
+        /* Texto y badge */
+        .payment-option__label {
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.1;
+        }
+
+        .payment-option__badge {
+            margin-left: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f5132;
+            background: #d1e7dd;
+            border-radius: 999px;
+            padding: 4px 10px;
+            white-space: nowrap;
+        }
+
+        /* Mercado Pago logo */
+        .payment-option__label--mp {
+            font-weight: 600;
+        }
+
+        .payment-option__mp-logo {
+            height: 34px;
+            width: auto;
+            display: block;
+        }
+
+        /* Hover suave como en listas */
+        .payment-option:hover {
+            background: #f9fafb;
+        }
+
         .cart-item-card {
             background: #ffffff;
         }
@@ -23,6 +109,7 @@
             font-size: 1rem;
             margin: 0;
         }
+
         .cart-item-price del h4 {
             font-size: 0.9rem;
         }
@@ -46,7 +133,6 @@
                 text-align: left; /* si lo preferís a la izquierda en mobile */
             }
         }
-
 
 
         input, option, select {
@@ -215,6 +301,109 @@
         .payment-method-button {
             padding: 10px 18px;
         }
+
+/* Contenedor tipo lista */
+.shipping-methods{
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Item */
+.shipping-option{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.shipping-option + .shipping-option{
+    border-top: 1px solid #e5e7eb;
+}
+
+.shipping-option:hover{
+    background: #f9fafb;
+}
+
+/* Radio “custom” */
+.shipping-option__radio{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.shipping-option__circle{
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 2px solid #9ca3af;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 18px;
+}
+
+.shipping-option__radio:checked + .shipping-option__circle{
+    border-color: #111827;
+}
+
+.shipping-option__radio:checked + .shipping-option__circle::after{
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #111827;
+}
+
+/* Contenido (texto/logo) */
+.shipping-option__content{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.shipping-option__logo{
+    width: 160px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.shipping-option__title{
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.1;
+}
+
+.shipping-option__subtitle{
+    color: #6b7280;
+    line-height: 1.2;
+}
+
+/* Precio a la derecha */
+.shipping-option__price{
+    margin-left: auto;
+    font-weight: 800;
+    color: #16a34a;
+    white-space: nowrap;
+}
+
+/* Variante destacada (Llega hoy/mañana) */
+.shipping-option--highlight .shipping-option__price{
+    color: #16a34a;
+}
+
+/* Mobile: logo un poquito más chico */
+@media (max-width: 575.98px){
+    .shipping-option__logo{ width: 140px; }
+}
 
         /* Mobile */
         @media (max-width: 991.98px) {
@@ -412,23 +601,27 @@
                             <form id="contactForm">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" placeholder="email@gmail.com" required>
+                                    <input type="email" class="form-control" id="email" placeholder="email@gmail.com"
+                                           required>
                                 </div>
 
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="firstName" class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" id="firstName" placeholder="Nombre" required>
+                                        <input type="text" class="form-control" id="firstName" placeholder="Nombre"
+                                               required>
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="lastName" class="form-label">Apellido</label>
-                                        <input type="text" class="form-control" id="lastName" placeholder="Apellido" required>
+                                        <input type="text" class="form-control" id="lastName" placeholder="Apellido"
+                                               required>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Teléfono</label>
-                                    <input type="tel" class="form-control" id="phone" placeholder="011 6172-1821" required>
+                                    <input type="tel" class="form-control" id="phone" placeholder="011 6172-1821"
+                                           required>
                                 </div>
 
                                 <div class="row">
@@ -455,71 +648,9 @@
                                     </div>
                                 </div>
 
-                                {{-- correo-argentino / Retiro --}}
-                                <div class="row mb-4">
-
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button type="button" id="correo-argentino-button"
-                                                class="btn btn-outline-success btn-md w-100 payment-method-button mt-3 shipping_method"
-                                                style="font-size: 1rem;"
-                                                data-shipment-method="correo-argentino">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="text-start">
-                                                    <img src="https://www.correoargentino.com.ar/sites/default/files/logo-correo.png" alt="Correo Argentino Logo" style="width: 100%; max-width: 200px; height: auto;">
-                                                    <span style="font-weight: bold">Envío a domicilio</span><br>
-                                                    <small>De 1 a 5 días hábiles</small>
-                                                </div>
-                                                <span class="fw-semibold small shipping-cost-price" id="correo-argentino-price" style="color: green; font-weight: bold">GRATIS</span>
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button type="button" id="take-away-button"
-                                                class="btn btn-outline-success btn-md w-100 payment-method-button mt-3 shipping_method"
-                                                style="font-size: 1rem;"
-                                                data-shipment-method="take-away">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="text-start">
-                                                    <span style="font-weight: bold">Retirar en CABA</span>
-                                                    <br>
-                                                    <small>Bernardo de Irigoyen 630 - Monserrat</small>
-                                                    <br>
-                                                    <small>CON CITA PREVIA</small>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </div>
-
-
-                                    {{-- Opción "Llega hoy / mañana" --}}
-                                    <div class="row mb-3">
-                                        <div id="shipping-option-wrapper"
-                                             class="col-md-12 d-flex justify-content-center d-none w-100">
-                                            <button
-                                                type="button"
-                                                id="shipping-option"
-                                                class="btn btn-outline-success btn-md w-100 payment-method-button mt-3 shipping_method"
-                                                style="font-size: 1rem; border-color: green; color: green; font-weight: bold"
-                                                data-shipment-method="shipping-option-wrapper"
-                                            >
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div class="text-start">
-                                                        <span id="shipping-option-title">¡Llega hoy!</span><br>
-                                                        <small id="shipping-option-subtitle">Comprando antes de las 13:00 hs</small>
-                                                    </div>
-                                                    <span class="fw-semibold small shipping-cost-price">Gratis</span>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-
-                                {{-- DOMICILIO (solo para envíos, se oculta en retiro) --}}
-                                <div id="address-section" class="border rounded-3 p-3 mb-4 d-none">
-                                    <h6 class="mb-3" style="font-weight: bold; font-size: 1.5rem">Datos del destinatario</h6>
+                                <div id="address-section" class="border rounded-3 p-3 mb-4 d-block">
+                                    <h6 class="mb-3" style="font-weight: bold; font-size: 1.5rem">Datos del
+                                        destinatario</h6>
 
                                     <div class="row">
                                         <div class="mb-3 col-md-6">
@@ -554,15 +685,94 @@
 
                                     <div class="row">
                                         <div class="mb-3 col-md-12">
-                                            <label for="observations" class="form-label">Observaciones para el envío:</label>
-                                            <label for="observations" class="form-label">Si preferís que te enviemos a una sucursal de Correo Argentino, dejalo escrito acá</label>
+                                            <label for="observations" class="form-label">Observaciones para el
+                                                envío:</label>
+                                            <label for="observations" class="form-label">Si preferís que te enviemos a
+                                                una sucursal de Correo Argentino, dejalo escrito acá</label>
                                             <textarea class="form-control" id="observations" rows="3"
                                                       placeholder="Referencias; cosas a tener en cuenta; etc."></textarea>
                                         </div>
                                     </div>
                                 </div>
 
-                                {{-- Campo hidden opcional si después querés leerlo desde el back --}}
+
+                                {{-- correo-argentino / Retiro --}}
+                                <div class="row mb-4">
+
+                                    <div class="shipping-methods">
+                                        <label class="shipping-option" for="sm_correo">
+                                            <input
+                                                class="shipping-option__radio"
+                                                type="radio"
+                                                name="shipping_method"
+                                                id="sm_correo"
+                                                value="correo-argentino"
+                                                data-shipment-method="correo-argentino"
+                                            >
+                                            <span class="shipping-option__circle" aria-hidden="true"></span>
+
+                                            <span class="shipping-option__content">
+                                                <img
+                                                    src="https://www.correoargentino.com.ar/sites/default/files/logo-correo.png"
+                                                    alt="Correo Argentino"
+                                                    class="shipping-option__logo"
+                                                >
+                                                <span class="shipping-option__title">Envío a domicilio</span>
+                                                <small class="shipping-option__subtitle">De 1 a 5 días hábiles</small>
+                                            </span>
+
+                                            <span
+                                                class="shipping-option__price shipping-cost-price"
+                                                id="correo-argentino-price"
+                                            >GRATIS</span>
+                                        </label>
+
+                                        <label class="shipping-option" for="sm_takeaway">
+                                            <input
+                                                class="shipping-option__radio"
+                                                type="radio"
+                                                name="shipping_method"
+                                                id="sm_takeaway"
+                                                value="take-away"
+                                                data-shipment-method="take-away"
+                                            >
+                                            <span class="shipping-option__circle" aria-hidden="true"></span>
+
+                                            <span class="shipping-option__content">
+            <span class="shipping-option__title">Retirar en CABA</span>
+            <small class="shipping-option__subtitle">Bernardo de Irigoyen 630 - Monserrat</small>
+            <small class="shipping-option__subtitle">CON CITA PREVIA</small>
+        </span>
+                                        </label>
+
+                                        {{-- Opción "Llega hoy / mañana" --}}
+                                        <div id="shipping-option-wrapper" class="d-none shipping-option-selector">
+                                            <label class="shipping-option shipping-option--highlight" for="sm_arrives">
+                                                <input
+                                                    class="shipping-option__radio"
+                                                    type="radio"
+                                                    name="shipping_method"
+                                                    id="sm_arrives"
+                                                    value="shipping-option-wrapper"
+                                                    data-shipment-method="shipping-option-wrapper"
+                                                >
+                                                <span class="shipping-option__circle" aria-hidden="true"></span>
+
+                                                <span class="shipping-option__content">
+                <span class="shipping-option__title" id="shipping-option-title">¡Llega hoy!</span>
+                <small class="shipping-option__subtitle" id="shipping-option-subtitle">
+                    Comprando antes de las 13:00 hs
+                </small>
+            </span>
+
+                                                <span class="shipping-option__price shipping-cost-price">Gratis</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
                                 <input type="hidden" id="selected_shipping_method" name="selected_shipping_method">
 
                                 <button type="button"
@@ -576,7 +786,6 @@
                         </div>
 
 
-
                         <!-- Step 2: Resumen + método de pago -->
                         <div class="tab-pane fade" id="step2">
                             <form id="billingForm">
@@ -585,6 +794,7 @@
                                         color: #bc8d8a;
                                         border-color: #bc8d8a;
                                     }
+
                                     .btn:hover {
                                         color: var(--bs-btn-hover-color);
                                         background-color: #bc8d8a;
@@ -598,7 +808,8 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="fw-semibold">Datos de facturación</span>
-                                                <button type="button" class="btn btn-link btn-sm p-0" id="summaryEditContact">
+                                                <button type="button" class="btn btn-link btn-sm p-0"
+                                                        id="summaryEditContact">
                                                     Cambiar
                                                 </button>
                                             </div>
@@ -611,7 +822,8 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="fw-semibold">Entrega</span>
-                                                <button type="button" class="btn btn-link btn-sm p-0" id="summaryEditShipping">
+                                                <button type="button" class="btn btn-link btn-sm p-0"
+                                                        id="summaryEditShipping">
                                                     Cambiar
                                                 </button>
                                             </div>
@@ -625,37 +837,57 @@
                                 {{-- MÉTODO DE PAGO (tus botones originales) --}}
                                 <div class="row mb-5">
                                     <h5 class="mb-3" style="font-weight: bold; font-size: 1.5rem">Método de pago</h5>
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button type="button" id="mercado-pago-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
-                                                style="font-size: 1rem;"
-                                                data-payment-method="mercado-pago">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                    <img src="{{asset('MP_RGB_HANDSHAKE_color_vertical.png')}}"
-                                                         style="width: 100%; max-width: 150px; height: auto;" alt="Mercado Pago">
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button type="button" id="bank-transfer-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
-                                                style="font-size: 1rem;"
-                                                data-payment-method="bank-transfer">
-                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            <span style="font-weight: bold">Transferencia bancaria</span>
-                                            <br>
-                                            <small>10% off</small>
-                                        </button>
-                                    </div>
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button type="button" id="cash-button"
-                                                class="btn btn-outline-success btn-md w-75 payment-method-button mt-3 payment_method"
-                                                style="font-size: 1rem;"
-                                                data-payment-method="cash">
-                                            <i class="mx-0" style="margin-right: 5px; font-size: 1.2rem;"></i>
-                                            <span style="font-weight: bold">Efectivo</span><br>
-                                            <small>20% off | Solo para retirar en CABA</small>
-                                        </button>
+                                    <div class="payment-methods">
+                                        <label class="payment-option" for="pm_bank">
+                                            <input
+                                                class="payment-option__radio"
+                                                type="radio"
+                                                name="payment_method"
+                                                id="pm_bank"
+                                                value="bank-transfer"
+                                                data-payment-method="bank-transfer"
+                                            >
+                                            <span class="payment-option__circle" aria-hidden="true"></span>
+
+                                            <span class="payment-option__label">Transferencia bancaria</span>
+                                            <span class="payment-option__badge">10% de descuento</span>
+                                        </label>
+
+                                        <label class="payment-option" for="pm_cash">
+                                            <input
+                                                class="payment-option__radio"
+                                                type="radio"
+                                                name="payment_method"
+                                                id="pm_cash"
+                                                value="cash"
+                                                data-payment-method="cash"
+                                            >
+                                            <span class="payment-option__circle" aria-hidden="true"></span>
+
+                                            <span class="payment-option__label">Efectivo</span>
+                                            <span class="payment-option__badge">10% de descuento</span>
+                                        </label>
+
+                                        <label class="payment-option" for="pm_mp">
+                                            <input
+                                                class="payment-option__radio"
+                                                type="radio"
+                                                name="payment_method"
+                                                id="pm_mp"
+                                                value="mercado-pago"
+                                                data-payment-method="mercado-pago"
+                                            >
+                                            <span class="payment-option__circle" aria-hidden="true"></span>
+
+                                            <span class="payment-option__label payment-option__label--mp d-flex align-items-center justify-content-center">
+                                                <span class="payment-option__label">Mercado Pago</span>
+                                                <img
+                                                    src="{{ asset('MP_RGB_HANDSHAKE_color_vertical.png') }}"
+                                                    alt="Mercado Pago"
+                                                    class="payment-option__mp-logo"
+                                                >
+                                            </span>
+                                        </label>
                                     </div>
                                 </div>
                             </form>

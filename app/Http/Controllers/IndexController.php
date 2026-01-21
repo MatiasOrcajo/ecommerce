@@ -80,7 +80,7 @@ class IndexController extends Controller
             ->get();
 
         if($request->q == "Todos los productos") $products = Product::where('visible', true)->get();
-        if($request->q == "SUMMER SALE") $products = Product::where('visible', true)->where('discount', 50)->get();
+        if($request->q == "SUMMER SALE") $products = Product::where('visible', true)->get();
 
         return $this->productService->productsData($products);
 

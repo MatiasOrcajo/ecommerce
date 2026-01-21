@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedPaymentMethod = null; // (se setea por los botones de pago)
 
     // Botones de métodos de pago / envío
-    const paymentMethodButtons = document.querySelectorAll(".payment_method");
-    const shipmentMethodButtons = document.querySelectorAll(".shipping_method");
+    const paymentMethodButtons = document.querySelectorAll(".payment-option");
+    const shipmentMethodButtons = document.querySelectorAll(".shipping-option");
 
     // Campos de dirección
     const provinceEl = document.getElementById('province');
@@ -329,7 +329,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // marcamos el clickeado
             button.classList.add('selected');
 
-            selectedPaymentMethod = button.getAttribute('data-payment-method');
+            selectedPaymentMethod = button.firstElementChild.getAttribute('data-payment-method');
+
         });
     });
 
@@ -338,7 +339,9 @@ document.addEventListener("DOMContentLoaded", () => {
     shipmentMethodButtons.forEach((button) => {
         button.addEventListener("click", () => {
             shipmentMethodButtons.forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
+            button.classList.add('selected')
+
+            selectedShipmentMethod = button.firstElementChild.getAttribute('data-shipment-method');
         });
     });
 

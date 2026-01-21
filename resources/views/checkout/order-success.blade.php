@@ -114,7 +114,7 @@
 
                             <tr>
                                 <td colspan="6" class="text-end"><strong>Total:</strong></td>
-                                <td><strong>${{ $order->total_amount + $order->shipping_cost }}</strong></td>
+                                <td><strong>${{ $order->total_amount}}</strong></td>
                             </tr>
                             </tfoot>
                         </table>
