@@ -73,7 +73,7 @@
 
     {{-- Banner desktop --}}
     <div class="container-fluid mt-4 px-0 d-none d-lg-block">
-        <a href="/search?q=Todos los productos">
+        <a href="/search?q=SUMMER SALE">
             <img
                 src="{{ asset('banner.png') }}"
                 alt="Banner principal"
@@ -781,7 +781,9 @@
                     const container = document.getElementById('products-container');
                     let html = '';
 
-                    Object.values(data).forEach(item => {
+                    const sortedData = Object.values(data).sort((a, b) => b.product.price - a.product.price);
+
+                    sortedData.forEach(item => {
                         const {product, colors} = item;
 
                         const colorNames = colors.names;
@@ -924,7 +926,9 @@
                 const container = document.getElementById('main-products-container');
                 let html = '';
 
-                Object.values(data).forEach(item => {
+                const sortedData = Object.values(data).sort((a, b) => b.product.price - a.product.price);
+
+                sortedData.forEach(item => {
                     const {product, colors} = item;
 
                     const colorNames = colors.names;

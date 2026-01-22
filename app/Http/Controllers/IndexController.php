@@ -35,6 +35,7 @@ class IndexController extends Controller
     public function index()
     {
         $products = Product::where('featured', true)
+            ->orderBy('price')
             ->where('visible', true)
             ->with('variants.pictures')
             ->get();
@@ -48,6 +49,7 @@ class IndexController extends Controller
     {
 
         $products = \App\Models\Product::where('featured', true)
+            ->orderBy('price', 'DESC')
             ->where('visible', true)
             ->with('variants')
             ->get();
@@ -76,11 +78,12 @@ class IndexController extends Controller
     {
 
         $products = Product::where('name', 'like', '%' . $request->q . '%')
+            ->orderBy('price', 'desc')
             ->where('visible', true)
             ->get();
 
-        if($request->q == "Todos los productos") $products = Product::where('visible', true)->get();
-        if($request->q == "SUMMER SALE") $products = Product::where('visible', true)->get();
+        if($request->q == "Todos los productos") $products = Product::where('visible', true)->orderBy('price')->get();
+        if($request->q == "SUMMER SALE") $products = Product::where('visible', true)->orderBy('price')->get();
 
         return $this->productService->productsData($products);
 
@@ -89,7 +92,7 @@ class IndexController extends Controller
 
     public function getMainProducts()
     {
-        $products = Product::whereIn('id', [8, 13, 15, 16])->get();
+        $products = Product::whereIn('id', [8, 13, 15, 16])->orderBy('price', 'desc')->get();
 
         return $this->productService->productsData($products);
     }

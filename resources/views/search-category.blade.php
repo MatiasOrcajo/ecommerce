@@ -155,7 +155,9 @@
                         return;
                     }
 
-                    Object.values(data).forEach(item => {
+                    const sortedData = Object.values(data).sort((a, b) => b.product.price - a.product.price);
+
+                    sortedData.forEach(item => {
                         const {product, colors} = item;
                         const colorNames = colors.names;
 

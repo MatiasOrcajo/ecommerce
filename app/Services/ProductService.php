@@ -87,6 +87,8 @@ class ProductService {
             }
         }
 
+//        dd($data);
+
         return json_encode($data);
     }
 

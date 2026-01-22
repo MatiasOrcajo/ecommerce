@@ -147,6 +147,7 @@
                     .catch(err => console.error(err));
 
                 function renderProducts(data) {
+                    console.log(data)
                     const container = document.getElementById('products-container');
                     let html = '';
 
@@ -161,7 +162,9 @@
                         return;
                     }
 
-                    Object.values(data).forEach(item => {
+                    const sortedData = Object.values(data).sort((a, b) => b.product.price - a.product.price);
+
+                    sortedData.forEach(item => {
                         const { product, colors } = item;
                         const colorNames = colors.names;
 
@@ -182,18 +185,18 @@
                         variants.forEach((v, i) => {
                             colorNames[i].includes('PACK') || colorNames[i].includes('Pack') ? swatches += '' :
                                 swatches += `
-                  <div
-                    class="color-box mx-1"
-                    data-variant-index="${i}"
-                    style="
-                      width:24px; height:24px;
-                      background:${v.colorCode};
-                      border:1px solid #ccc;
-                      cursor:pointer;
-                    "
-                    title="${colorNames[i]}"
-                  ></div>
-                `;
+                                  <div
+                                    class="color-box mx-1"
+                                    data-variant-index="${i}"
+                                    style="
+                                      width:24px; height:24px;
+                                      background:${v.colorCode};
+                                      border:1px solid #ccc;
+                                      cursor:pointer;
+                                    "
+                                    title="${colorNames[i]}"
+                                  ></div>
+                                `;
                         });
 
 
