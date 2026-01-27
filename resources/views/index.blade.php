@@ -390,19 +390,6 @@
         </div>
     </section>
 
-    <!-- Contenedor infaltables -->
-    <section>
-        <div class="mt-5" id="destacados" style="margin-top: 7rem; margin-bottom: 3rem">
-            <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">¡Los infaltables para
-                modelar tu figura!</h2>
-
-        </div>
-        <div id="main-products-container"
-             class="row row-cols-1 row-cols-lg-2 g-4 justify-content-center col-lg-8 col-12 mx-auto">
-        </div>
-    </section>
-
-
     <!-- banner movimiento -->
     <section>
         <!-- Banner con texto deslizante -->
@@ -435,6 +422,23 @@
             </div>
         </div>
     </section>
+
+    <!-- Contenedor infaltables -->
+    <section>
+        <div class="mt-5" id="destacados" style="margin-top: 7rem; margin-bottom: 3rem">
+            <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">¡Los infaltables para
+                modelar tu figura!</h2>
+
+        </div>
+        <div id="main-products-container"
+             class="row row-cols-1 row-cols-lg-2 g-4 justify-content-center col-lg-8 col-12 mx-auto">
+        </div>
+    </section>
+
+
+    @section('reviews')
+        @include('layouts.reviews')
+    @endsection
 
     <style>
         /* Estilos para el banner animado */
@@ -517,39 +521,7 @@
     </style>
 
     <!-- Clientas -->
-    <section>
-        <div class="" id="destacados" style="margin-bottom: 3rem">
-            <h2 class="d-block mt-5 text-center" style="font-size: 2rem; font-weight: bold">Lo que dicen nuestras
-                clientas 💞</h2>
 
-        </div>
-        <div class="swiper customers-swiper mx-3">
-            <div class="swiper-wrapper pb-3 justify-content-md-center" id="customers-container">
-                <div class="swiper-slide">
-                    <img src="{{ asset('/testimonial/1.jpg') }}" alt="Testimonial 1" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{ asset('/testimonial/2.jpg') }}" alt="Testimonial 2" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{ asset('/testimonial/3.jpg') }}" alt="Testimonial 3" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{ asset('/testimonial/4.jpg') }}" alt="Testimonial 4" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{ asset('/testimonial/5.jpg') }}" alt="Testimonial 5" class="img-fluid">
-                </div>
-                <div class="swiper-slide">
-                    <img src="{{ asset('/testimonial/6.jpg') }}" alt="Testimonial 6" class="img-fluid">
-                </div>
-            </div>
-            <!-- Paginación -->
-            <div class="swiper-pagination"></div>
-            <!-- Scrollbar -->
-            <div class="swiper-scrollbar"></div>
-        </div>
-    </section>
 
     {{--    <div class="container-fluid px-0">--}}
     {{--        <div class="video-wrapper w-100">--}}
@@ -591,75 +563,9 @@
         }
     </style>
 
-    <div class="my-5 py-5 d-none d-md-block">
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="me-md-4">
-                <i class="fa-brands fa-instagram" style="font-size: 4rem; color: #bc8d8a;"></i>
-            </div>
-            <a href="https://www.instagram.com/aticaoficial/" target="_blank">
-
-                <div style="transform: translateY(-20%)">
-                    <p class="d-block mt-5 text-center" style="font-size: 1.5rem;">SEGUINOS EN INSTAGRAM</p>
-                    <h3 style="font-size: 2.5rem">@atica.arg</h3>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <div class="my-5 py-5 d-block d-md-none">
-        <div class="d-flex justify-content-center align-items-center flex-column text-center">
-            <a href="https://www.instagram.com/aticaoficial/" target="_blank">
-                <div class="me-md-4">
-                    <i class="fa-brands fa-instagram" style="font-size: 4rem; color: #bc8d8a;"></i>
-                </div>
-                <div style="transform: translateY(-20%)">
-                    <p class="d-block mt-5 text-center" style="font-size: 1.5rem;">SEGUINOS EN INSTAGRAM</p>
-                    <h3 style="font-size: 2.5rem">@atica.arg</h3>
-                </div>
-            </a>
-        </div>
-    </div>
 
 
     <!-- Newsletter Subscription Form (Bootstrap 5) -->
-    <div class="p-0 px-3 mb-5 w-100 translate-y-0 d-flex justify-content-center align-items-center">
-
-        <div>
-            <!-- Top bar -->
-            <div class="bg-dark text-white d-flex justify-content-between align-items-center px-4 py-3">
-                <h5 class="m-0" style="font-size: 1.5rem">Dejá tu correo y recibí un regalo especial 💖</h5>
-            </div>
-
-            <!-- Formulario -->
-            <div class="bg-white border shadow-sm p-4 p-md-5">
-                <h6 class="mb-4">Completa tus datos para suscribirte</h6>
-                <form id="mailing_list_form">
-
-                    <!-- Campos de texto -->
-                    <div class="mb-3">
-                        <input name="email" type="email" class="form-control form-control-lg" placeholder="Email"
-                               required>
-                    </div>
-                    <div class="mb-3">
-                        <input name="name" type="text" class="form-control form-control-lg" placeholder="Nombre"
-                               required>
-                    </div>
-                    <div class="mb-3">
-                        <input name="surname" type="text" class="form-control form-control-lg" placeholder="Apellido"
-                               required>
-                    </div>
-                    <div class="mb-4">
-                        <input name="birthdate" type="text" class="form-control form-control-lg"
-                               placeholder="cumpleaños (dd/mm)"
-                               pattern="\d{2}/\d{2}">
-                    </div>
-
-                    <!-- Botón Enviar -->
-                    <button type="submit" class="btn btn-dark btn-lg w-100">ENVIAR</button>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
     <style>
@@ -683,30 +589,6 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-
-                const customersSwiper = new Swiper('.customers-swiper', {
-                    slidesPerView: 1,
-                    spaceBetween: 10,
-                    loop: true,
-                    infinity: true,
-                    autoplay: true,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true
-                    },
-                    scrollbar: {
-                        el: '.swiper-scrollbar',
-                    },
-                    breakpoints: {
-                        576: {
-                            slidesPerView: 2,
-                        },
-                        992: {
-                            slidesPerView: 3,
-                            autoplay: false
-                        }
-                    }
-                });
 
                 const swiper = new Swiper('.products-swiper', {
                     slidesPerView: 1,

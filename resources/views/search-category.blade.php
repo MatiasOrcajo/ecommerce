@@ -74,6 +74,10 @@
          class="row row-cols-1 row-cols-lg-3 g-4 mx-3 justify-content-center mb-5">
     </div>
 
+    @section('reviews')
+        @include('layouts.reviews')
+    @endsection
+
     {{--    <div class="container-fluid px-0">--}}
     {{--        <div class="video-wrapper w-100">--}}
     {{--            <video autoplay muted loop playsinline>--}}

@@ -256,6 +256,20 @@
                         <button class="arrow-btn arrow-right" id="thumbNext">›</button>
                     </div>
 
+                    <!-- Descripciones -->
+                    <div class="col-12">
+                        <div class="my-3 d-none d-md-block">
+                            <div class="mb-4">
+                                <div class="bg-light border rounded p-2"><em>Descripción</em></div>
+                                <div class="mt-2">{!! $product->description !!}</div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="bg-light border rounded p-2"><em>Medidas</em></div>
+                                <div class="mt-2">{!! $product->sizes_description !!}</div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Información del producto -->
@@ -460,26 +474,13 @@
                     </div>
                 </div>
 
-                <!-- Descripciones -->
-                <div class="col-md-6">
-                    <div class="my-3 d-none d-md-block">
-                        <div class="mb-4">
-                            <div class="bg-light border rounded p-2"><em>Descripción</em></div>
-                            <div class="mt-2">{!! $product->description !!}</div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="bg-light border rounded p-2"><em>Medidas</em></div>
-                            <div class="mt-2">{!! $product->sizes_description !!}</div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="bg-light border rounded p-2"><em>Referencia Modelo</em></div>
-                            <div class="mt-2">{!! $product->model_reference !!}</div>
-                        </div>
-                    </div>
-                </div>
-
+                @section('reviews')
+                    @include('layouts.reviews')
+                @endsection
 
             </div>
+
+
         </div>
 
         <!-- Lightbox Overlay -->
@@ -487,6 +488,8 @@
             <span id="lightbox-close">&times;</span>
             <img id="lightbox-img" src="" alt="Ampliado">
         </div>
+
+
     </div>
 
     @push('scripts')
