@@ -37,7 +37,6 @@
             @media (max-width: 991.98px) {
                 .product-page-container {
                     padding-bottom: 0;
-                    margin-top: 100px; /* reemplaza el translateY */
                     transform: none; /* clave */
                 }
             }
