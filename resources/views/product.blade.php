@@ -474,9 +474,7 @@
                     </div>
                 </div>
 
-                @section('reviews')
-                    @include('layouts.reviews')
-                @endsection
+                @include('layouts.reviews')
 
             </div>
 

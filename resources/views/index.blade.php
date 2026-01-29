@@ -612,47 +612,6 @@
                     }
                 });
 
-                // Capturar el formulario
-                const mailingListForm = document.getElementById('mailing_list_form');
-
-                // Escuchar el evento de envío del formulario
-                mailingListForm.addEventListener('submit', async (e) => {
-                    e.preventDefault(); // Evitar el comportamiento por defecto del formulario
-
-                    // Crear el objeto FormData
-                    const formData = new FormData(mailingListForm);
-
-                    try {
-                        // Realizar la petición POST a la ruta /mailing-list-contact
-                        const response = await fetch('/mailing-list-contact', {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            }
-                        });
-
-                        // Verificar si la respuesta es exitosa
-                        if (response.ok) {
-                            // Cambiar el HTML para mostrar un mensaje de agradecimiento
-                            mailingListForm.parentElement.innerHTML = `
-                                <div class="text-center p-4">
-                                    <h5 class="text-success">¡Gracias por suscribirte!</h5>
-                                    <p class="text-muted">Pronto recibirás noticias y beneficios exclusivos.</p>
-                                </div>
-                            `;
-                        } else {
-                            const errorData = await response.json();
-                            console.error('Error al enviar el formulario:', errorData);
-                            alert('Hubo un error al procesar el formulario. Por favor, inténtalo de nuevo.');
-                        }
-                    } catch (error) {
-                        console.error('Error en la conexión:', error);
-                        alert('Ocurrió un error inesperado. Por favor, revisa tu conexión e inténtalo otra vez.');
-                    }
-                });
-
 
                 fetch('/featured-products')
                     .then(res => res.json())
