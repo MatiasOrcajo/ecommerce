@@ -853,21 +853,6 @@
                                             <span class="payment-option__badge">10% de descuento</span>
                                         </label>
 
-                                        <label class="payment-option" for="pm_cash">
-                                            <input
-                                                class="payment-option__radio"
-                                                type="radio"
-                                                name="payment_method"
-                                                id="pm_cash"
-                                                value="cash"
-                                                data-payment-method="cash"
-                                            >
-                                            <span class="payment-option__circle" aria-hidden="true"></span>
-
-                                            <span class="payment-option__label">Efectivo</span>
-                                            <span class="payment-option__badge">10% de descuento</span>
-                                        </label>
-
                                         <label class="payment-option" for="pm_mp">
                                             <input
                                                 class="payment-option__radio"
