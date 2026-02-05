@@ -439,11 +439,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('faqs')}}">Preguntas Frecuentes</a>
+                    <a class="nav-link" href="{{route('faqs')}}">Preguntas frecuentes</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://wa.link/n5il16" target="_blank" style="font-weight: bold; text-decoration: underline">Necesito Ayuda</a>
+                    <a class="nav-link" href="https://wa.link/n5il16" target="_blank" style="font-weight: bold; text-decoration: underline">Necesito ayuda</a>
                 </li>
             </ul>
         </div>
@@ -530,11 +530,11 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('faqs')}}">Preguntas Frecuentes</a>
+                            <a class="nav-link" href="{{route('faqs')}}">Preguntas frecuentes</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="https://wa.link/n5il16" target="_blank" style="font-weight: bold; text-decoration: underline">Necesito Ayuda</a>
+                            <a class="nav-link" href="https://wa.link/n5il16" target="_blank" style="font-weight: bold; text-decoration: underline">Necesito ayuda</a>
                         </li>
                     </ul>
 
