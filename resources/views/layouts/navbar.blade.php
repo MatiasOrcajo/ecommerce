@@ -435,7 +435,7 @@
                 <!-- ↑ Fin dropdown ↑ -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('index') }}#footer">Contacto</a>
+                    <a class="nav-link" href="{{route('sizes-guide')}}">Guía de talles</a>
                 </li>
 
                 <li class="nav-item">
@@ -443,11 +443,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="https://wa.link/n5il16" target="_blank">Necesito Ayuda</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('sizes-guide')}}">Guía de talles</a>
+                    <a class="nav-link" href="https://wa.link/n5il16" target="_blank" style="font-weight: bold; text-decoration: underline">Necesito Ayuda</a>
                 </li>
             </ul>
         </div>
@@ -528,8 +524,9 @@
                                 <li><a class="dropdown-item" href="/search?q=Todos los productos">Todos los productos</a></li>
                             </ul>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('index') }}#footer">Contacto</a>
+                            <a class="nav-link" href="{{route('sizes-guide')}}">Guía de talles</a>
                         </li>
 
                         <li class="nav-item">
@@ -537,11 +534,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="https://wa.link/n5il16" target="_blank">Necesito Ayuda</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('sizes-guide')}}">Guía de talles</a>
+                            <a class="nav-link" href="https://wa.link/n5il16" target="_blank" style="font-weight: bold; text-decoration: underline">Necesito Ayuda</a>
                         </li>
                     </ul>
 
