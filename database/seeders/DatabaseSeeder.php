@@ -6,70 +6,68 @@ use App\Models\Cart;
 use App\Models\CartProducts;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Customer;
+use App\Models\MailingList;
 use App\Models\Order;
 use App\Models\OrderProducts;
 use App\Models\Picture;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Database\Factories\ProductSizeFactory;
+use App\Models\Visit;
+use App\Models\Visitor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run()
     {
-        // Seed Categories
-        Category::factory(10)->create();
+        Category::factory(20)->create();
 
-        // Seed Products
-        Product::factory(50)->create();
+        Product::factory(100)->create()->each(function ($product) {
+            ProductVariant::factory()->create(['product_id' => $product->id]);
+            ProductVariant::factory()->create(['product_id' => $product->id]);
+            ProductVariant::factory(rand(1, 4))->create(['product_id' => $product->id]);
 
-        // Seed Users
-        User::factory(20)->create();
-
-        // Seed Carts and CartProducts
-        Cart::factory(20)->create()->each(function ($cart) {
-            CartProducts::factory(3)->create(['cart_id' => $cart->id]);
+            Picture::factory(rand(1, 5))->create([
+                'product_id' => $product->id,
+                'product_variant_id' => $product->sizes()->inRandomOrder()->first()?->id,
+            ]);
         });
 
-        // Seed Coupons
-        Coupon::factory(10)->create();
+        $variantIds = ProductVariant::pluck('id')->toArray();
 
-        // Seed Orders and OrderProductsService
-        Order::factory(1000)->create()->each(function ($order) {
-            OrderProducts::factory(1)->create(['order_id' => $order->id]);
+        User::factory(5)->create();
+
+        Customer::factory(200)->create();
+
+        Coupon::factory(20)->create();
+
+        Cart::factory(50)->create()->each(function ($cart) use ($variantIds) {
+            $count = rand(1, 5);
+            for ($i = 0; $i < $count; $i++) {
+                CartProducts::factory()->create([
+                    'cart_id' => $cart->id,
+                    'product_variants_id' => $variantIds[array_rand($variantIds)],
+                ]);
+            }
         });
 
-        // Seed Pictures for Products
-        Product::all()->each(function ($product) {
-            Picture::factory(3)->create(['product_id' => $product->id]);
+        Order::factory(500)->create()->each(function ($order) use ($variantIds) {
+            $count = rand(1, 4);
+            for ($i = 0; $i < $count; $i++) {
+                OrderProducts::factory()->create([
+                    'order_id' => $order->id,
+                    'product_variants_id' => $variantIds[array_rand($variantIds)],
+                ]);
+            }
         });
 
-        $visitors = [];
+        Visitor::factory(500)->create();
 
-        // Generar 50 visitantes con IPs aleatorias y fechas aleatorias en los últimos 30 días
-        for ($i = 0; $i < 10000; $i++) {
-            $visitors[] = [
-                'ip_address' => $this->generateRandomIp(),
-                'created_at' => now()->subDays(rand(0, 700))->subMinutes(rand(0, 1440)),
-                'updated_at' => now(),
-            ];
-        }
+        MailingList::factory(80)->create();
 
-        DB::table('visitors')->insert($visitors);
-
-        ProductVariant::factory(1000)->create();
-
-    }
-
-    private function generateRandomIp(): string
-    {
-        return rand(1, 255) . '.' . rand(0, 255) . '.' . rand(0, 255) . '.' . rand(1, 255);
+        Visit::factory(2000)->create();
     }
 }

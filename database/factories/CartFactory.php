@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Constants;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,10 +13,24 @@ class CartFactory extends Factory
 {
     public function definition()
     {
+        $status = $this->faker->randomElement([
+            Constants::ACTIVE,
+            Constants::ACTIVE,
+            Constants::ACTIVE,
+            Constants::ABANDONED,
+            Constants::PENDING,
+            Constants::CONFIRMED,
+            Constants::EMPTY,
+            Constants::SAVED,
+        ]);
+
+        $createdAt = $this->faker->dateTimeBetween('-3 months', 'now');
+
         return [
-            'customer_id' => \App\Models\Customer::factory(),
-            'status' => $this->faker->randomElement(['active', 'abandoned']),
-            'created_at' => now(),
+            'customer_id' => $this->faker->boolean(60) ? Customer::factory() : null,
+            'status' => $status,
+            'created_at' => $createdAt,
+            'updated_at' => $this->faker->dateTimeBetween($createdAt, 'now'),
         ];
     }
 }

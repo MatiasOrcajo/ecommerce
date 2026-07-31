@@ -11,12 +11,14 @@ class CouponFactory extends Factory
 {
     public function definition()
     {
+        $discount = $this->faker->randomElement([5, 10, 15, 20, 25, 30, 40]);
+
         return [
-            'code' => $this->faker->bothify('COUPON-####'),
-            'discount' => 10,
-            'quantity' => $this->faker->numberBetween(1, 300),
-            'valid_until' => $this->faker->dateTimeBetween('+1 week', '+1 month'),
-            'created_at' => now(),
+            'code' => strtoupper($this->faker->bothify('ATICA-####-????')),
+            'discount' => $discount,
+            'quantity' => $this->faker->numberBetween(10, 500),
+            'valid_until' => $this->faker->dateTimeBetween('-1 month', '+3 months'),
+            'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
         ];
     }
 }

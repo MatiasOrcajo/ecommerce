@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,10 +13,24 @@ class PictureFactory extends Factory
 {
     public function definition()
     {
+        $images = [
+            'https://images.unsplash.com/photo-1434389677669-e08b4cda5a19?w=600',
+            'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600',
+            'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600',
+            'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',
+            'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=600',
+            'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600',
+            'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600',
+            'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600',
+            'https://images.unsplash.com/photo-1551218372-a8789b81b253?w=600',
+            'https://images.unsplash.com/photo-1445384763658-0400939829cd?w=600',
+        ];
+
         return [
-            'product_id' => \App\Models\Product::factory(),
+            'product_id' => Product::factory(),
+            'product_variant_id' => $this->faker->boolean(60) ? ProductVariant::factory() : null,
             'order' => $this->faker->numberBetween(1, 5),
-            'path' => $this->faker->randomElement(['https://sublitextil.com.ar/wp-content/uploads/2019/01/Remera-sublimar-hombre-.jpg', 'https://tascani.vtexassets.com/arquivos/ids/175953/tascani19507921.jpg?v=637985814929000000', 'https://dcdn.mitiendanube.com/stores/002/364/252/products/whatsapp-image-2023-04-06-at-15-45-17-11-64fae6cfeeeb6d8df816808072429618-1024-1024.jpeg', 'https://www.stockcenter.com.ar/on/demandware.static/-/Sites-365-dabra-catalog/default/dwacd4d4f6/products/AD_GM5534/AD_GM5534-1.JPG', 'https://www.shopcoveusa.com/cdn/shop/files/BlackShortsFrontFinal2_1_1024x1024.jpg?v=1718226693']),
+            'path' => $this->faker->randomElement($images),
             'created_at' => now(),
         ];
     }
