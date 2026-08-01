@@ -10,8 +10,8 @@ class Category extends Model
     use HasFactory;
 
     protected $table = 'categories';
-    protected $guarded;
 
+    protected $guarded;
 
     /**
      * Retorna todos los productos de una categoria

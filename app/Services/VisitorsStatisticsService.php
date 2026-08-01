@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Order;
 use App\Models\Visit;
 use App\Models\Visitor;
 use Carbon\Carbon;
@@ -21,7 +20,6 @@ class VisitorsStatisticsService
         'year-on-year' => 'filterVisitorsYearOnYear',
     ];
 
-
     /**
      * Retrieves filtered sales data based on the specified filter criteria.
      *
@@ -29,7 +27,7 @@ class VisitorsStatisticsService
      * from a predefined mapping. If the filter exists in the mapping, the corresponding method is called
      * to process and return the filtered sales data. Otherwise, it responds with an error for an invalid filter.
      *
-     * @param Request $request The incoming HTTP request containing the filter parameter.
+     * @param  Request  $request  The incoming HTTP request containing the filter parameter.
      * @return mixed The filtered sales data returned by the corresponding method or a JSON error response
      *               with a 400 status code for invalid filters.
      */
@@ -39,6 +37,7 @@ class VisitorsStatisticsService
 
         if (isset(self::FILTER_METHOD_MAP[$filter])) {
             $method = self::FILTER_METHOD_MAP[$filter];
+
             return $this->$method();
         }
 
@@ -94,6 +93,7 @@ class VisitorsStatisticsService
             if (self::ipStartsWithAny($ip, self::suspiciousIpPrefixes())) {
                 return true;
             }
+
             // En general, UA vacío/genérico lo consideramos bot:
             return true;
         }
@@ -149,14 +149,10 @@ class VisitorsStatisticsService
                 return true;
             }
         }
+
         return false;
     }
 
-
-    /**
-     * @param string $ip
-     * @return bool
-     */
     private function isMetaIp(string $ip): bool
     {
 
@@ -175,8 +171,6 @@ class VisitorsStatisticsService
         return str_starts_with(strtolower($ip), '2800:2130:5240:');
     }
 
-
-
     private function filterRealVisits($allVisits)
     {
 
@@ -191,8 +185,6 @@ class VisitorsStatisticsService
                 return $this->isUs((string) $v->ip_address);
             });
     }
-
-
 
     /**
      * Filters and retrieves visitor data for the current day.
@@ -219,7 +211,7 @@ class VisitorsStatisticsService
             ->map
             ->count();
 
-        $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
+        $primaryInfo = $dates->map(fn ($value, $date) => $visitors[$date] ?? 0)->toJson();
         $secondaryInfo = $this->filterVisitorsYesterdayPreviousPeriod();
 
         return json_encode([
@@ -227,7 +219,6 @@ class VisitorsStatisticsService
             'secondary' => $secondaryInfo,
         ]);
     }
-
 
     private function filterVisitorsYesterdayPreviousPeriod(): string
     {
@@ -245,9 +236,8 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        return $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
+        return $dates->map(fn ($value, $date) => $visitors[$date] ?? 0)->toJson();
     }
-
 
     /**
      * Generates a report of visitors for the last seven days.
@@ -281,12 +271,11 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? null)->toJson();
+        $primaryInfo = $dates->map(fn ($value, $date) => $visitors[$date] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousSevenDays();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterVisitorsPreviousSevenDays(): string
     {
@@ -308,9 +297,8 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        return $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
+        return $dates->map(fn ($value, $date) => $visitors[$date] ?? 0)->toJson();
     }
-
 
     /**
      * Generates a JSON report of visitor data for the current month.
@@ -344,12 +332,11 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        $primaryInfo = $dates->map(fn($value, $date) => $visitors[$date] ?? null)->toJson();
+        $primaryInfo = $dates->map(fn ($value, $date) => $visitors[$date] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousMonth();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterVisitorsPreviousMonth(): string
     {
@@ -371,9 +358,8 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        return $dates->map(fn($value, $date) => $visitors[$date] ?? 0)->toJson();
+        return $dates->map(fn ($value, $date) => $visitors[$date] ?? 0)->toJson();
     }
-
 
     /**
      * Filters and processes visitor data for the current year to generate a JSON response.
@@ -390,7 +376,7 @@ class VisitorsStatisticsService
         $reportingPeriod = Carbon::parse(now())->startOfYear()->daysUntil(now());
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfYear(), Carbon::now()->endOfDay()])
@@ -405,19 +391,18 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        $primaryInfo = $months->map(fn($value, $month) => $visitors[$month] ?? null)->toJson();
+        $primaryInfo = $months->map(fn ($value, $month) => $visitors[$month] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousYear();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterVisitorsPreviousYear(): string
     {
         $reportingPeriod = Carbon::parse(now())->startOfYear()->subYear(1)->daysUntil(now()->startOfYear()->subYear(1)->endOfYear());
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfYear()->subYear(1), now()->startOfYear()->subYear(1)->endOfYear()])
@@ -432,9 +417,8 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        return $months->map(fn($value, $month) => $visitors[$month] ?? 0)->toJson();
+        return $months->map(fn ($value, $month) => $visitors[$month] ?? 0)->toJson();
     }
-
 
     /**
      * Processes and compares visitor data over the past 12 months to generate a JSON report.
@@ -451,7 +435,7 @@ class VisitorsStatisticsService
         $reportingPeriod = Carbon::parse(now())->subMonths(12)->monthsUntil(Carbon::parse(now()));
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->subMonths(12)->startOfMonth(), Carbon::now()])
@@ -466,19 +450,18 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        $primaryInfo = $months->map(fn($value, $month) => $visitors[$month] ?? null)->toJson();
+        $primaryInfo = $months->map(fn ($value, $month) => $visitors[$month] ?? null)->toJson();
         $secondaryInfo = $this->filterVisitorsPreviousYearOnYearPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterVisitorsPreviousYearOnYearPeriod(): string
     {
         $reportingPeriod = Carbon::parse(now())->startOfMonth()->subYear(2)->daysUntil(now()->startOfMonth()->subYear(1)->endOfMonth());
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $allVisits = Visit::whereBetween('visited_at', [Carbon::parse(now())->startOfMonth()->subYear(2), now()->startOfMonth()->subYear(1)->endOfMonth()])
@@ -493,8 +476,6 @@ class VisitorsStatisticsService
             return $visitors->count();
         });
 
-        return $months->map(fn($value, $month) => $visitors[$month] ?? 0)->toJson();
+        return $months->map(fn ($value, $month) => $visitors[$month] ?? 0)->toJson();
     }
-
-
 }

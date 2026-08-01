@@ -18,7 +18,7 @@ class CartEmptyMiddleware
     {
         $cart = Session::get('cart');
 
-        if (!$cart || empty($cart["products"])){
+        if (! $cart || empty($cart['products'])) {
 
             return redirect()->route('index');
         }

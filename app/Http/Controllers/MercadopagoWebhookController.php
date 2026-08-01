@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Log;
 
 class MercadopagoWebhookController extends Controller
 {
-
     /**
      * Handles a webhook request from Mercado Pago.
      *
@@ -20,7 +19,7 @@ class MercadopagoWebhookController extends Controller
      * if the provided type and data ID match the expected criteria.
      * Returns a JSON response indicating a successful operation.
      *
-     * @param Request $request The incoming HTTP request object containing webhook data.
+     * @param  Request  $request  The incoming HTTP request object containing webhook data.
      * @return \Illuminate\Http\JsonResponse|array The JSON response indicating the processing result.
      */
     public function handle(Request $request)
@@ -38,7 +37,6 @@ class MercadopagoWebhookController extends Controller
 
     }
 
-
     /**
      * Processes a merchant order using the provided data ID.
      *
@@ -52,7 +50,7 @@ class MercadopagoWebhookController extends Controller
      *
      * Returns the response data as a JSON object.
      *
-     * @param mixed $dataId The identifier of the merchant order to process.
+     * @param  mixed  $dataId  The identifier of the merchant order to process.
      * @return array The API response in JSON format.
      */
     public function processMerchantOrder($dataId)
@@ -62,35 +60,28 @@ class MercadopagoWebhookController extends Controller
         $response = Http::withToken($accessToken)
             ->get("https://api.mercadopago.com/merchant_orders/{$dataId}");
 
-        $order = Order::find($response["external_reference"]);
+        $order = Order::find($response['external_reference']);
 
-        if($response["order_status"] == "paid" ){
-            $order->status = "Pago recibido";
+        if ($response['order_status'] == 'paid') {
+            $order->status = 'Pago recibido';
 
             FacebookPurchaseEventJob::dispatch($order, $order->ctx);
 
-
-            if($order->email_sent == false){
+            if ($order->email_sent == false) {
                 SendOrderSuccessEmail::dispatch($order->id)->delay(now()->addSeconds(5));
                 SendNewSaleEmail::dispatch($order->id)->delay(now()->addSeconds(5));
                 $order->email_sent = true;
                 $order->save();
             }
 
-        }
-
-        else if($response["order_status"] == "payment_in_process"){
-            $order->status = "Pago pendiente de aprobación";
-        }
-
-        else{
-            $order->status = "Pago fallido";
+        } elseif ($response['order_status'] == 'payment_in_process') {
+            $order->status = 'Pago pendiente de aprobación';
+        } else {
+            $order->status = 'Pago fallido';
         }
 
         $order->save();
 
         return $response->json();
     }
-
-
 }

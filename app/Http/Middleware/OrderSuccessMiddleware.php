@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderSuccessMiddleware
 {
-
     /**
      * Handle an incoming request.
      *
@@ -33,6 +32,7 @@ class OrderSuccessMiddleware
             if ($order && strtolower($order->customer->email) === strtolower(trim($request->input('email')))) {
 
                 Session::put("email_validated_$code", true);
+
                 return redirect()->route('order-success', $code); // volver a la misma ruta para reintentar con sesión válida
             }
 

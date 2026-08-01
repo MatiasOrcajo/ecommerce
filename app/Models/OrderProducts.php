@@ -18,7 +18,6 @@ class OrderProducts extends Model
         'discount',
     ];
 
-
     /**
      * Defines a relationship where this model belongs to a Product.
      */
@@ -26,5 +25,4 @@ class OrderProducts extends Model
     {
         return $this->belongsTo(ProductVariant::class, 'product_variants_id');
     }
-
 }

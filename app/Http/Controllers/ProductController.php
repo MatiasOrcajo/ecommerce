@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Picture;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-
-
-    public function __construct(private readonly ProductService $productService)
-    {
-
-    }
+    public function __construct(private readonly ProductService $productService) {}
 
     /**
      * Retorna un numero random
@@ -32,27 +27,22 @@ class ProductController extends Controller
         return $rand;
     }
 
-
     /**
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function create(Request $request)
     {
         $this->validateProduct($request);
 
-        $this->saveProductData(new Product(), $request);
+        $this->saveProductData(new Product, $request);
 
         return response()->json([
             'message' => 'Product created successfully!',
-            'product' => $product
+            'product' => $product,
         ], 200);
     }
 
-
     /**
-     * @param Product $product
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function edit(Product $product, Request $request)
@@ -63,13 +53,11 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product updated successfully!',
-            'product' => $product
+            'product' => $product,
         ], 200);
     }
 
-
     /**
-     * @param Product $product
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete(Product $product)
@@ -77,16 +65,14 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json([
-            'message' => 'Product deleted successfully!'
+            'message' => 'Product deleted successfully!',
         ], 200);
     }
 
-
     /**
-     * @param Request $request
      * @return void
      */
-// Método privado para validar los datos
+    // Método privado para validar los datos
     private function validateProduct(Request $request)
     {
         $request->validate([
@@ -99,14 +85,10 @@ class ProductController extends Controller
         ]);
     }
 
-
     /**
-     * @param Product $product
-     * @param Request $request
      * @return void
-     *
      */
-// Método privado para guardar los datos del producto
+    // Método privado para guardar los datos del producto
     private function saveProductData(Product $product, Request $request)
     {
         $product->fill([
@@ -123,14 +105,11 @@ class ProductController extends Controller
         $product->save();
     }
 
-
     /**
      * Obtiene dos imagenes de un producto segun un color
      *
      * todo implementar esta funcion para traer todas las imagenes de un color en la vista de producto
      *
-     * @param Product $product
-     * @param Request $request
      * @return mixed
      */
     public function searchProductImagesByColor(Product $product, Request $request)
@@ -138,25 +117,21 @@ class ProductController extends Controller
         return $product->variants()->where('color', $request->color)->first()->pictures()->orderBy('order')->take(2)->get();
     }
 
-
     /**
-     * @param $slug
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
     public function show($slug)
     {
-        $product = Product::where("slug", $slug)->firstOrFail();
+        $product = Product::where('slug', $slug)->firstOrFail();
         $categories = \App\Models\Category::all();
 
         $product->visits += 1;
         $product->save();
 
-        return view('product', compact('product', 'categories'));
+        return Inertia::render('Product', ['product' => $product, 'categories' => $categories]);
     }
 
-
     /**
-     * @param Product $product
      * @return \Illuminate\Http\JsonResponse
      */
     public function getVariants(Product $product)
@@ -164,11 +139,4 @@ class ProductController extends Controller
 
         return response()->json($this->productService->getVariants($product));
     }
-
-
-
-
-
-
-
 }

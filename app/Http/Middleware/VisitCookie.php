@@ -1,6 +1,7 @@
 <?php
 
 // app/Http/Middleware/VisitCookie.php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -14,17 +15,16 @@ class VisitCookie
         $response = $next($request);
 
         if (! $request->cookies->has('vst')) {
-            $raw   = Str::uuid()->toString().'|'.time();
-            $sig   = hash_hmac('sha256', $raw, config('app.key'));
+            $raw = Str::uuid()->toString().'|'.time();
+            $sig = hash_hmac('sha256', $raw, config('app.key'));
             $token = base64_encode($raw.'|'.$sig);
 
             // Cookie legible por JS (NO HttpOnly), pero segura
             cookie()->queue(
-                cookie('vst', $token, 60*24, '/', null, true, false, false, 'Lax')
+                cookie('vst', $token, 60 * 24, '/', null, true, false, false, 'Lax')
             );
         }
 
         return $response;
     }
 }
-

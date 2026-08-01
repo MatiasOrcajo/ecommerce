@@ -26,8 +26,8 @@ class SendNewSaleEmail implements ShouldQueue
     {
         $order = Order::with(['customer', 'products.productVariant.pictures'])->find($this->orderId);
 
-        Mail::send('emails.new-sale', ['order' => $order], function ($message) use ($order) {
-            $message->to(["sofia@atica.com.ar", "matias@atica.com.ar"])
+        Mail::send('emails.new-sale', ['order' => $order], function ($message) {
+            $message->to(['sofia@atica.com.ar', 'matias@atica.com.ar'])
                 ->subject('Nueva venta!');
         });
     }

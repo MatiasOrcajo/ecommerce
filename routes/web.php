@@ -1,18 +1,12 @@
 <?php
 
 use App\Http\Controllers\BeaconController;
-use App\Http\Controllers\ProfileController;
-use App\Models\Order;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
-use App\Traits\CartTrait;
+use Inertia\Inertia;
 
 Route::group(['middleware' => ['web']], function () {
 
-    Route::get('/test-carbon', function (){
-
-
-    });
+    Route::get('/test-carbon', function () {});
 
     Route::post('/v-beacon', BeaconController::class)->name('v-beacon');
 
@@ -30,11 +24,11 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/see-cart', [\App\Http\Controllers\CartController::class, 'seeCart']);
 
-    Route::get('/guia-de-talles', function(){
+    Route::get('/guia-de-talles', function () {
 
         $categories = \App\Models\Category::all()->toArray();
 
-        return view('sizes-guide', compact('categories'));
+        return Inertia::render('SizesGuide', ['categories' => $categories]);
     })->name('sizes-guide');
 
     Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('index')->middleware(['set-cookie-unique-visitant']);
@@ -44,7 +38,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/categorias/{slug}', [\App\Http\Controllers\Admin\CategoryController::class, 'showCategory'])->name('category.show')->middleware(['set-cookie-unique-visitant']);
 
     Route::get('/categories/{slug}/search-products', [\App\Http\Controllers\Admin\CategoryController::class, 'searchProductsByCategory']);
-
 
     Route::get('/products/{product}/get-variants', [\App\Http\Controllers\ProductController::class, 'getVariants'])->name('product.variants.show');
 
@@ -77,13 +70,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/carts/products/{product}', [\App\Http\Controllers\CartController::class, 'addProduct']);
     Route::put('/carts/products/update-quantity', [\App\Http\Controllers\CartController::class, 'updateProductQuantity']);
 
-    //search product pictures by color
+    // search product pictures by color
     Route::get('/products/{product}/search-pictures-by-color', [\App\Http\Controllers\ProductController::class, 'searchProductImagesByColor']);
 
     Route::post('/mailing-list-contact', [\App\Http\Controllers\MailingListController::class, 'store'])->name('mailing-list-contact');
 
 });
-
 
 Route::prefix('admin')->group(function () {
     Route::middleware('auth')->group(function () {
@@ -122,9 +114,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
-
     });
 });
 
-
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

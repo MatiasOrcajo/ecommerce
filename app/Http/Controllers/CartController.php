@@ -2,27 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
-use App\Models\CartProducts;
-use App\Models\Constants;
 use App\Models\Product;
 use App\Services\CartService;
 use App\Traits\CartTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-
     use CartTrait;
 
     public function __construct(private readonly CartService $cartService)
     {
-//        if($this->getCart() != null){
-//            $this->calculateCartTotalAmount();
-//        }
+        //        if($this->getCart() != null){
+        //            $this->calculateCartTotalAmount();
+        //        }
     }
 
     public function seeCart()
@@ -35,12 +30,9 @@ class CartController extends Controller
         $cart = $this->cartService->create();
     }
 
-
     /**
      * Añade un producto al carrito del usuario
      *
-     * @param Product $product
-     * @param Request $request
      * @return JsonResponse
      */
     public function addProduct(Product $product, Request $request)
@@ -49,11 +41,10 @@ class CartController extends Controller
         return $this->cartService->addProduct($product, $request);
     }
 
-
     /**
      * Elimina un producto del carrito del usuario
      *
-     * @param Product $product
+     * @param  Product  $product
      * @return \Illuminate\Http\JsonResponse
      */
     public function deleteProduct(Request $request)
@@ -61,7 +52,6 @@ class CartController extends Controller
         return $this->cartService->deleteProduct($request);
 
     }
-
 
     /**
      * Calcula el número total de elementos en el carrito
@@ -74,7 +64,6 @@ class CartController extends Controller
         return $this->getCart();
     }
 
-
     /**
      * Vacía el carrito del usuario
      *
@@ -85,26 +74,22 @@ class CartController extends Controller
         $this->cartService->clearCart();
     }
 
-
-
     public function updateProductQuantity(Request $request)
     {
 
         $cart = Session::get('cart');
 
-        foreach ($cart["products"] as $index => $productVariantInCart){
-            if($productVariantInCart["product_variant_id"] == $request->productVariantId){
+        foreach ($cart['products'] as $index => $productVariantInCart) {
+            if ($productVariantInCart['product_variant_id'] == $request->productVariantId) {
 
-                if($request->action == "plus"){
-                    $cart["products"][$index]["quantity"]++;
+                if ($request->action == 'plus') {
+                    $cart['products'][$index]['quantity']++;
+                } else {
+                    $cart['products'][$index]['quantity']--;
                 }
 
-                else{
-                    $cart["products"][$index]["quantity"]--;
-                }
-
-                if($cart["products"][$index]["quantity"] == 0){
-                    unset($cart["products"][$index]);
+                if ($cart['products'][$index]['quantity'] == 0) {
+                    unset($cart['products'][$index]);
                 }
             }
         }
@@ -113,7 +98,5 @@ class CartController extends Controller
 
         return response()->json(Session::get('cart'));
 
-
     }
-
 }

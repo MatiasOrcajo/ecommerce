@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $table = 'products';
-    protected $fillable = ['name', 'category_id', 'price', 'discount', 'description', 'discount_until', 'stock', 'featured', 'sizes_description', 'model_reference', 'slug', 'color', 'visible', 'youtube_link'];
 
+    protected $table = 'products';
+
+    protected $fillable = ['name', 'category_id', 'price', 'discount', 'description', 'discount_until', 'stock', 'featured', 'sizes_description', 'model_reference', 'slug', 'color', 'visible', 'youtube_link'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -19,7 +20,6 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-
 
     /**
      * Retorna todos los registros de order_products asociados a un producto
@@ -31,7 +31,6 @@ class Product extends Model
         return $this->hasMany(OrderProducts::class, 'product_id');
     }
 
-
     /**
      * Retorna todas las imagenes asociadas a un prod
      *
@@ -41,7 +40,6 @@ class Product extends Model
     {
         return $this->hasMany(Picture::class, 'product_id')->orderBy('order');
     }
-
 
     /**
      * Retorna todos los carritos que tengan dicho producto
@@ -53,7 +51,6 @@ class Product extends Model
         return $this->hasMany(CartProducts::class, 'product_id');
     }
 
-
     public function sizes()
     {
         return $this->hasMany(ProductVariant::class, 'product_id');
@@ -64,18 +61,13 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class, 'product_id');
     }
 
-
     public function getRouteKeyName()
     {
         return 'slug'; // Indica que usaremos el campo 'slug' para obtener el modelo en las rutas
     }
 
-
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
     }
-
-
-
 }

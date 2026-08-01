@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Constants;
 use App\Models\Coupon;
 use App\Models\Customer;
 use App\Models\Order;
@@ -52,7 +51,7 @@ class OrderFactory extends Factory
             'code' => $this->generateOrderCode(),
             'payment_method' => $this->faker->randomElement(['Mercado Pago', 'Mercado Pago', 'Mercado Pago', 'Transferencia', 'Efectivo']),
             'shipping_method' => $this->faker->randomElement(['Correo Argentino', 'Correo Argentino', 'Andreani', 'Retiro en CABA']),
-            'shipping_address' => $this->faker->streetAddress() . ', ' . $this->faker->city(),
+            'shipping_address' => $this->faker->streetAddress().', '.$this->faker->city(),
             'shipping_company' => $this->faker->optional(0.3)->company(),
             'shipping_cost' => $this->faker->optional(0.7)->randomFloat(2, 1000, 5000),
             'expiration_date' => $expirationDate,

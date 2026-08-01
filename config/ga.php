@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'GTM_ID' => env("GTM_ID"),
+    'GTM_ID' => env('GTM_ID'),
 ];

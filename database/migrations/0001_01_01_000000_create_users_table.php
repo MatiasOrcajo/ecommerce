@@ -35,7 +35,6 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
-
         \App\Models\User::create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',

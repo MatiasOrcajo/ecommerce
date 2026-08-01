@@ -10,7 +10,6 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Traits\CartTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -18,31 +17,21 @@ use Illuminate\Support\Str;
 
 class CartService
 {
-
     use CartTrait;
 
-
-    public function __construct(private readonly ProductService $productService, private readonly CouponService $couponService)
-    {
-
-    }
-
+    public function __construct(private readonly ProductService $productService, private readonly CouponService $couponService) {}
 
     /**
-     *
      * Creates a new cart associated with the current authenticated user.
      *
      * @return \Illuminate\Database\Eloquent\Model
-     *
      */
     public function create()
     {
         return Cart::create([
-            "status" => Constants::EMPTY
+            'status' => Constants::EMPTY,
         ]);
     }
-
-
 
     /**
      * Adds a product to the cart stored in the session. If the cart does not exist in the session,
@@ -53,41 +42,39 @@ class CartService
      * Updates the product's total amount with the applied discount, calculates the discounted
      * price, and saves the updated cart back to the session.
      *
-     * @param Product $product The product to be added to the cart.
+     * @param  Product  $product  The product to be added to the cart.
      * @return \Illuminate\Http\JsonResponse Returns a JSON response with the updated cart.
      */
     public function addProduct(Product $product, Request $request)
     {
         $sessionCart = null;
 
-        //If cart isn't stored in session
-        //Create the Cart record and assign its id to the cart to be stored in session for reference
-        if (!Session::has('cart')) {
+        // If cart isn't stored in session
+        // Create the Cart record and assign its id to the cart to be stored in session for reference
+        if (! Session::has('cart')) {
             $createdCartInstance = $this->create();
             $createdCartInstance->status = Constants::ACTIVE;
             $createdCartInstance->save();
-            $sessionCart["cart_id"] = $createdCartInstance->id;
-            $sessionCart["is_coupon_applied"] = false;
+            $sessionCart['cart_id'] = $createdCartInstance->id;
+            $sessionCart['is_coupon_applied'] = false;
             Session::put('cart', $sessionCart);
         } else {
             $sessionCart = Session::get('cart');
         }
 
-
         $productVariant = ProductVariant::where('size', $request->size)
-                            ->where('color', $request->color)
-                            ->where('product_id', $request->product_id)
-                            ->firstOrFail();
+            ->where('color', $request->color)
+            ->where('product_id', $request->product_id)
+            ->firstOrFail();
 
-        if($productVariant->stock < $request->quantity){
-            throw new \Exception("No hay stock suficiente. Por favor seleccione menos cantidad.");
+        if ($productVariant->stock < $request->quantity) {
+            throw new \Exception('No hay stock suficiente. Por favor seleccione menos cantidad.');
         }
 
         $isProductAlreadyInCart = false;
 
-
-        //si el producto ya se encuentra en el carrito
-        //aumenta la cantidad
+        // si el producto ya se encuentra en el carrito
+        // aumenta la cantidad
         if (isset($sessionCart['products'])) {
             foreach ($sessionCart['products'] as $index => &$item) {
                 if ($item['product_variant_id'] == $productVariant->id) {
@@ -100,7 +87,7 @@ class CartService
             unset($item);
         }
 
-        if (!$isProductAlreadyInCart) {
+        if (! $isProductAlreadyInCart) {
             $sessionCart['products'][] = [
                 'product_variant_id' => $productVariant->id,
                 'quantity' => (int) $request->quantity,
@@ -109,35 +96,34 @@ class CartService
 
         $this->saveCartInSession($sessionCart);
 
-        $cartProducts = new CartProducts();
+        $cartProducts = new CartProducts;
         $cartProducts->product_variants_id = $productVariant->id;
-        $cartProducts->cart_id = $sessionCart["cart_id"];
+        $cartProducts->cart_id = $sessionCart['cart_id'];
         $cartProducts->save();
-
 
         // ====== ENVIAR EVENTO A META CAPI: AddToCart ======
 
-        if(app()->environment('production')) {
+        if (app()->environment('production')) {
 
             try {
 
-                $pixelId     = config('facebook.pixel_id');
+                $pixelId = config('facebook.pixel_id');
                 $accessToken = config('facebook.access_token');
 
                 // 1) Datos básicos del producto (ajustá los campos según tu modelo)
                 $unitPrice = $productVariant->price ?? $product->price ?? 0;
-                $quantity  = (int) $request->quantity;
+                $quantity = (int) $request->quantity;
                 $contentId = (string) $productVariant->id; // o sku
 
                 // 2) Armar custom_data
                 $customData = [
-                    'currency'     => 'ARS',
-                    'value'        => round($unitPrice * $quantity, 2),
-                    'content_ids'  => [$contentId],
+                    'currency' => 'ARS',
+                    'value' => round($unitPrice * $quantity, 2),
+                    'content_ids' => [$contentId],
                     'content_type' => 'product',
-                    'contents'     => [[
-                        'id'         => $contentId,
-                        'quantity'   => $quantity,
+                    'contents' => [[
+                        'id' => $contentId,
+                        'quantity' => $quantity,
                         'item_price' => (float) $unitPrice,
                     ]],
                 ];
@@ -147,10 +133,10 @@ class CartService
                 $fbc = request()->cookie('_fbc') ?? (request('fbclid') ? 'fb.1.'.time().'.'.request('fbclid') : null);
 
                 $userData = array_filter([
-                    'client_ip_address'  => $request->ip(),
-                    'client_user_agent'  => $request->userAgent(),
-                    'fbp'                => $fbp,
-                    'fbc'                => $fbc,
+                    'client_ip_address' => $request->ip(),
+                    'client_user_agent' => $request->userAgent(),
+                    'fbp' => $fbp,
+                    'fbc' => $fbc,
                 ]);
 
                 // 4) Endpoint + payload
@@ -159,13 +145,13 @@ class CartService
 
                 $body = [
                     'data' => [[
-                        'event_name'       => 'AddToCart',
-                        'event_time'       => time(),
-                        'action_source'    => 'website',
-                        'event_id'         => $eventId,
+                        'event_name' => 'AddToCart',
+                        'event_time' => time(),
+                        'action_source' => 'website',
+                        'event_id' => $eventId,
                         'event_source_url' => url()->current(),
-                        'user_data'        => $userData,
-                        'custom_data'      => $customData,
+                        'user_data' => $userData,
+                        'custom_data' => $customData,
                     ]],
                     'access_token' => $accessToken,
                 ];
@@ -176,17 +162,17 @@ class CartService
                 $payloadOk = $res->successful() && ($res->json()['events_received'] ?? 0) > 0;
 
                 Log::info('Meta CAPI AddToCart response', [
-                    'ok'            => $payloadOk,
-                    'status'        => $res->status(),
-                    'events_received'=> $res->json()['events_received'] ?? null,
-                    'messages'      => $res->json()['messages'] ?? null,
-                    'fbtrace_id'    => $res->json()['fbtrace_id'] ?? null,
+                    'ok' => $payloadOk,
+                    'status' => $res->status(),
+                    'events_received' => $res->json()['events_received'] ?? null,
+                    'messages' => $res->json()['messages'] ?? null,
+                    'fbtrace_id' => $res->json()['fbtrace_id'] ?? null,
                 ]);
 
-                if (!$payloadOk) {
+                if (! $payloadOk) {
                     Log::warning('Meta CAPI AddToCart failed', [
                         'status' => $res->status(),
-                        'body'   => $res->json(),
+                        'body' => $res->json(),
                         'endpoint' => $endpoint,
                     ]);
                 }
@@ -197,10 +183,7 @@ class CartService
 
         }
 
-
-// ====== FIN CAPI ======
-
-
+        // ====== FIN CAPI ======
 
         return response()->json(Session::get('cart'));
 
@@ -212,9 +195,8 @@ class CartService
      * Si el carrito queda vacío tras la eliminación del producto, se actualiza
      * el estado del carrito a EMPTY_BY_CUSTOMER.
      *
-     * @param Product $product
+     * @param  Product  $product
      * @return \Illuminate\Http\JsonResponse
-     *
      */
     public function deleteProduct(Request $request)
     {
@@ -222,16 +204,16 @@ class CartService
         $cartInSession = Session::get('cart');
         $productVariantInCartIndex = 0;
 
-        foreach (collect($cartInSession["products"]) as $index => $productVariantInCart){
-            if($productVariantInCart["product_variant_id"] == $request->product_variant_id){
+        foreach (collect($cartInSession['products']) as $index => $productVariantInCart) {
+            if ($productVariantInCart['product_variant_id'] == $request->product_variant_id) {
                 $productVariantInCartIndex = $index;
             }
         }
 
-        unset($cartInSession["products"][$productVariantInCartIndex]);
+        unset($cartInSession['products'][$productVariantInCartIndex]);
 
         if (empty($cartInSession)) {
-            $cart = Cart::find($cartInSession["cart_id"]);
+            $cart = Cart::find($cartInSession['cart_id']);
             $cart->status = Constants::EMPTY_BY_CUSTOMER;
             $cart->save();
         }
@@ -243,27 +225,22 @@ class CartService
 
     }
 
-
     /**
-     *
      * Elimina todos los elementos del carrito de la sesión.
      *
      * @return void
-     *
      */
     public function clearCart()
     {
         Session::forget('cart');
     }
 
-
     /**
      * Calculates the total amount for each product in the cart after applying discounts.
      *
-     * @param object $customerData An object containing customer-related data, including applied coupons.
-     *
+     * @param  object  $customerData  An object containing customer-related data, including applied coupons.
      * @return \Illuminate\Support\Collection A collection of product details, including product ID, quantity, unit price,
-     *                                         discount, subtotal, and total amount after discounts.
+     *                                        discount, subtotal, and total amount after discounts.
      */
     public function createArrayOfProductsInCart($customerData)
     {
@@ -271,21 +248,21 @@ class CartService
         $cart = $this->getCart();
         $idCartStoredInDatabase = array_key_first($cart);
 
-        return collect($cart[$idCartStoredInDatabase]["products"])->map(function ($query) use ($customerData) {
+        return collect($cart[$idCartStoredInDatabase]['products'])->map(function ($query) {
             $data = [];
 
-            foreach ($query["sizes"] as $size => $product){
-                $product = Product::find($query["id"]);
+            foreach ($query['sizes'] as $size => $product) {
+                $product = Product::find($query['id']);
                 $coupon_id = $this->getCouponAppliedId();
 
                 $data[] = [
-                    "product_id" => $product->id,
-                    "size" => $size,
-                    "quantity" => $product["quantity"],
-                    "unit_price" => $query["price"],
-                    "product_discount" => $query["discount"],
-                    "total" => $product["total_amount_with_discounts"],
-                    "coupon_discount" => Coupon::find($coupon_id)->discount ?? null,
+                    'product_id' => $product->id,
+                    'size' => $size,
+                    'quantity' => $product['quantity'],
+                    'unit_price' => $query['price'],
+                    'product_discount' => $query['discount'],
+                    'total' => $product['total_amount_with_discounts'],
+                    'coupon_discount' => Coupon::find($coupon_id)->discount ?? null,
                 ];
             }
 
@@ -293,5 +270,4 @@ class CartService
         });
 
     }
-
 }

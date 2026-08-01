@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Models\Order;
-use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SalesStatisticsService
 {
-
     /**
      * Mapping of filter methods to their corresponding keys.
      */
@@ -21,7 +19,6 @@ class SalesStatisticsService
         'year-on-year' => 'filterSalesYearOnYear',
     ];
 
-
     /**
      * Retrieves filtered sales data based on the specified filter criteria.
      *
@@ -29,7 +26,7 @@ class SalesStatisticsService
      * from a predefined mapping. If the filter exists in the mapping, the corresponding method is called
      * to process and return the filtered sales data. Otherwise, it responds with an error for an invalid filter.
      *
-     * @param Request $request The incoming HTTP request containing the filter parameter.
+     * @param  Request  $request  The incoming HTTP request containing the filter parameter.
      * @return mixed The filtered sales data returned by the corresponding method or a JSON error response
      *               with a 400 status code for invalid filters.
      */
@@ -39,6 +36,7 @@ class SalesStatisticsService
 
         if (isset(self::FILTER_METHOD_MAP[$filter])) {
             $method = self::FILTER_METHOD_MAP[$filter];
+
             return $this->$method();
         }
 
@@ -69,7 +67,7 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        $primaryInfo = $dates->map(fn($value, $date) => $orders[$date] ?? null)->toJson();
+        $primaryInfo = $dates->map(fn ($value, $date) => $orders[$date] ?? null)->toJson();
         $secondaryInfo = $this->filterSalesYesterdayPreviousPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
@@ -89,10 +87,8 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $dates->map(fn($value, $date) => $orders[$date] ?? null)->toJson();
+        return $dates->map(fn ($value, $date) => $orders[$date] ?? null)->toJson();
     }
-
-
 
     /**
      * Filters and retrieves the total sales amounts for completed orders over the past seven days.
@@ -122,12 +118,11 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        $primaryInfo = $dates->map(fn($value, $date) => $orders[$date] ?? 0)->toJson();
+        $primaryInfo = $dates->map(fn ($value, $date) => $orders[$date] ?? 0)->toJson();
         $secondaryInfo = $this->filterPreviousSevenDaysPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterPreviousSevenDaysPeriod(): string
     {
@@ -148,9 +143,8 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $dates->map(fn($value, $date) => $orders[$date] ?? 0)->toJson();
+        return $dates->map(fn ($value, $date) => $orders[$date] ?? 0)->toJson();
     }
-
 
     /**
      * Filters and calculates the sales data for the current month.
@@ -181,7 +175,7 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        $primaryInfo = $dates->map(fn($value, $date) => $orders[$date] ?? 0)->toJson();
+        $primaryInfo = $dates->map(fn ($value, $date) => $orders[$date] ?? 0)->toJson();
         $secondaryInfo = $this->filterSalesPreviousMonthPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
@@ -207,10 +201,9 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $dates->map(fn($value, $date) => $orders[$date] ?? 0)->toJson();
+        return $dates->map(fn ($value, $date) => $orders[$date] ?? 0)->toJson();
 
     }
-
 
     /**
      * Filters and calculates the sales data for the current year.
@@ -227,7 +220,7 @@ class SalesStatisticsService
         $reportingPeriod = Carbon::parse(now())->startOfYear()->daysUntil(now());
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $orders = Order::where('status', ['Pago recibido', 'En proceso', 'Envío realizado'])
@@ -240,19 +233,18 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        $primaryInfo = $months->map(fn($value, $month) => $orders[$month] ?? 0)->toJson();
+        $primaryInfo = $months->map(fn ($value, $month) => $orders[$month] ?? 0)->toJson();
         $secondaryInfo = $this->filterSalesPreviousYearPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterSalesPreviousYearPeriod(): string
     {
         $reportingPeriod = Carbon::parse(now())->startOfYear()->subYear(1)->daysUntil(now()->startOfYear()->subYear(1)->endOfYear());
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $orders = Order::where('status', ['Pago recibido', 'En proceso', 'Envío realizado'])
@@ -265,10 +257,9 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $months->map(fn($value, $month) => $orders[$month] ?? 0)->toJson();
+        return $months->map(fn ($value, $month) => $orders[$month] ?? 0)->toJson();
 
     }
-
 
     /**
      * Filters and calculates the sales data for the past 12 months year-on-year.
@@ -288,7 +279,7 @@ class SalesStatisticsService
         $reportingPeriod = Carbon::parse(now())->subMonths(12)->monthsUntil(Carbon::parse(now()));
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $orders = Order::where('status', ['Pago recibido', 'En proceso', 'Envío realizado'])
@@ -301,19 +292,18 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        $primaryInfo = $months->map(fn($value, $month) => $orders[$month] ?? null)->toJson();
+        $primaryInfo = $months->map(fn ($value, $month) => $orders[$month] ?? null)->toJson();
         $secondaryInfo = $this->filterSalesPreviousYearOnYearPeriod();
 
         return json_encode(['primary' => $primaryInfo, 'secondary' => $secondaryInfo]);
     }
-
 
     private function filterSalesPreviousYearOnYearPeriod(): string
     {
         $reportingPeriod = Carbon::parse(now())->startOfMonth()->subYear(2)->daysUntil(now()->startOfMonth()->subYear(1)->endOfMonth());
 
         $months = collect($reportingPeriod)->mapWithKeys(function ($date) {
-            return [$date->year . ' ' . $date->monthName => 0];
+            return [$date->year.' '.$date->monthName => 0];
         });
 
         $orders = Order::where('status', ['Pago recibido', 'En proceso', 'Envío realizado'])
@@ -326,9 +316,7 @@ class SalesStatisticsService
                 return round(array_sum($orders->pluck('total_amount')->toArray()), 2);
             });
 
-        return $months->map(fn($value, $month) => $orders[$month] ?? 0)->toJson();
+        return $months->map(fn ($value, $month) => $orders[$month] ?? 0)->toJson();
 
     }
-
-
 }

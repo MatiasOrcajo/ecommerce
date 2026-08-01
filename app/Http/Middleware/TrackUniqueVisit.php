@@ -5,10 +5,10 @@ namespace App\Http\Middleware;
 use App\Models\Visit;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use Symfony\Component\HttpFoundation\Response;
 
 class TrackUniqueVisit
 {
@@ -25,9 +25,9 @@ class TrackUniqueVisit
             return $next($request);
         }
 
-        $uaRaw  = $request->userAgent() ?? '';
+        $uaRaw = $request->userAgent() ?? '';
         $uaNorm = mb_strtolower(trim($uaRaw));
-        $today  = now()->toDateString();
+        $today = now()->toDateString();
 
         // --- 2) Filtro de bots: Cloudflare + CrawlerDetect + heurística ---
         if ($this->isBot($request, $uaRaw, $ip)) {
@@ -44,6 +44,7 @@ class TrackUniqueVisit
             if (! $token) {
                 $this->queueVisitCookie();
             }
+
             return $next($request);
         }
 
@@ -91,7 +92,9 @@ class TrackUniqueVisit
     /** ¿Es muy probable que sea una vista HTML real? */
     private function isLikelyHtmlView(Request $request): bool
     {
-        if ($request->method() !== 'GET') return false;
+        if ($request->method() !== 'GET') {
+            return false;
+        }
 
         // Evitar assets estáticos (si salen por la misma app)
         $path = strtolower($request->path());
@@ -101,10 +104,12 @@ class TrackUniqueVisit
 
         // Debe aceptar HTML (algunos scrapers piden */* o JSON)
         $accept = strtolower($request->headers->get('Accept', ''));
-        if ($accept !== '' && !str_contains($accept, 'text/html')) return false;
+        if ($accept !== '' && ! str_contains($accept, 'text/html')) {
+            return false;
+        }
 
         // Evitar prefetch/prerender
-        $purpose    = strtolower($request->headers->get('Purpose', ''));
+        $purpose = strtolower($request->headers->get('Purpose', ''));
         $secPurpose = strtolower($request->headers->get('Sec-Purpose', ''));
         if (str_contains($purpose, 'prefetch')
             || str_contains($secPurpose, 'prefetch')
@@ -118,8 +123,8 @@ class TrackUniqueVisit
     /** Coloca en cola una cookie firmada legible por JS (para que el beacon la devuelva) */
     private function queueVisitCookie(): void
     {
-        $raw   = Str::uuid()->toString().'|'.time();
-        $sig   = hash_hmac('sha256', $raw, config('app.key'));
+        $raw = Str::uuid()->toString().'|'.time();
+        $sig = hash_hmac('sha256', $raw, config('app.key'));
         $token = base64_encode($raw.'|'.$sig);
 
         // Cookie legible por JS (NO HttpOnly), segura y con SameSite=Lax
@@ -139,8 +144,8 @@ class TrackUniqueVisit
     public function isBot(?\Illuminate\Http\Request $request, string $uaRaw, string $ip): bool
     {
         $uaRaw = $uaRaw ?? '';
-        $ua    = mb_strtolower(trim($uaRaw));
-        $ip    = $ip ?? '';
+        $ua = mb_strtolower(trim($uaRaw));
+        $ip = $ip ?? '';
 
         // (A) Cloudflare Bot Management (si existe el header)
         // 0–29: likely automated; 30–59: ambiguous; 60–99: likely human.
@@ -165,19 +170,19 @@ class TrackUniqueVisit
         // (C) Firmas explícitas
         $explicit = [
             // Mensajes/escáneres
-            'hello from palo alto networks','paloaltonetworks','cortex-xpanse','scanning-activity',
-            'internetmeasurement','l9tcpid','xfox-scan','compatible; odin','odin; https://docs.getodin.com',
+            'hello from palo alto networks', 'paloaltonetworks', 'cortex-xpanse', 'scanning-activity',
+            'internetmeasurement', 'l9tcpid', 'xfox-scan', 'compatible; odin', 'odin; https://docs.getodin.com',
 
             // Librerías/headless
-            'libredtail-http','curl/','python-requests','wget/','go-http-client','okhttp',
-            'java/','node-fetch','libwww-perl','httpclient','aiohttp',
-            'headlesschrome','puppeteer','playwright','phantomjs','selenium','lighthouse','pagespeed','rendertron',
+            'libredtail-http', 'curl/', 'python-requests', 'wget/', 'go-http-client', 'okhttp',
+            'java/', 'node-fetch', 'libwww-perl', 'httpclient', 'aiohttp',
+            'headlesschrome', 'puppeteer', 'playwright', 'phantomjs', 'selenium', 'lighthouse', 'pagespeed', 'rendertron',
 
             // Navegadores “raros” hoy
-            'konqueror/','ucbrowser/',
+            'konqueror/', 'ucbrowser/',
 
             // Genéricos
-            'crawler','spider','scraper','scanner','fetcher',
+            'crawler', 'spider', 'scraper', 'scanner', 'fetcher',
         ];
         foreach ($explicit as $s) {
             if ($s !== '' && str_contains($ua, $s)) {
@@ -189,32 +194,48 @@ class TrackUniqueVisit
         $score = 0;
 
         // UA vacío o muy corto
-        if ($ua === '' || $ua === 'mozilla/5.0') $score += 3;
-        if (mb_strlen($uaRaw) > 0 && mb_strlen($uaRaw) <= 15) $score += 2;
+        if ($ua === '' || $ua === 'mozilla/5.0') {
+            $score += 3;
+        }
+        if (mb_strlen($uaRaw) > 0 && mb_strlen($uaRaw) <= 15) {
+            $score += 2;
+        }
 
         // Typos típicos
-        foreach (['mozlila','bulid','moblie','live gecko','winndows','safri'] as $t) {
-            if (str_contains($ua, $t)) $score += 2;
+        foreach (['mozlila', 'bulid', 'moblie', 'live gecko', 'winndows', 'safri'] as $t) {
+            if (str_contains($ua, $t)) {
+                $score += 2;
+            }
         }
 
         // Android con modelo 1–3 letras (scrapers): leve
-        if (preg_match('~android [0-9]+;\s*[a-z0-9_-]{1,3}\)?~i', $uaRaw)) $score += 1;
+        if (preg_match('~android [0-9]+;\s*[a-z0-9_-]{1,3}\)?~i', $uaRaw)) {
+            $score += 1;
+        }
 
         // Pistas humanas (restan levemente)
-        foreach (['safari/537.36','mobile safari/537.36','gecko/20100101'] as $hint) {
-            if (str_contains($ua, $hint)) $score -= 1;
+        foreach (['safari/537.36', 'mobile safari/537.36', 'gecko/20100101'] as $hint) {
+            if (str_contains($ua, $hint)) {
+                $score -= 1;
+            }
         }
 
         // Client Hints/Fetch headers (navegadores reales hoy)
         if ($request) {
-            if ($request->headers->has('sec-ch-ua'))         $score -= 1;
-            if ($request->headers->has('sec-fetch-site'))    $score -= 1;
-            if ($request->headers->has('sec-fetch-mode'))    $score -= 1;
+            if ($request->headers->has('sec-ch-ua')) {
+                $score -= 1;
+            }
+            if ($request->headers->has('sec-fetch-site')) {
+                $score -= 1;
+            }
+            if ($request->headers->has('sec-fetch-mode')) {
+                $score -= 1;
+            }
         }
 
         // Allowlist leve: referers de IG/FB (no restamos mucho; sólo evitamos sumar)
         if ($request) {
-            $ref = strtolower($request->headers->get('referer',''));
+            $ref = strtolower($request->headers->get('referer', ''));
             if ($ref && (str_contains($ref, 'l.instagram.com') || str_contains($ref, 'm.facebook.com'))) {
                 $score = max($score - 1, $score); // como mucho restar 1
             }
@@ -227,5 +248,4 @@ class TrackUniqueVisit
 
         return $score >= 3;
     }
-
 }

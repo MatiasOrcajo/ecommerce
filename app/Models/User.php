@@ -45,7 +45,6 @@ class User extends Authenticatable
         ];
     }
 
-
     /**
      * Retorna el carrito asociado al usuario
      *

@@ -10,12 +10,12 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'orders';
+
     protected $guarded;
 
     protected $casts = [
         'ctx' => 'array',
     ];
-
 
     /**
      * Retorna al cliente relacionado con una orden (pedido)
@@ -27,7 +27,6 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-
     /**
      * Retorna todos los productos asociados a una orden
      *
@@ -38,11 +37,8 @@ class Order extends Model
         return $this->hasMany(OrderProducts::class, 'order_id');
     }
 
-
     public function coupon()
     {
         return $this->belongsTo(Coupon::class, 'coupon_id');
     }
-
-
 }

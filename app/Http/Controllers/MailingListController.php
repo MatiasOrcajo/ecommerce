@@ -11,18 +11,16 @@ use Illuminate\Http\Request;
 
 class MailingListController extends Controller
 {
-
-
     public function store(Request $request)
     {
 
-        if(MailingList::where('email', $request->email)->first()){
+        if (MailingList::where('email', $request->email)->first()) {
 
             throw new \Error('El email ya existe en nuestra base de datos.');
         }
 
         $customer = MailingList::create($request->toArray());
-        $coupon = new Coupon();
+        $coupon = new Coupon;
         $coupon->code = $this->generateCode();
         $coupon->discount = 10;
         $coupon->quantity = 1;
@@ -31,13 +29,10 @@ class MailingListController extends Controller
 
         SendEmailMarketingDiscountEmail::dispatch($customer, $coupon)->delay(now()->addSeconds(5));
 
-
-
         return true;
     }
 
-
-    private function generateCode ()
+    private function generateCode()
     {
         $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         $code = '10-';
@@ -46,12 +41,10 @@ class MailingListController extends Controller
             $code .= $chars[random_int(0, strlen($chars) - 1)];
         }
 
-        if(Order::where("code", $code)->first()){
+        if (Order::where('code', $code)->first()) {
             $this->generateCode();
         }
 
         return $code;
     }
-
-
 }

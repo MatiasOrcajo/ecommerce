@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Jobs\SendOrderSuccessEmail;
 use App\Models\Order;
-use Illuminate\Support\Facades\Mail;
 
 class EmailService
 {

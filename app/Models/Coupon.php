@@ -10,8 +10,8 @@ class Coupon extends Model
     use HasFactory;
 
     protected $table = 'coupons';
-    protected $guarded;
 
+    protected $guarded;
 
     /**
      * Retorna todas las ordenes donde se haya usado un cupón específico
@@ -23,7 +23,4 @@ class Coupon extends Model
     {
         return $this->hasMany(Order::class, 'coupon_id');
     }
-
-
-
 }

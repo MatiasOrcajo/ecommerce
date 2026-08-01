@@ -3,7 +3,6 @@
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
-
 Route::group(['middleware' => ['api']], function () {
     Route::get('/sales', [\App\Http\Controllers\Admin\DashboardController::class, 'getSales']);
 
@@ -30,8 +29,5 @@ Route::group(['middleware' => ['api']], function () {
     Route::bind('product', function ($value) {
         return Product::findOrFail($value);
     });
-
-
-
 
 });

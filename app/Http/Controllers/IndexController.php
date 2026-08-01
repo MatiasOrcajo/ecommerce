@@ -5,32 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class IndexController extends Controller
 {
-
-
-    public function __construct(private readonly ProductService $productService)
-    {
-
-    }
-
+    public function __construct(private readonly ProductService $productService) {}
 
     public function politics()
     {
         $categories = \App\Models\Category::all();
 
-        return view('politics', compact('categories'));
+        return Inertia::render('Politics', ['categories' => $categories]);
     }
-
 
     public function faqs()
     {
         $categories = \App\Models\Category::all();
 
-        return view('faqs', compact('categories'));
+        return Inertia::render('Faqs', ['categories' => $categories]);
     }
-
 
     public function index()
     {
@@ -41,9 +34,8 @@ class IndexController extends Controller
             ->get();
         $categories = \App\Models\Category::all();
 
-        return view('index', compact('products', 'categories'));
+        return Inertia::render('Index', compact('products', 'categories'));
     }
-
 
     public function getFeaturedProducts()
     {
@@ -56,39 +48,39 @@ class IndexController extends Controller
 
         return $this->productService->productsData($products);
 
-
     }
-
 
     public function searchProducts(Request $request)
     {
         $categories = \App\Models\Category::all();
         $q = $request->q;
 
-        return view('search-products', compact('categories', 'q'));
+        return Inertia::render('Search', ['categories' => $categories, 'products' => [], 'query' => $q]);
     }
-
 
     /**
      * Busqueda de productos segun ciertas condiciones
-     * @param Request $request
+     *
      * @return false|string
      */
     public function searchProductsAjax(Request $request)
     {
 
-        $products = Product::where('name', 'like', '%' . $request->q . '%')
+        $products = Product::where('name', 'like', '%'.$request->q.'%')
             ->orderBy('price', 'desc')
             ->where('visible', true)
             ->get();
 
-        if($request->q == "Todos los productos") $products = Product::where('visible', true)->orderBy('price')->get();
-        if($request->q == "SUMMER SALE") $products = Product::where('visible', true)->orderBy('price')->get();
+        if ($request->q == 'Todos los productos') {
+            $products = Product::where('visible', true)->orderBy('price')->get();
+        }
+        if ($request->q == 'SUMMER SALE') {
+            $products = Product::where('visible', true)->orderBy('price')->get();
+        }
 
         return $this->productService->productsData($products);
 
     }
-
 
     public function getMainProducts()
     {
@@ -96,7 +88,4 @@ class IndexController extends Controller
 
         return $this->productService->productsData($products);
     }
-
-
-
 }

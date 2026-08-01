@@ -10,5 +10,6 @@ class MailingList extends Model
     use HasFactory;
 
     protected $table = 'mailing_list';
+
     protected $guarded;
 }

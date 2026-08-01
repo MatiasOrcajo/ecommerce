@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class ProductVariant extends Model
 {
     protected $table = 'product_variants';
 
     use hasFactory;
-
 
     public function product()
     {
@@ -45,6 +43,4 @@ class ProductVariant extends Model
 
         return $path ?: null;
     }
-
-
 }

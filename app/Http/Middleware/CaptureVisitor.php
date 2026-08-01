@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Events\NewVisitor;
 use Closure;
 use Illuminate\Http\Request;
-use App\Events\NewVisitor;
 use Illuminate\Support\Str;
 
 class CaptureVisitor

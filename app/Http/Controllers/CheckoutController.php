@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coupon;
 use App\Models\Order;
-use App\Models\ProductVariant;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\EmailService;
@@ -14,33 +12,24 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
-use MercadoPago\Client\Preference\PreferenceClient;
+use Inertia\Inertia;
 
 class CheckoutController extends Controller
 {
-
     use CartTrait;
 
     public function __construct(private readonly MercadoPagoService $mpService,
-                                private readonly CheckoutService $checkoutService,
-                                private readonly EmailService $emailService,
-                                private readonly CartService $cartService)
-    {
-
-    }
-
+        private readonly CheckoutService $checkoutService,
+        private readonly EmailService $emailService,
+        private readonly CartService $cartService) {}
 
     public function index()
     {
         $categories = \App\Models\Category::all();
 
-        return view('checkout', compact('categories'));
+        return Inertia::render('Checkout', ['categories' => $categories]);
     }
 
-
-    /**
-     * @param Request $request
-     */
     public function pay(Request $request)
     {
 
@@ -48,12 +37,10 @@ class CheckoutController extends Controller
 
     }
 
-
-
     /**
      * Handles the processing of a successful order.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Contracts\View\View
      */
     public function processOrderSuccess($code)
@@ -61,13 +48,11 @@ class CheckoutController extends Controller
         $order = Order::where('code', $code)->first();
         $categories = \App\Models\Category::all();
 
-        return view('checkout.order-success', compact('order', 'categories'));
+        return Inertia::render('Checkout/OrderSuccess', ['order' => $order, 'categories' => $categories]);
     }
 
-
     /**
-     * @param Request $request
-     * @param Order $order
+     * @param  Order  $order
      */
     public function success(Request $request, $encrypted)
     {
@@ -84,9 +69,7 @@ class CheckoutController extends Controller
 
     }
 
-
     /**
-     * @param Request $request
      * @return void
      */
     public function failure(Request $request, $encrypted)
@@ -98,10 +81,7 @@ class CheckoutController extends Controller
 
     }
 
-
-
     /**
-     * @param Request $request
      * @return void
      */
     public function pending(Request $request, $encrypted)
@@ -115,16 +95,12 @@ class CheckoutController extends Controller
 
     /**
      * Handle the request to retrieve cart information from the session.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function getCartInfo(): JsonResponse
     {
 
         return response()->json($this->checkoutService->getCartInfo());
     }
-
-
 
     // public function
 

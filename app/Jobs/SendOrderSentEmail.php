@@ -21,7 +21,6 @@ class SendOrderSentEmail implements ShouldQueue
         //
     }
 
-
     private function generateOrderCode()
     {
         $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -30,7 +29,6 @@ class SendOrderSentEmail implements ShouldQueue
         for ($i = 4; $i < 13; $i++) {
             $code .= $chars[random_int(0, strlen($chars) - 1)];
         }
-
 
         return $code;
     }
@@ -45,7 +43,7 @@ class SendOrderSentEmail implements ShouldQueue
         $code = $this->generateOrderCode();
 
         $random = random_int(0, 2);
-        $coupon = new Coupon();
+        $coupon = new Coupon;
         $coupon->code = $code;
         $coupon->quantity = 1;
         $coupon->valid_until = Carbon::now()->addDays(30);
