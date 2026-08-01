@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
 
         $variantIds = ProductVariant::pluck('id')->toArray();
 
+        $this->call(AdminUserSeeder::class);
+
         User::factory(5)->create();
 
         Customer::factory(200)->create();
