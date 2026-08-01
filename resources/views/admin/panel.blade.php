@@ -31,6 +31,21 @@
                 </table>
             </div>
         </div>
+
+        <div class="modal fade" id="orderItemsModal" tabindex="-1" aria-labelledby="orderItemsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderItemsModalLabel">Items del pedido</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="orderItemsContent"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection
@@ -77,14 +92,7 @@
                 },
                 {
                     title: "PEDIDO",
-                    data: 'order',
-                    render: function(data, type, row) {
-                        if (type === 'display') {
-                            let html = $('<textarea/>').html(data).text(); // decodifica el HTML
-                            return html;
-                        }
-                        return data;
-                    }
+                    data: 'order_summary'
                 },
                 {
                     title: "TOTAL",
@@ -151,6 +159,18 @@
                     title: "FECHA",
                     data: 'created_at'
                 },
+                {
+                    title: "",
+                    data: 'id',
+                    width: "1%",
+                    orderable: false,
+                    render: function(data, type, row) {
+                        if (type === 'display') {
+                            return '<button type="button" class="btn btn-sm btn-outline-info btn-ver-items" data-id="'+data+'"><i class="fa-solid fa-eye"></i> Ver items</button>';
+                        }
+                        return '';
+                    }
+                },
             ]
         })
 
@@ -172,6 +192,13 @@
                     console.error("Error al actualizar el estado", error);
                 }
             });
+        });
+
+        $('#orders_list').on('click', '.btn-ver-items', function () {
+            let tr = $(this).closest('tr');
+            let rowData = $('#orders_list').DataTable().row(tr).data();
+            $('#orderItemsContent').html(rowData.order);
+            $('#orderItemsModal').modal('show');
         });
 
     })

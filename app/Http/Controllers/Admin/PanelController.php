@@ -32,14 +32,17 @@ class PanelController extends Controller
                 'shipping_method' => $order->shipping_method,
                 'observations' => $order->observations,
                 'order' => $order->products->map(function ($orderProduct) {
-                    return $orderProduct->quantity.'x '.
-                        $orderProduct->productVariant->product->name.'<br/>'.
-                        'Talle '.$orderProduct->productVariant->size.'<br/>'.
-                        $orderProduct->productVariant->color_name.
-                        '<div style="height: 15px; width: 15px; border: 1px solid black; background: '.$orderProduct->productVariant->color.';"></div>'.
-                        '<br/>';
-
-                }),
+                    return '<div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">'
+                        .'<div>'
+                        .'<strong>'.$orderProduct->quantity.'x '.$orderProduct->productVariant->product->name.'</strong><br>'
+                        .'<small class="text-muted">Talle: '.$orderProduct->productVariant->size.' | '.$orderProduct->productVariant->color_name.'</small>'
+                        .'</div>'
+                        .'<span class="ms-auto" style="display:inline-block;width:18px;height:18px;border-radius:50%;background:'.$orderProduct->productVariant->color.';border:1px solid #ddd;"></span>'
+                        .'</div>';
+                })->implode(''),
+                'order_summary' => $order->products->take(2)->map(function ($orderProduct) {
+                    return $orderProduct->quantity.'x '.$orderProduct->productVariant->product->name;
+                })->implode(' | ').($order->products->count() > 2 ? ' +'.($order->products->count() - 2).' mas' : ''),
             ];
         }))->make(true);
     }

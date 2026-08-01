@@ -15,6 +15,8 @@ class Order extends Model
 
     protected $casts = [
         'ctx' => 'array',
+        'is_packaged' => 'boolean',
+        'packaged_at' => 'datetime',
     ];
 
     /**

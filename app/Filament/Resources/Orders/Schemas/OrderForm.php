@@ -4,10 +4,11 @@ namespace App\Filament\Resources\Orders\Schemas;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\TextInput;
-use Filament\Schemas\Components\Select;
-use Filament\Schemas\Components\Placeholder;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Placeholder;
 use Filament\Schemas\Components\Grid;
+use Illuminate\Support\Carbon;
 
 class OrderForm
 {
@@ -46,7 +47,7 @@ class OrderForm
                                     ->content(fn ($record) => '$'.($record?->shipping_cost ?? '0')),
                                 Placeholder::make('order_date')
                                     ->label('Fecha')
-                                    ->content(fn ($record) => $record?->order_date?->format('d/m/Y H:i')),
+                                    ->content(fn ($record) => $record?->order_date ? Carbon::parse($record->order_date)->format('d/m/Y H:i') : null),
                             ])
                             ->columns(2)
                             ->columnSpan(1),

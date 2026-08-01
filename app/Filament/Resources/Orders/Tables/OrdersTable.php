@@ -2,12 +2,18 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\HtmlString;
 
 class OrdersTable
 {
@@ -27,17 +33,7 @@ class OrdersTable
                     ->label('Cliente')
                     ->formatStateUsing(fn ($record) => $record->customer?->name.' '.$record->customer?->surname)
                     ->searchable(['customer.name', 'customer.surname']),
-                TextColumn::make('products')
-                    ->label('Pedido')
-                    ->formatStateUsing(function ($record) {
-                        return $record->products->map(function ($orderProduct) {
-                            return $orderProduct->quantity.'x '
-                                .$orderProduct->productVariant?->product?->name.' '
-                                .'Talle '.$orderProduct->productVariant?->size.' '
-                                .$orderProduct->productVariant?->color_name;
-                        })->implode(' | ');
-                    })
-                    ->wrap(),
+
                 TextColumn::make('total_amount')
                     ->label('Total')
                     ->money('ARS')
@@ -64,6 +60,14 @@ class OrdersTable
                         default => 'gray',
                     })
                     ->sortable(),
+                ToggleColumn::make('is_packaged')
+                    ->label('Empaquetado')
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->afterStateUpdated(function ($record, $state) {
+                        $record->packaged_at = $state ? now() : null;
+                        $record->save();
+                    }),
                 TextColumn::make('created_at')
                     ->label('Fecha')
                     ->dateTime('d/m/Y H:i')
@@ -84,15 +88,38 @@ class OrdersTable
                         'Retiro realizado' => 'Retiro realizado',
                         'Expirado' => 'Expirado',
                     ]),
+                TernaryFilter::make('is_packaged')
+                    ->label('Empaquetado'),
             ])
             ->recordActions([
+                Action::make('viewItems')
+                    ->label('Ver items')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->modalWidth('2xl')
+                    ->modalHeading(fn ($record) => 'Items del pedido #'.$record->code)
+                    ->modalContent(fn ($record) => new HtmlString(view('filament.orders.items-modal', [
+                        'products' => $record->products,
+                    ])->render())),
                 EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('markPackaged')
+                        ->label('Marcar empaquetado')
+                        ->icon('heroicon-o-archive-box')
+                        ->color('success')
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update([
+                                    'is_packaged' => true,
+                                    'packaged_at' => now(),
+                                ]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     DeleteBulkAction::make(),
                 ]),
             ]);
     }
-
 }
