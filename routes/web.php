@@ -77,44 +77,12 @@ Route::group(['middleware' => ['web']], function () {
 
 });
 
-Route::prefix('admin')->group(function () {
-    Route::middleware('auth')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard
-        ');
-        })->name('admin.dashboard');
-
-        Route::get('/products', [\App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.products');
-
-        Route::post('/products', [\App\Http\Controllers\Admin\ProductController::class, 'store'])->name('admin.products.store');
-
-        Route::get('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'show'])->name('admin.product.show');
-
-        Route::post('/products/{product}/create-size', [\App\Http\Controllers\Admin\ProductController::class, 'createSize'])->name('admin.product.create.size');
-
-        Route::post('/pictures/{product}', [\App\Http\Controllers\Admin\PictureController::class, 'store'])->name('admin.pictures.store');
-
-        Route::delete('/pictures/{picture}', [\App\Http\Controllers\Admin\PictureController::class, 'destroy'])->name('admin.pictures.destroy');
-
-        Route::get('/pictures/{product}', [\App\Http\Controllers\Admin\PictureController::class, 'getPictures'])->name('admin.pictures.product');
-
-        Route::put('/pictures/{product}/edit-order', [\App\Http\Controllers\Admin\PictureController::class, 'editOrder'])->name('admin.pictures.edit.order');
-
-        Route::put('/products/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
-
-        Route::put('/products/{product}/update-descriptions', [\App\Http\Controllers\Admin\ProductController::class, 'updateDescriptionSizesAndReferences'])->name('admin.products.update.descriptions');
-
-        Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories');
-
-        Route::post('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');
-
-        Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('admin.categories.show');
-
-        Route::get('/panel', [\App\Http\Controllers\Admin\PanelController::class, 'index'])->name('admin.panel');
-
-        Route::get('/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-
-    });
-});
+// Old admin routes replaced by Filament.
+// Route::prefix('admin')->group(function () {
+//     Route::middleware('auth')->group(function () {
+//         Route::get('/dashboard', function () { ...
+//         ...
+//     });
+// });
 
 require __DIR__.'/auth.php';
