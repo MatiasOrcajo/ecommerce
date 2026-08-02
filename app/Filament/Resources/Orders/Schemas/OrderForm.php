@@ -9,7 +9,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\HtmlString;
@@ -19,16 +18,16 @@ class OrderForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
-                Grid::make(['default' => 1, 'lg' => 3])
+                Grid::make(['default' => 1, 'lg' => 2])
                     ->schema([
-                        // COLUMNA IZQUIERDA: Detalles del Pedido
                         Group::make()
                             ->schema([
                                 Section::make('Detalles del Pedido')
                                     ->description('Información de la orden')
                                     ->icon('heroicon-o-document-text')
-                                    ->columns(['default' => 1, 'sm' => 2, 'xl' => 3]) // 3 columnas internamente
+                                    ->columns(['default' => 1, 'sm' => 2, 'xl' => 3])
                                     ->schema([
                                         Placeholder::make('code')
                                             ->label('Código')
@@ -79,7 +78,7 @@ class OrderForm
                                             ->columnSpanFull(),
                                     ]),
                             ])
-                            ->columnSpan(['default' => 1, 'lg' => 2]),
+                            ->columnSpan(['default' => 1, 'lg' => 1]),
 
                         // COLUMNA DERECHA: Cliente y Estado
                         Group::make()
@@ -137,20 +136,6 @@ class OrderForm
                                     ]),
                             ])
                             ->columnSpan(['default' => 1, 'lg' => 1]),
-
-                        // SECCIÓN INFERIOR: Productos (Ocupa todo el ancho)
-                        Section::make('Productos del Pedido')
-                            ->description(fn ($record) => $record?->products?->sum('quantity').' items en total')
-                            ->icon('heroicon-o-shopping-bag')
-                            ->collapsible()
-                            ->columnSpanFull() // <-- Esto soluciona el problema de que la tabla se aplaste
-                            ->schema([
-                                View::make('filament.orders.products-table')
-                                    ->viewData(fn ($record) => [
-                                        'products' => $record->products,
-                                        'totalAmount' => $record->total_amount,
-                                    ]),
-                            ]),
                     ]),
 
             ]);

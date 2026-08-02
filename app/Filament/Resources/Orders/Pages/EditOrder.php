@@ -12,8 +12,6 @@ class EditOrder extends EditRecord
 {
     protected static string $resource = OrderResource::class;
 
-    protected string $view = 'filament.orders.edit-order';
-
     public function getMaxContentWidth(): Width
     {
         return Width::None;
