@@ -62,9 +62,9 @@ class CartService
             $sessionCart = Session::get('cart');
         }
 
-        $productVariant = ProductVariant::where('size', $request->size)
-            ->where('color', $request->color)
-            ->where('product_id', $request->product_id)
+        $productVariant = ProductVariant::where('product_id', $request->product_id)
+            ->whereHas('size', fn ($q) => $q->where('name', $request->size))
+            ->whereHas('color', fn ($q) => $q->where('hex', $request->color))
             ->firstOrFail();
 
         if ($productVariant->stock < $request->quantity) {

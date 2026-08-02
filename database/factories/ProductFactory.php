@@ -57,7 +57,6 @@ class ProductFactory extends Factory
                 : null,
             'sales' => $this->faker->numberBetween(0, 500),
             'visits' => $this->faker->numberBetween(100, 12000),
-            'stock' => $this->faker->numberBetween(0, 60),
             'description' => ucfirst($this->faker->words($this->faker->numberBetween(8, 25), true).'.'),
             'sizes_description' => $this->faker->optional(0.4)->paragraph(),
             'model_reference' => $this->faker->optional(0.7)->bothify('MOD-####-????'),

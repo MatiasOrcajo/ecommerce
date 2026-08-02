@@ -176,12 +176,12 @@ class CheckoutService
                 'product_variant_id' => $productVariant->id,
                 'product_name' => $product->name,
                 'quantity' => $qty,
-                'pic' => $productVariant->pictures->first()?->path ?? null,
+                'pic' => $productVariant->pictures->first()?->path ?? $product->productPictures->first()?->path ?? null,
                 'subtotal' => $subtotal,
-                'total' => 0.0,                    // se seteará más abajo
-                'color' => $productVariant->color ?? null,
-                'size' => $productVariant->size ?? null,
-                'color_name' => $productVariant->color_name ?? null,
+                'total' => 0.0,
+                'color' => $productVariant->color->hex ?? null,
+                'size' => $productVariant->size->name ?? null,
+                'color_name' => $productVariant->color->name ?? null,
                 'slug' => $product->slug,
             ];
 

@@ -21,6 +21,18 @@ class OrderProducts extends Model
     /**
      * Defines a relationship where this model belongs to a Product.
      */
+    public function product()
+    {
+        return $this->hasOneThrough(
+            Product::class,
+            ProductVariant::class,
+            'id',
+            'id',
+            'product_variants_id',
+            'product_id'
+        );
+    }
+
     public function productVariant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ProductVariant::class, 'product_variants_id');

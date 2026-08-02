@@ -7,7 +7,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -25,17 +25,22 @@ class VariantsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextInput::make('size')
+                Select::make('size_id')
                     ->label('Talle')
-                    ->required()
-                    ->maxLength(255),
-                ColorPicker::make('color')
-                    ->label('Color')
+                    ->relationship('size', 'name')
+                    ->searchable()
+                    ->preload()
                     ->required(),
-                TextInput::make('color_name')
-                    ->label('Nombre del Color')
-                    ->required()
-                    ->maxLength(255),
+                Select::make('color_id')
+                    ->label('Color')
+                    ->relationship('color', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                TextInput::make('sku')
+                    ->label('SKU')
+                    ->maxLength(50)
+                    ->unique(ignoreRecord: true),
                 TextInput::make('stock')
                     ->label('Stock')
                     ->required()
@@ -47,22 +52,25 @@ class VariantsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('size')
+            ->recordTitleAttribute('sku')
             ->columns([
-                TextColumn::make('size')
+                TextColumn::make('size.name')
                     ->label('Talle')
                     ->searchable()
                     ->sortable(),
-                ColorColumn::make('color')
+                ColorColumn::make('color.hex')
                     ->label('Color'),
-                TextColumn::make('color_name')
+                TextColumn::make('color.name')
                     ->label('Nombre del Color')
+                    ->searchable(),
+                TextColumn::make('sku')
+                    ->label('SKU')
                     ->searchable(),
                 TextColumn::make('stock')
                     ->label('Stock')
                     ->sortable(),
             ])
-            ->defaultSort('size')
+            ->defaultSort('size_id')
             ->headerActions([
                 CreateAction::make(),
             ])

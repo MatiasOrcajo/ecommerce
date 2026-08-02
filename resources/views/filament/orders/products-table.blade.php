@@ -36,15 +36,15 @@
                                     </span>
                                 <div class="flex items-center gap-1.5 mt-1">
                                         <span class="w-2.5 h-2.5 rounded-full ring-1 ring-gray-950/10 dark:ring-white/20 flex-shrink-0"
-                                              style="background-color: {{ $variant->color }}"></span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $variant->color_name }}</span>
+                                              style="background-color: {{ $variant->color->hex }}"></span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $variant->color->name }}</span>
                                 </div>
                             </div>
                         </div>
                     </td>
                     <td class="px-4 py-3 text-center">
                             <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 dark:bg-white/5 dark:text-gray-300 dark:ring-white/10">
-                                {{ $variant->size }}
+                                {{ $variant->size->name }}
                             </span>
                     </td>
                     <td class="px-4 py-3 text-center">

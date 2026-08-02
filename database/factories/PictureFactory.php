@@ -6,12 +6,9 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Picture>
- */
 class PictureFactory extends Factory
 {
-    public function definition()
+    public function definition(): array
     {
         $images = [
             'https://images.unsplash.com/photo-1434389677669-e08b4cda5a19?w=600',
@@ -31,7 +28,6 @@ class PictureFactory extends Factory
             'product_variant_id' => $this->faker->boolean(60) ? ProductVariant::factory() : null,
             'order' => $this->faker->numberBetween(1, 5),
             'path' => $this->faker->randomElement($images),
-            'created_at' => now(),
         ];
     }
 }

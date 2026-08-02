@@ -11,63 +11,40 @@ class Product extends Model
 
     protected $table = 'products';
 
-    protected $fillable = ['name', 'category_id', 'price', 'discount', 'description', 'discount_until', 'stock', 'featured', 'sizes_description', 'model_reference', 'slug', 'color', 'visible', 'youtube_link'];
+    protected $fillable = ['name', 'category_id', 'price', 'discount', 'description', 'discount_until', 'featured', 'sizes_description', 'model_reference', 'slug', 'visible', 'youtube_link'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    /**
-     * Retorna todos los registros de order_products asociados a un producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function orderProducts()
     {
         return $this->hasMany(OrderProducts::class, 'product_id');
     }
 
-    /**
-     * Retorna todas las imagenes asociadas a un prod
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function pictures()
+    public function productPictures()
     {
-        return $this->hasMany(Picture::class, 'product_id')->orderBy('order');
+        return $this->hasMany(ProductPicture::class, 'product_id')->orderBy('order');
     }
 
-    /**
-     * Retorna todos los carritos que tengan dicho producto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    public function pictures()
+    {
+        return $this->productPictures();
+    }
+
     public function cartProducts()
     {
         return $this->hasMany(CartProducts::class, 'product_id');
     }
 
-    public function sizes()
+    public function variants()
     {
-        return $this->hasMany(ProductVariant::class, 'product_id');
-    }
-
-    public function colors()
-    {
-        return $this->hasMany(ProductVariant::class, 'product_id');
+        return $this->hasMany(ProductVariant::class);
     }
 
     public function getRouteKeyName()
     {
-        return 'slug'; // Indica que usaremos el campo 'slug' para obtener el modelo en las rutas
-    }
-
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
+        return 'slug';
     }
 }

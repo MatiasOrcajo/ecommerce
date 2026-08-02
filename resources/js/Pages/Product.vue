@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
@@ -15,6 +15,30 @@ const quantity = ref(1)
 const sizeHelpOpen = ref(false)
 const lightboxImage = ref(null)
 const flexShippingTitle = ref('')
+const currentCarouselIndex = ref(0)
+
+const currentColorPics = computed(() => {
+    const colorObj = availableColors.value.find(c => c.color === selectedColor.value)
+    if (!colorObj) return []
+    return Array.isArray(colorObj.pics.paths) ? colorObj.pics.paths : Object.values(colorObj.pics.paths)
+})
+
+const filteredSizes = computed(() => {
+    const variants = productsVariantsArray.value.filter(v => v.color === selectedColor.value)
+    const arr = variants.map(v => ({ size: v.size, stock: v.stock }))
+    const isLetter = arr.every(s => isNaN(s.size))
+    const order = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+    arr.sort((a, b) => isLetter ? order.indexOf(a.size) - order.indexOf(b.size) : a.size - b.size)
+    return arr
+})
+
+const carouselItems = computed(() => {
+    return currentColorPics.value.map((path, i) => ({
+        path,
+        active: i === currentCarouselIndex.value,
+        index: i,
+    }))
+})
 
 function formatMoneyAR(value) {
     const nf = new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -99,132 +123,17 @@ function toYoutubeEmbed(url) {
     return null
 }
 
-function normalizePaths(pics) {
-    return Array.isArray(pics.paths) ? pics.paths : Object.values(pics.paths)
+function selectColor(colorHex) {
+    selectedColor.value = colorHex
+    currentCarouselIndex.value = 0
 }
 
-function printAvailableColors() {
-    const container = document.getElementById('colors-container')
-    if (!availableColors.value || availableColors.value.length <= 1 || availableColors.value[0].color_name.includes('PACK')) {
-        if (container) { container.innerHTML = ''; container.style.display = 'none' }
-        selectedColor.value = availableColors.value?.[0]?.color
-        updateCarousel()
-        printAvailableSizes()
-        return
-    }
-    if (container) {
-        container.style.display = ''
-        container.innerHTML = availableColors.value.map((c, i) =>
-            `<div class="btn btn-outline-secondary" data-color="${c.color}" title="${c.color_name}" style="background:${c.color}; width:32px; height:32px; margin-right:0.5rem; border-radius:50%;"></div>`
-        ).join('')
-
-        const boxes = container.querySelectorAll('.btn-outline-secondary')
-        if (boxes.length > 0) boxes[0].style.outline = '1px solid black'
-        boxes.forEach((box, i) => {
-            box.addEventListener('click', (e) => {
-                boxes.forEach(b => b.style.outline = 'none')
-                e.target.style.outline = '1px solid black'
-                selectedColor.value = e.target.dataset.color
-                updateCarousel()
-                printAvailableSizes()
-            })
-        })
-    }
-    selectedColor.value = availableColors.value[0].color
-    updateCarousel()
+function selectSize(sizeName) {
+    selectedSize.value = sizeName
 }
 
-function printAvailableSizes() {
-    const container = document.getElementById('sizes-container')
-    const variants = productsVariantsArray.value.filter(v => v.color === selectedColor.value)
-    const arr = variants.map(v => ({ size: v.size, stock: v.stock }))
-    const isLetter = arr.every(s => isNaN(s.size))
-    const order = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
-    arr.sort((a, b) => isLetter ? order.indexOf(a.size) - order.indexOf(b.size) : a.size - b.size)
-
-    if (container) {
-        container.innerHTML = arr.map(s =>
-            `<div class="btn btn-outline-secondary size-box ${s.stock == 0 ? 'no-stock' : ''}" data-size="${s.size}" data-stock="${s.stock}" style="margin-right:0.5rem; cursor:pointer;">${s.size}</div>`
-        ).join('')
-        container.querySelectorAll('.size-box').forEach(box => {
-            box.addEventListener('click', (e) => {
-                container.querySelectorAll('.size-box').forEach(b => b.classList.remove('active'))
-                e.target.classList.add('active')
-                selectedSize.value = e.target.dataset.size
-                document.getElementById('sizeSelector').innerHTML = '<strong>Talle: </strong>' + selectedSize.value
-            })
-        })
-    }
-}
-
-function updateCarousel() {
-    const colorObj = availableColors.value.find(c => c.color === selectedColor.value)
-    if (!colorObj) return
-    const paths = normalizePaths(colorObj.pics)
-
-    const inner = document.querySelector('#productCarousel .carousel-inner')
-    if (!inner) return
-    const innerHtml = paths.map((path, i) => `
-        <div class="carousel-item ${i === 0 ? 'active' : ''}">
-            <div class="zoom-container d-flex justify-content-center align-items-center">
-                <img src="${path}" class="d-block product-image" alt="Producto ${i + 1}">
-            </div>
-        </div>
-    `).join('')
-
-    const embed = toYoutubeEmbed(props.product.youtube_link)
-    const videoHtml = embed ? `
-        <div class="carousel-item">
-            <div class="ratio ratio-16x9 carousel-video">
-                <iframe src="${embed}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-    ` : ''
-
-    inner.innerHTML = innerHtml + videoHtml
-
-    const thumbContainer = document.querySelector('.thumbnail-container')
-    if (thumbContainer) {
-        thumbContainer.innerHTML = paths.map((path, i) =>
-            `<img src="${path}" class="thumbnail-item ${i === 0 ? 'active' : ''}" data-bs-target="#productCarousel" data-bs-slide-to="${i}" alt="Mini ${i + 1}">`
-        ).join('')
-    }
-
-    rebindCarousel()
-}
-
-function rebindCarousel() {
-    const carouselEl = document.getElementById('productCarousel')
-    if (!carouselEl) return
-    if (carouselEl._bsCarousel) carouselEl._bsCarousel.dispose()
-    carouselEl._bsCarousel = new bootstrap.Carousel(carouselEl, { ride: false })
-
-    const thumbs = document.querySelectorAll('.thumbnail-item')
-    carouselEl.addEventListener('slid.bs.carousel', () => {
-        const items = Array.from(carouselEl.querySelectorAll('.carousel-item'))
-        const idx = items.findIndex(i => i.classList.contains('active'))
-        thumbs.forEach((t, i) => t.classList.toggle('active', i === idx))
-    })
-    thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => carouselEl._bsCarousel.to(i)))
-
-    bindZoomFollow()
-}
-
-function bindZoomFollow() {
-    document.querySelectorAll('.zoom-container').forEach(container => {
-        const img = container.querySelector('img')
-        container.onmousemove = null
-        container.onmouseleave = null
-        container.addEventListener('mousemove', e => {
-            const rect = container.getBoundingClientRect()
-            const x = ((e.clientX - rect.left) / rect.width) * 100
-            const y = ((e.clientY - rect.top) / rect.height) * 100
-            img.style.transformOrigin = `${x}% ${y}%`
-        })
-        container.addEventListener('mouseleave', () => {
-            img.style.transformOrigin = 'center center'
-        })
-    })
+function handleCarouselImageClick(img) {
+    lightboxImage.value = img
 }
 
 async function addToCart() {
@@ -277,34 +186,31 @@ function updateCartCounter() {
         })
 }
 
+function scrollThumbs(direction) {
+    document.querySelector('.thumbnail-container')?.scrollBy({ left: direction * 100, behavior: 'smooth' })
+}
+
 onMounted(async () => {
     try {
         const res = await fetch(`/products/${props.product.id}/get-variants`)
         const data = await res.json()
         availableColors.value = data.availableColors
         productsVariantsArray.value = data.productsVariantsArray
-        printAvailableColors()
-        printAvailableSizes()
+
+        if (availableColors.value.length > 0) {
+            const hasPics = availableColors.value.some(c => (Array.isArray(c.pics.paths) ? c.pics.paths : Object.values(c.pics.paths)).length > 0)
+            if (hasPics && !availableColors.value[0].color_name.includes('PACK')) {
+                selectedColor.value = availableColors.value[0].color
+            } else if (availableColors.value[0]) {
+                selectedColor.value = availableColors.value[0].color
+            }
+        }
     } catch (e) {
         console.error(e)
     }
 
     setShippingTitle()
     setInterval(setShippingTitle, 1000)
-
-    const productCarousel = document.getElementById('productCarousel')
-    productCarousel?.addEventListener('click', e => {
-        const img = e.target.closest('.zoom-container img')
-        if (!img) return
-        lightboxImage.value = img.src
-    })
-
-    document.getElementById('thumbPrev')?.addEventListener('click', () => {
-        document.querySelector('.thumbnail-container')?.scrollBy({ left: -100, behavior: 'smooth' })
-    })
-    document.getElementById('thumbNext')?.addEventListener('click', () => {
-        document.querySelector('.thumbnail-container')?.scrollBy({ left: 100, behavior: 'smooth' })
-    })
 })
 </script>
 
@@ -314,16 +220,16 @@ onMounted(async () => {
             <div class="container my-md-5">
                 <div class="row gx-5">
                     <div class="col-md-6" style="margin-top: 3rem">
-                        <div id="productCarousel" class="carousel slide" data-bs-ride="false">
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
-                                <div v-for="(picture, index) in product.pictures" :key="index" :class="['carousel-item', { active: index === 0 }]">
-                                    <div class="zoom-container d-flex justify-content-center align-items-center">
-                                        <img :src="picture.path" :alt="'Producto ' + (index + 1)" class="d-block product-image" style="margin: 0 auto;">
+                                <div v-for="(pic, index) in (currentColorPics.length ? currentColorPics : product.product_pictures?.map(p => p.path) || [])" :key="'cp-'+index" :class="['carousel-item', { active: index === currentCarouselIndex }]">
+                                    <div class="zoom-container d-flex justify-content-center align-items-center" @click="handleCarouselImageClick(pic)">
+                                        <img :src="pic" :alt="'Producto ' + (index + 1)" class="d-block product-image">
                                     </div>
                                 </div>
                                 <div v-if="product.youtube_link" class="carousel-item">
                                     <div class="ratio ratio-16x9 carousel-video">
-                                        <iframe :data-youtube-src="product.youtube_link" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        <iframe :src="toYoutubeEmbed(product.youtube_link)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -332,11 +238,11 @@ onMounted(async () => {
                         </div>
 
                         <div class="thumbnail-wrapper mt-3">
-                            <button class="arrow-btn arrow-left" id="thumbPrev">‹</button>
+                            <button class="arrow-btn arrow-left" @click="scrollThumbs(-1)">‹</button>
                             <div class="thumbnail-container">
-                                <img v-for="(picture, index) in product.pictures" :key="index" :src="picture.path" :class="['thumbnail-item', { active: index === 0 }]" :data-bs-target="'#productCarousel'" :data-bs-slide-to="index" :alt="'Mini ' + (index + 1)">
+                                <img v-for="(pic, index) in (currentColorPics.length ? currentColorPics : product.product_pictures?.map(p => p.path) || [])" :key="'t-'+index" :src="pic" :class="['thumbnail-item', { active: index === currentCarouselIndex }]" :data-bs-target="'#productCarousel'" :data-bs-slide-to="index" :alt="'Mini ' + (index + 1)" @click="currentCarouselIndex = index">
                             </div>
-                            <button class="arrow-btn arrow-right" id="thumbNext">›</button>
+                            <button class="arrow-btn arrow-right" @click="scrollThumbs(1)">›</button>
                         </div>
 
                         <div class="col-12">
@@ -370,7 +276,7 @@ onMounted(async () => {
                             {{ formatMoneyAR((product.discount ? product.price * (1 - product.discount / 100) : product.price) * 0.8) }} en efectivo
                         </p>
 
-                        <span id="flex-shipping-title" style="color: green; font-weight: bold; font-size: 19px">{{ flexShippingTitle }}</span>
+                        <span style="color: green; font-weight: bold; font-size: 19px">{{ flexShippingTitle }}</span>
                         <br>
                         <span style="text-decoration: underline; cursor: pointer; font-size: 15px">Válido para CABA y GBA</span>
 
@@ -389,13 +295,18 @@ onMounted(async () => {
 
                         <div class="my-3">
                             <label class="d-block mb-1"><strong>Color:</strong></label>
-                            <div class="d-flex gap-2" id="colors-container"></div>
+                            <div class="d-flex gap-2">
+                                <div v-if="availableColors.length <= 1 || availableColors[0].color_name.includes('PACK')" style="display:none"></div>
+                                <div v-for="(c, i) in availableColors" v-else :key="c.color" class="btn btn-outline-secondary" :title="c.color_name" :style="{ background: c.color, width: '32px', height: '32px', borderRadius: '50%', outline: selectedColor === c.color ? '1px solid black' : 'none' }" @click="selectColor(c.color)"></div>
+                            </div>
                         </div>
 
                         <div class="my-4">
-                            <label id="sizeSelector" class="d-block mb-1"><strong>Talle:</strong></label>
-                            <div class="d-flex gap-2" id="sizes-container"></div>
-                            <span id="sizes_help" style="text-decoration: underline; cursor: pointer" class="mt-1" @click="sizeHelpOpen = true">¿Qué talle elijo?</span>👈
+                            <label class="d-block mb-1"><strong>Talle: {{ selectedSize }}</strong></label>
+                            <div class="d-flex gap-2">
+                                <div v-for="s in filteredSizes" :key="s.size" class="btn btn-outline-secondary size-box" :class="{ 'no-stock': s.stock === 0, active: selectedSize === s.size }" :data-size="s.size" :data-stock="s.stock" style="margin-right:0.5rem; cursor:pointer;" @click="selectSize(s.size)">{{ s.size }}</div>
+                            </div>
+                            <span style="text-decoration: underline; cursor: pointer" class="mt-1" @click="sizeHelpOpen = true">¿Qué talle elijo?</span>👈
                         </div>
 
                         <div id="size-help-overlay" :style="{ display: sizeHelpOpen ? 'block' : 'none' }" @click="sizeHelpOpen = false"></div>
@@ -472,4 +383,5 @@ main { overflow-x: hidden; }
 #size-help-panel { position: fixed !important; top: 0; right: 0; width: 0; height: 100%; overflow-y: auto; transition: all 0.3s ease; z-index: 2147483647 !important; background-color: #f4f5f4; }
 #size-help-overlay { display: none; position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 10000; }
 body.panel-open { overflow: hidden; height: 100vh; }
+.size-box.active { outline: 2px solid black; }
 </style>

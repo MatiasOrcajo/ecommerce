@@ -114,7 +114,13 @@ class ProductController extends Controller
      */
     public function searchProductImagesByColor(Product $product, Request $request)
     {
-        return $product->variants()->where('color', $request->color)->first()->pictures()->orderBy('order')->take(2)->get();
+        return $product->variants()
+            ->whereHas('color', fn ($q) => $q->where('hex', $request->color))
+            ->first()
+            ->pictures()
+            ->orderBy('order')
+            ->take(2)
+            ->get();
     }
 
     /**
@@ -122,7 +128,7 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::where('slug', $slug)->with('productPictures')->firstOrFail();
         $categories = \App\Models\Category::all();
 
         $product->visits += 1;

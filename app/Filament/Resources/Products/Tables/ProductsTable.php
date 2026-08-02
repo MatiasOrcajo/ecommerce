@@ -22,7 +22,7 @@ class ProductsTable
                     ->sortable(),
                 ImageColumn::make('pictures_first_path')
                     ->label('Imagen')
-                    ->getStateUsing(fn ($record) => $record->pictures->first()?->path),
+                    ->getStateUsing(fn ($record) => $record->productPictures->first()?->path),
                 TextColumn::make('name')
                     ->label('Nombre')
                     ->sortable()
@@ -41,9 +41,10 @@ class ProductsTable
                 TextColumn::make('sales')
                     ->label('Ventas')
                     ->sortable(),
-                TextColumn::make('stock')
+                TextColumn::make('total_stock')
                     ->label('Stock')
-                    ->sortable(),
+                    ->getStateUsing(fn ($record) => $record->variants()->sum('stock'))
+                    ->sortable(query: fn ($query, $direction) => $query->withSum('variants as total_stock_sum', 'stock')->orderBy('total_stock_sum', $direction)),
                 TextColumn::make('visits')
                     ->label('Visitas')
                     ->sortable()

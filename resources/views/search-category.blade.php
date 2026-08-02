@@ -163,15 +163,11 @@
 
                     sortedData.forEach(item => {
                         const {product, colors} = item;
-                        const colorNames = colors.names;
-
-                        // Construir variantes [{ colorCode, pics }]
-                        const variants = colorNames.map((_, idx) => {
-                            const entry = colors[idx];
-                            const code = Object.keys(entry)[0];
-                            const pics = entry[code][0];
-                            return {colorCode: code, pics};
-                        });
+                        const variants = colors.map(c => ({
+                            colorCode: c.hex,
+                            colorName: c.name,
+                            pics: c.paths,
+                        }));
 
                         // Primeras dos imágenes
                         const firstImg = variants[0].pics[0];
@@ -180,7 +176,7 @@
                         // Swatches
                         let swatches = '';
                         variants.forEach((v, i) => {
-                            colorNames[i].includes('PACK') || colorNames[i].includes('Pack') ? swatches += '' :
+                            v.colorName.includes('PACK') || v.colorName.includes('Pack') ? swatches += '' :
                                 swatches += `
                   <div
                     class="color-box mx-1"
@@ -191,7 +187,7 @@
                       border:1px solid #ccc;
                       cursor:pointer;
                     "
-                    title="${colorNames[i]}"
+                    title="${v.colorName}"
                   ></div>
                 `;
                         });

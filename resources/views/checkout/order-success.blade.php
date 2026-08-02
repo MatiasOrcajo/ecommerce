@@ -86,15 +86,15 @@
                                     <td>
                                         <div
                                             style="
-                                                background: {{ $orderProduct->productVariant->color }};
+                                                background: {{ $orderProduct->productVariant->color->hex }};
                                                 width: 32px;
                                                 height: 32px;
                                                 border: 1px solid #ccc;
                                                 border-radius: 4px;
                                             "
-                                            title="{{ $orderProduct->productVariant->color_name }}"
-                                        ></div>{{ $orderProduct->productVariant->color_name }}</td>
-                                    <td>{{ $orderProduct->productVariant->size }}</td>
+                                            title="{{ $orderProduct->productVariant->color->name }}"
+                                        ></div>{{ $orderProduct->productVariant->color->name }}</td>
+                                    <td>{{ $orderProduct->productVariant->size->name }}</td>
                                     <td>{{ $orderProduct->quantity }}</td>
                                     <td>${{ $orderProduct->unit_price }}</td>
                                     <td>${{ $orderProduct->total }}</td>

@@ -65,9 +65,6 @@ class ProductForm
                                 TextInput::make('youtube_link')
                                     ->label('Link de YouTube')
                                     ->url(),
-                                TextInput::make('color')
-                                    ->label('Color')
-                                    ->type('color'),
                             ])
                             ->columnSpan(1),
                     ]),

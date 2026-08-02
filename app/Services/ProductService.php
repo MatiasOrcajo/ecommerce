@@ -2,84 +2,92 @@
 
 namespace App\Services;
 
-use App\Models\Picture;
 use App\Models\Product;
 
 class ProductService
 {
-    public function calculateProductPriceWithDiscount(Product $product)
+    public function calculateProductPriceWithDiscount(Product $product): float
     {
         return ($product->price * $product->discount) / 100;
     }
 
-    /**
-     * @return array
-     */
-    public function getVariants(Product $product)
+    public function getVariants(Product $product): array
     {
-        $productVariants = $product->variants;
+        $variants = $product->variants()
+            ->with(['color', 'size', 'pictures' => fn ($q) => $q->orderBy('order')])
+            ->get();
 
-        $availableColors = $productVariants->select(['id', 'color', 'color_name'])
-            ->unique('color_name')
+        $colors = $variants
+            ->groupBy(fn ($v) => $v->color->name)
+            ->map(function ($group) {
+                $best = $group->first(fn ($v) => $v->pictures->isNotEmpty()) ?? $group->first();
+
+                return [
+                    'id' => $best->id,
+                    'color' => $best->color->hex,
+                    'color_name' => $best->color->name,
+                    'pics' => [
+                        'paths' => $best->pictures->pluck('path')->values()->toArray(),
+                    ],
+                ];
+            })
             ->values()
             ->toArray();
 
-        $pictures = Picture::whereIn('product_variant_id', $productVariants->pluck('id'))
-            ->orderBy('order')
-            ->get();
-
-        $availableColors = collect($availableColors)
-            ->transform(function ($color) use ($pictures) {
-                $paths = [];
-                $pics = $pictures->where('product_variant_id', $color['id']);
-                $paths['paths'] = $pics->map(fn ($pic) => $pic->path);
-                $color['pics'] = $paths;
-
-                return $color;
-            })
-            ->toArray();
-
-        $availableSizes = $productVariants->select('size')
+        $sizes = $variants
+            ->map(fn ($v) => ['size' => $v->size->name])
             ->unique('size')
+            ->values()
             ->toArray();
 
-        $productsVariantsArray = $productVariants->select(['size', 'color', 'stock'])->toArray();
+        $variantsArray = $variants->map(fn ($v) => [
+            'size' => $v->size->name,
+            'color' => $v->color->hex,
+            'stock' => $v->stock,
+        ])->toArray();
 
         return [
-            'availableColors' => $availableColors,
-            'availableSizes' => $availableSizes,
-            'productsVariantsArray' => $productsVariantsArray,
-            'youtube_link' => $product->youtube_link ?? null,
+            'availableColors' => $colors,
+            'availableSizes' => $sizes,
+            'productsVariantsArray' => $variantsArray,
+            'youtube_link' => $product->youtube_link,
         ];
     }
 
-    /**
-     * Devuelve un json con los datos de los productos
-     */
-    public function productsData($products): string|false
+    public function productsData($products): array
     {
+        $ids = $products->pluck('id');
+
+        $products = Product::whereIn('id', $ids)
+            ->with(['variants' => fn ($q) => $q
+                ->whereHas('pictures')
+                ->with(['color', 'pictures' => fn ($q) => $q->orderBy('order')]),
+            ])
+            ->get()
+            ->keyBy('id');
+
         $data = [];
-
         foreach ($products as $product) {
-            $data[$product->id] = [];
-            $data[$product->id]['product'] = [
-                'name' => $product->name,
-                'price' => $product->price,
-                'discount' => $product->discount,
-                'discount_until' => $product->discount_until,
-                'slug' => $product->slug,
+            $data[$product->id] = [
+                'product' => [
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'discount' => $product->discount,
+                    'discount_until' => $product->discount_until,
+                    'slug' => $product->slug,
+                ],
+                'colors' => $product->variants
+                    ->groupBy(fn ($v) => $v->color->name)
+                    ->map(fn ($group, $name) => [
+                        'name' => $name,
+                        'hex' => $group->first()->color->hex,
+                        'paths' => $group->first()->pictures->pluck('path')->take(2)->values()->toArray(),
+                    ])
+                    ->values()
+                    ->toArray(),
             ];
-
-            $variants = $product->variants()->whereHas('pictures')->with('pictures')->get();
-
-            foreach ($variants as $variant) {
-                $data[$product->id]['colors']['names'][] = $variant->color_name;
-                $data[$product->id]['colors'][] = [$variant->color => [$variant->pictures()->orderBy('order')->pluck('path')->take(2)->toArray()]];
-            }
         }
 
-        //        dd($data);
-
-        return json_encode($data);
+        return $data;
     }
 }

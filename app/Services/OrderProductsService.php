@@ -24,31 +24,21 @@ class OrderProductsService
     {
         foreach ($cartInfo['products'] as $index => $product) {
 
-            // descuento el stock
-            $productInDb = Product::where('name', $product['product_name'])->first();
-            $productVariant = ProductVariant::where('product_id', $productInDb->id)
-                ->where('color', $product['color'])
-                ->where('size', $product['size'])
-                ->first();
+            $productVariant = ProductVariant::findOrFail($product['product_variant_id']);
 
             $productVariant->decrement('stock', $product['quantity']);
 
             if ($productVariant->stock < 0) {
 
-                throw new \Exception('No hay stock suficiente del producto '.$productInDb->name.'El stock actual es: '.$productVariant->stock);
+                throw new \Exception('No hay stock suficiente del producto '.($productVariant->product->name ?? 'desconocido').' El stock actual es: '.$productVariant->stock);
             }
 
-            // Crear el registro utilizando asignación masiva.
             \App\Models\OrderProducts::create([
                 'product_variants_id' => $productVariant->id,
                 'order_id' => $order->id,
                 'quantity' => $product['quantity'],
-                'unit_price' => $productInDb->price,
-                'discount' => $productInDb->discount,
-                // el total de la orden puede ser menor
-                // dependiendo de si está aplicado un cupón o no
-                // el precio final real del producto en ese caso
-                // deberá evaluarse haciendo el descuento de cupón de la orden
+                'unit_price' => $productVariant->product->price,
+                'discount' => $productVariant->product->discount,
                 'total' => $product['total'],
             ]);
 
@@ -66,18 +56,23 @@ class OrderProductsService
      */
     public function mapOrderProductToItem($orderId)
     {
-        $order = Order::with(['products.product.pictures'])->find($orderId);
+        $order = Order::with(['products.productVariant.product.productPictures'])->find($orderId);
 
         return $order->products->reduce(function (array $acc, \App\Models\OrderProducts $orderProduct) {
+            $product = $orderProduct->productVariant?->product;
+            if (! $product) {
+                return $acc;
+            }
+
             $acc[] = [
-                'id' => $orderProduct->product->id,
-                'title' => $orderProduct->product->name,
-                'description' => $orderProduct->product->description,
-                'picture_url' => $orderProduct->product->pictures->first()->path,
-                'category_id' => $orderProduct->product->category_id,
+                'id' => $product->id,
+                'title' => $product->name,
+                'description' => $product->description,
+                'picture_url' => $product->productPictures->first()?->path ?? $orderProduct->productVariant->pictures->first()?->path ?? '',
+                'category_id' => $product->category_id,
                 'quantity' => $orderProduct->quantity,
                 'currency_id' => 'ARS',
-                'unit_price' => $orderProduct->total_amount / $orderProduct->quantity,
+                'unit_price' => $orderProduct->unit_price,
             ];
 
             return $acc;

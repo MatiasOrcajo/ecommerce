@@ -34,8 +34,8 @@
                 <div style="flex: 1;">
                     <p style="margin: 0;">{{$orderProduct->quantity}}× {{$orderProduct->productVariant->product->name}}</p>
                     <p style="margin: 0; font-size: 13px; color: #555; display: flex; align-items: center;">
-                        Color: {{$orderProduct->productVariant->color_name}} <span style="display: inline-block; width: 10px; height: 10px; background: {{$orderProduct->productVariant->color}}; margin-left: 5px;"></span>
-                        &nbsp;|&nbsp;Talle: {{$orderProduct->productVariant->size}}
+                        Color: {{$orderProduct->productVariant->color->name}} <span style="display: inline-block; width: 10px; height: 10px; background: {{$orderProduct->productVariant->color->hex}}; margin-left: 5px;"></span>
+                        &nbsp;|&nbsp;Talle: {{$orderProduct->productVariant->size->name}}
                     </p>
                 </div>
                 <p style="margin: 0; align-self: center;">${{$orderProduct->total}}</p>

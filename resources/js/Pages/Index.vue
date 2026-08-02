@@ -13,21 +13,19 @@ function formatMoneyAR(value) {
 }
 
 function renderProductCard(product, colors, isFeatured = false) {
-    const colorNames = colors.names
-    const variants = colorNames.map((_, idx) => {
-        const entry = colors[idx]
-        const code = Object.keys(entry)[0]
-        const pics = entry[code][0]
-        return { colorCode: code, pics }
-    })
+    const variants = colors.map(c => ({
+        colorCode: c.hex,
+        colorName: c.name,
+        pics: c.paths,
+    }))
 
     const firstImg = variants[0].pics[0]
     const secondImg = variants[0].pics[1] || variants[0].pics[0]
 
     let swatches = ''
     variants.forEach((v, i) => {
-        if (!colorNames[i].includes('PACK') && !colorNames[i].includes('Pack')) {
-            swatches += `<div class="color-box mx-1" data-variant-index="${i}" style="background:${v.colorCode};" title="${colorNames[i]}"></div>`
+        if (!v.colorName.includes('PACK') && !v.colorName.includes('Pack')) {
+            swatches += `<div class="color-box mx-1" data-variant-index="${i}" style="background:${v.colorCode};" title="${v.colorName}"></div>`
         }
     })
 

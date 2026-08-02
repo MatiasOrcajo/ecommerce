@@ -13,25 +13,23 @@ function formatMoneyAR(value) {
 }
 
 function buildVariants(colors) {
-    const colorNames = colors.names
-    return colorNames.map((_, idx) => {
-        const entry = colors[idx]
-        const code = Object.keys(entry)[0]
-        const pics = entry[code][0]
-        return { colorCode: code, pics }
-    })
+    return colors.map(c => ({
+        colorCode: c.hex,
+        colorName: c.name,
+        pics: c.paths,
+    }))
 }
 
-function getSwatchesHtml(variants, colorNames) {
+function getSwatchesHtml(variants) {
     let swatches = ''
     variants.forEach((v, i) => {
-        if (!colorNames[i].includes('PACK') && !colorNames[i].includes('Pack')) {
+        if (!v.colorName.includes('PACK') && !v.colorName.includes('Pack')) {
             swatches += `
                 <div
                     class="color-box mx-1"
                     data-variant-index="${i}"
                     style="width:24px; height:24px; background:${v.colorCode}; border:1px solid #ccc; cursor:pointer;"
-                    title="${colorNames[i]}"
+                    title="${v.colorName}"
                 ></div>
             `
         }
@@ -77,7 +75,7 @@ function getSwatchesHtml(variants, colorNames) {
                     </div>
                     <div class="card-body d-flex flex-column position-relative">
                         <div class="d-flex justify-content-center mb-3">
-                            <div class="color-box-parent d-flex justify-content-center align-items-center" v-html="getSwatchesHtml(buildVariants(item.colors), item.colors.names)"></div>
+                            <div class="color-box-parent d-flex justify-content-center align-items-center" v-html="getSwatchesHtml(buildVariants(item.colors))"></div>
                         </div>
                         <h5 class="card-title text-center mb-2">{{ item.product.name }}</h5>
 

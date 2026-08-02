@@ -8,7 +8,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -18,9 +17,9 @@ use Filament\Tables\Table;
 
 class PicturesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'pictures';
+    protected static string $relationship = 'productPictures';
 
-    protected static ?string $title = 'Imagenes';
+    protected static ?string $title = 'Imagenes del Producto';
 
     public function form(Schema $schema): Schema
     {
@@ -36,13 +35,6 @@ class PicturesRelationManager extends RelationManager
                     ->label('Orden')
                     ->numeric()
                     ->default(1),
-                Select::make('product_variant_id')
-                    ->label('Variante')
-                    ->relationship('variant', 'id')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->size.' - '.$record->color_name)
-                    ->nullable()
-                    ->searchable()
-                    ->preload(),
             ]);
     }
 
@@ -56,9 +48,6 @@ class PicturesRelationManager extends RelationManager
                 TextColumn::make('order')
                     ->label('Orden')
                     ->sortable(),
-                TextColumn::make('variant.size')
-                    ->label('Talle')
-                    ->formatStateUsing(fn ($record) => $record->variant?->size.' - '.$record->variant?->color_name),
             ])
             ->defaultSort('order')
             ->headerActions([
