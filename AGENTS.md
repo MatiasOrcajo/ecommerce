@@ -32,6 +32,9 @@ php artisan queue:work
 ### Admin panel
 Routes under `/admin` (`routes/web.php:88`). Controllers in `app/Http/Controllers/Admin/`. Uses Yajra DataTables for product/category/order listings. Chart.js for dashboard stats. Log viewer at `/admin/logs`.
 
+#### Filament pitfalls
+- **Schema columns vs Grid component width:** `EditRecord::defaultForm()` auto-sets `columns(2)` on the form Schema. If a custom Schema file (e.g. `OrderForm::configure()`) replaces the components with a custom `Grid`, that Grid becomes the only child of a 2-column outer Schema and gets squeezed to half width. Fix: call `->columns(1)` on the Schema before `->components([...])` to let the inner Grid span the full width. Applies to Filament v4.12+.
+
 ### Cart & checkout
 Session-based cart stored in database (`SESSION_DRIVER=database`). `CartTrait` (`app/Traits/CartTrait.php`) provides shared cart logic. Coupons validated by `CouponService`. Payment flow: MercadoPago preference → webhook notification → order status update.
 

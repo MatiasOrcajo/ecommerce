@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
-use Filament\Schemas\Components\TextInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
